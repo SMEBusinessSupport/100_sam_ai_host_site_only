@@ -1,0 +1,604 @@
+openapi: 3.0.3
+info:
+  title: SAM AI Workflows Platform API
+  description: |
+    REST API endpoints for the SAM AI Workflows Platform.
+
+    This module provides **3 HTTP endpoints** for workflow canvas operations,
+    branch selection, and workflow analysis.
+
+    ## Architecture Overview
+
+    ```
+    ai_sam_workflows (THIS MODULE - UI Layer)
+    ├── controllers/         ← 5 Python controllers
+    │   ├── branch_api.py           → /canvas/api/branches/available
+    │   ├── transition_control.py   → /canvas/<workflow_id>/nodes
+    │   ├── workflow_orchestrator.py → /canvas/workflow/analyze
+    │   ├── node_type_mapper.py     → Internal (no HTTP)
+    │   └── documentation_controller.py → Documentation views
+    └── views/               ← 20 XML view files
+
+    ai_sam_workflows_base (Data Layer - SEPARATE)
+    ├── models/              ← 15 Python models
+    └── controllers/         ← RPC methods (Odoo JSON-RPC, not REST)
+    ```
+
+    ## Authentication
+
+    All endpoints require Odoo user authentication. Requests must include
+    valid session cookies from an authenticated Odoo session.
+
+    ## Data Models
+
+    This module is a **Platform Skin** (UI-only). All data models are in
+    `ai_sam_workflows_base` module. See that module's documentation for:
+    - `canvas` - Workflow definitions
+    - `canvas.node` - Workflow nodes
+    - `canvas.connection` - Node connections
+    - `workflow.execution` - Execution history
+    - `workflow.business.unit` - Business unit organization
+    - `api.credentials` - API credential storage
+    - `n8n.simple.node` - N8N node catalog
+    - `n8n.simple.supplier` - N8N supplier registry
+
+  version: 18.0.2.35.0
+  contact:
+    name: SAM AI Support
+    url: https://sme.ec
+    email: sam@sme.ec
+  license:
+    name: LGPL-3
+    url: https://www.gnu.org/licenses/lgpl-3.0.html
+
+servers:
+  - url: https://your-odoo-instance.com
+    description: Production Odoo server
+  - url: http://localhost:8069
+    description: Local development server
+
+tags:
+  - name: Branch Selection
+    description: Canvas branch/platform type selection API
+  - name: Canvas Access
+    description: Workflow canvas access and rendering
+  - name: Workflow Analysis
+    description: N8N workflow analysis and assembly planning
+
+paths:
+  /canvas/api/branches/available:
+    get:
+      tags:
+        - Branch Selection
+      summary: Get available branch types
+      description: |
+        Returns a list of available canvas branch/platform types that the user
+        can select from. Used by the branch selector dropdown in the UI.
+
+        This endpoint queries the `canvas.platform` model from `ai_sam` module
+        to retrieve all registered canvas platforms.
+
+        **Controller:** `branch_api.py`
+        **Size:** 5,581 bytes
+      operationId: getAvailableBranches
+      security:
+        - odooSession: []
+      responses:
+        '200':
+          description: Successfully retrieved branch types
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  branches:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Platform record ID
+                          example: 1
+                        name:
+                          type: string
+                          description: Platform display name
+                          example: "SAM Automator Platform"
+                        technical_name:
+                          type: string
+                          description: Technical identifier
+                          example: "automator"
+                        icon_class:
+                          type: string
+                          description: FontAwesome icon class
+                          example: "fa-project-diagram"
+                        renderer_class:
+                          type: string
+                          description: JavaScript renderer class name
+                          example: "AutomatorRenderer"
+                        active:
+                          type: boolean
+                          description: Whether platform is active
+                          example: true
+              example:
+                success: true
+                branches:
+                  - id: 1
+                    name: "SAM Automator Platform"
+                    technical_name: "automator"
+                    icon_class: "fa-project-diagram"
+                    renderer_class: "AutomatorRenderer"
+                    active: true
+                  - id: 2
+                    name: "SAM Creatives Platform"
+                    technical_name: "creatives"
+                    icon_class: "fa-paint-brush"
+                    renderer_class: "CreativesRenderer"
+                    active: true
+        '401':
+          description: User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /canvas/{workflow_id}/nodes:
+    get:
+      tags:
+        - Canvas Access
+      summary: Serve canvas view with hierarchical node manager
+      description: |
+        Serves the workflow canvas HTML page with the hierarchical node manager
+        initialized. This is the main entry point for viewing/editing a workflow
+        in the visual canvas editor.
+
+        **Controller:** `transition_control.py`
+        **Size:** 59,290 bytes (largest controller)
+
+        The controller:
+        1. Loads the workflow record from database
+        2. Initializes the hierarchical node manager
+        3. Renders the canvas QWeb template
+        4. Returns HTML with embedded workflow data
+
+        **Canvas Features:**
+        - Infinite canvas with pan and zoom (0.1x - 3.0x)
+        - Professional N8N-style node rendering
+        - Bezier curve connections
+        - 1,500+ searchable nodes
+        - Drag-and-drop interface
+      operationId: getCanvasView
+      security:
+        - odooSession: []
+      parameters:
+        - name: workflow_id
+          in: path
+          required: true
+          description: ID of the workflow/canvas record
+          schema:
+            type: integer
+            example: 42
+      responses:
+        '200':
+          description: Canvas HTML page
+          content:
+            text/html:
+              schema:
+                type: string
+                description: Rendered HTML page with canvas editor
+        '401':
+          description: User not authenticated
+        '404':
+          description: Workflow not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                success: false
+                error: "Workflow not found"
+        '500':
+          description: Internal server error
+
+  /canvas/workflow/analyze:
+    post:
+      tags:
+        - Workflow Analysis
+      summary: Analyze N8N workflow and generate assembly plan
+      description: |
+        Analyzes a pasted N8N workflow JSON and generates an intelligent
+        assembly plan for the Theater system to animate.
+
+        **Controller:** `workflow_orchestrator.py`
+        **Size:** 17,487 bytes
+
+        This is "SAM The Wiring Assistant" - it understands workflow complexity
+        and decides the optimal node creation sequence and rendering strategy.
+
+        **Analysis includes:**
+        - Node type identification and mapping
+        - Connection topology analysis
+        - Layout optimization (4-column hybrid template)
+        - Animation sequence planning
+        - Complexity scoring
+
+        **Assembly Plan Structure:**
+        The returned plan includes phases for theatrical assembly:
+        1. Phase 1: Trigger nodes (left column)
+        2. Phase 2: Processing nodes (center columns)
+        3. Phase 3: Output nodes (right column)
+        4. Phase 4: Connection drawing
+      operationId: analyzeWorkflow
+      security:
+        - odooSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - workflow_json
+              properties:
+                workflow_json:
+                  type: string
+                  description: Raw N8N workflow JSON string
+                  example: '{"nodes":[{"type":"n8n-nodes-base.manualTrigger"}],"connections":{}}'
+                options:
+                  type: object
+                  description: Optional analysis options
+                  properties:
+                    animated:
+                      type: boolean
+                      description: Whether to include animation data
+                      default: true
+                    layout_strategy:
+                      type: string
+                      description: Layout strategy to use
+                      enum: [auto, horizontal, vertical, grid]
+                      default: auto
+            example:
+              workflow_json: |
+                {
+                  "name": "My Workflow",
+                  "nodes": [
+                    {
+                      "parameters": {},
+                      "type": "n8n-nodes-base.manualTrigger",
+                      "typeVersion": 1,
+                      "position": [0, 0],
+                      "id": "node-1",
+                      "name": "Manual Trigger"
+                    },
+                    {
+                      "parameters": {
+                        "method": "GET",
+                        "url": "https://api.example.com/data"
+                      },
+                      "type": "n8n-nodes-base.httpRequest",
+                      "typeVersion": 1,
+                      "position": [200, 0],
+                      "id": "node-2",
+                      "name": "HTTP Request"
+                    }
+                  ],
+                  "connections": {
+                    "Manual Trigger": {
+                      "main": [[{"node": "HTTP Request", "type": "main", "index": 0}]]
+                    }
+                  }
+                }
+              options:
+                animated: true
+                layout_strategy: "auto"
+      responses:
+        '200':
+          description: Successfully analyzed workflow
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  analysis:
+                    type: object
+                    properties:
+                      node_count:
+                        type: integer
+                        description: Total number of nodes
+                        example: 5
+                      connection_count:
+                        type: integer
+                        description: Total number of connections
+                        example: 4
+                      complexity_score:
+                        type: integer
+                        description: Workflow complexity (1-10)
+                        example: 3
+                      trigger_nodes:
+                        type: array
+                        description: List of trigger node IDs
+                        items:
+                          type: string
+                        example: ["node-1"]
+                      output_nodes:
+                        type: array
+                        description: List of output/action node IDs
+                        items:
+                          type: string
+                        example: ["node-5"]
+                  assembly_plan:
+                    type: object
+                    properties:
+                      phases:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            phase_number:
+                              type: integer
+                              example: 1
+                            phase_name:
+                              type: string
+                              example: "Create Trigger Nodes"
+                            nodes:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    example: "node-1"
+                                  type:
+                                    type: string
+                                    example: "n8n-nodes-base.manualTrigger"
+                                  position:
+                                    type: object
+                                    properties:
+                                      x:
+                                        type: integer
+                                        example: 100
+                                      y:
+                                        type: integer
+                                        example: 200
+                            animation_delay:
+                              type: integer
+                              description: Delay in milliseconds before phase
+                              example: 500
+                      connections:
+                        type: array
+                        description: Connections to draw after nodes created
+                        items:
+                          type: object
+                          properties:
+                            source_node:
+                              type: string
+                              example: "node-1"
+                            source_port:
+                              type: integer
+                              example: 0
+                            target_node:
+                              type: string
+                              example: "node-2"
+                            target_port:
+                              type: integer
+                              example: 0
+                  layout:
+                    type: object
+                    description: Recommended layout configuration
+                    properties:
+                      strategy:
+                        type: string
+                        example: "4-column"
+                      columns:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            x:
+                              type: integer
+                            nodes:
+                              type: array
+                              items:
+                                type: string
+              example:
+                success: true
+                analysis:
+                  node_count: 5
+                  connection_count: 4
+                  complexity_score: 3
+                  trigger_nodes: ["node-1"]
+                  output_nodes: ["node-5"]
+                assembly_plan:
+                  phases:
+                    - phase_number: 1
+                      phase_name: "Create Trigger Nodes"
+                      nodes:
+                        - id: "node-1"
+                          type: "n8n-nodes-base.manualTrigger"
+                          position: {x: 100, y: 200}
+                      animation_delay: 0
+                    - phase_number: 2
+                      phase_name: "Create Processing Nodes"
+                      nodes:
+                        - id: "node-2"
+                          type: "n8n-nodes-base.httpRequest"
+                          position: {x: 400, y: 200}
+                      animation_delay: 500
+                  connections:
+                    - source_node: "node-1"
+                      source_port: 0
+                      target_node: "node-2"
+                      target_port: 0
+                layout:
+                  strategy: "4-column"
+                  columns:
+                    - {x: 100, nodes: ["node-1"]}
+                    - {x: 400, nodes: ["node-2", "node-3"]}
+                    - {x: 700, nodes: ["node-4"]}
+                    - {x: 1000, nodes: ["node-5"]}
+        '400':
+          description: Invalid workflow JSON
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                success: false
+                error: "Invalid N8N workflow JSON format"
+                details: "Missing required 'nodes' array"
+        '401':
+          description: User not authenticated
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    odooSession:
+      type: apiKey
+      in: cookie
+      name: session_id
+      description: Odoo session cookie from authenticated login
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: Error message
+          example: "An error occurred"
+        details:
+          type: string
+          description: Detailed error information
+          example: "Additional context about the error"
+
+    Branch:
+      type: object
+      description: Canvas platform/branch type
+      properties:
+        id:
+          type: integer
+          description: Platform record ID
+        name:
+          type: string
+          description: Display name
+        technical_name:
+          type: string
+          description: Technical identifier
+        icon_class:
+          type: string
+          description: FontAwesome icon class
+        renderer_class:
+          type: string
+          description: JavaScript renderer class
+        active:
+          type: boolean
+          description: Whether platform is active
+
+    WorkflowNode:
+      type: object
+      description: A workflow node from N8N JSON
+      properties:
+        id:
+          type: string
+          description: Unique node identifier
+        type:
+          type: string
+          description: N8N node type (e.g., "n8n-nodes-base.httpRequest")
+        name:
+          type: string
+          description: Node display name
+        position:
+          type: object
+          properties:
+            x:
+              type: integer
+            y:
+              type: integer
+        parameters:
+          type: object
+          description: Node configuration parameters
+
+    WorkflowConnection:
+      type: object
+      description: A connection between two nodes
+      properties:
+        source_node:
+          type: string
+          description: Source node ID
+        source_port:
+          type: integer
+          description: Source output port index
+        target_node:
+          type: string
+          description: Target node ID
+        target_port:
+          type: integer
+          description: Target input port index
+
+    AssemblyPlan:
+      type: object
+      description: Theatrical assembly plan for workflow rendering
+      properties:
+        phases:
+          type: array
+          description: Sequential phases for node creation
+          items:
+            type: object
+            properties:
+              phase_number:
+                type: integer
+              phase_name:
+                type: string
+              nodes:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkflowNode'
+              animation_delay:
+                type: integer
+                description: Milliseconds delay before phase
+        connections:
+          type: array
+          description: Connections to draw after all nodes created
+          items:
+            $ref: '#/components/schemas/WorkflowConnection'
+
+externalDocs:
+  description: Full Module Documentation
+  url: ./README.md
+
+# Additional Non-REST APIs (Odoo JSON-RPC)
+# These methods are in ai_sam_workflows_base, not this module:
+#
+# canvas.save_canvas_state(workflow_id, json_data)
+#   - Saves workflow JSON to database
+#   - Called via Odoo JSON-RPC from JavaScript
+#
+# canvas.load_canvas_state(workflow_id)
+#   - Loads workflow JSON from database
+#   - Returns json_definition field
+#
+# n8n.simple.node.search_nodes(query, limit)
+#   - Searches N8N node catalog
+#   - Used by NodeSearchModal.vue
+#
+# workflow.execution.create_execution(workflow_id)
+#   - Creates new execution record
+#   - Returns execution_id
+#
+# See ai_sam_workflows_base/API_DOCUMENTATION.yaml for RPC method documentation

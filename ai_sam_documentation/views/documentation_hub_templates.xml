@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ================================================================
+             DOCUMENTATION HUB - BASE LAYOUT (Following website_blog pattern)
+
+             ARCHITECTURE:
+             - Uses website.layout CORRECTLY (no custom nav override)
+             - Sidebar and content are CSS-based layout within #wrap
+             - Dev tools placed in content area, not conflicting with header
+             ================================================================ -->
+
+        <template id="index" name="Documentation Hub Navigation">
+            <t t-call="website.layout">
+                <div id="wrap" class="o_docs_hub">
+                    <!-- Dev Mode Toolbar (floating, doesn't conflict with menu) -->
+                    <t t-if="is_dev_mode">
+                        <div class="o_docs_dev_toolbar">
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-primary o_docs_dev_share_btn"
+                                    title="Share with Claude (Dev Mode)">
+                                <i class="fa fa-share-alt me-1"></i>
+                                <span class="d-none d-md-inline">Share</span>
+                            </button>
+                        </div>
+                    </t>
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- Sidebar Navigation -->
+                            <aside class="col-lg-3 o_docs_sidebar d-none d-lg-block">
+                                <div class="o_docs_sidebar_inner sticky-top pt-3">
+                                    <!-- Search -->
+                                    <div class="o_docs_search mb-3">
+                                        <form action="/documentation/search" method="get">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">
+                                                    <i class="fa fa-search"></i>
+                                                </span>
+                                                <input type="text"
+                                                       name="q"
+                                                       class="form-control"
+                                                       placeholder="Search docs..."
+                                                       t-att-value="search_query or ''"
+                                                       autocomplete="off"/>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Navigation Tree -->
+                                    <nav class="o_docs_nav">
+                                        <t t-foreach="sidebar_structure or []" t-as="section">
+                                            <div class="o_docs_nav_section mb-2">
+                                                <!-- Section Header -->
+                                                <a t-att-href="'/documentation/' + section['slug']"
+                                                   t-att-class="'o_docs_nav_header d-flex align-items-center py-2 px-2 rounded text-decoration-none ' + ('bg-primary text-white' if current_section and current_section.get('slug') == section['slug'] else 'text-dark')">
+                                                    <i class="fa fa-folder-o me-2"></i>
+                                                    <span class="flex-grow-1" t-esc="section['name']"/>
+                                                    <i class="fa fa-chevron-down fa-xs"></i>
+                                                </a>
+
+                                                <!-- Subsections & Articles -->
+                                                <div t-att-class="'o_docs_nav_items ps-3 ' + ('d-block' if current_section and current_section.get('slug') == section['slug'] else 'd-none')">
+
+                                                    <!-- Direct articles in section -->
+                                                    <t t-foreach="section.get('articles', [])" t-as="article">
+                                                        <a t-att-href="'/documentation/' + section['slug'] + '/' + article['slug']"
+                                                           t-att-class="'o_docs_nav_item d-block py-1 px-2 rounded text-decoration-none small ' + ('bg-light fw-bold' if current_article and current_article.get('slug') == article['slug'] else 'text-muted')">
+                                                            <i class="fa fa-file-text-o me-1"></i>
+                                                            <span t-esc="article['name']"/>
+                                                        </a>
+                                                    </t>
+
+                                                    <!-- Subsections -->
+                                                    <t t-foreach="section.get('subsections', [])" t-as="subsection">
+                                                        <div class="o_docs_nav_subsection mt-2">
+                                                            <div class="o_docs_nav_section_header text-uppercase small text-muted fw-bold px-2 py-1">
+                                                                <span t-esc="subsection['name']"/>
+                                                            </div>
+
+                                                            <!-- Articles in subsection -->
+                                                            <t t-foreach="subsection.get('articles', [])" t-as="article">
+                                                                <a t-att-href="'/documentation/' + section['slug'] + '/' + subsection['slug'] + '/' + article['slug']"
+                                                                   t-att-class="'o_docs_nav_item d-block py-1 px-2 rounded text-decoration-none small ' + ('bg-light fw-bold' if current_article and current_article.get('slug') == article['slug'] else 'text-muted')">
+                                                                    <i class="fa fa-file-text-o me-1"></i>
+                                                                    <span t-esc="article['name']"/>
+                                                                </a>
+                                                            </t>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </nav>
+
+                                    <!-- Quick Links -->
+                                    <div class="o_docs_quick_links mt-4 pt-3 border-top">
+                                        <a href="/slides" class="d-block py-1 text-muted small text-decoration-none">
+                                            <i class="fa fa-graduation-cap me-2"></i>eLearning View
+                                        </a>
+                                        <a href="/sam_insights/erd" class="d-block py-1 text-muted small text-decoration-none">
+                                            <i class="fa fa-sitemap me-2"></i>Database Schema
+                                        </a>
+                                    </div>
+                                </div>
+                            </aside>
+
+                            <!-- Mobile Sidebar Toggle -->
+                            <div class="col-12 d-lg-none py-2 bg-light border-bottom">
+                                <button class="btn btn-outline-secondary btn-sm o_docs_mobile_toggle" type="button" data-bs-toggle="collapse" data-bs-target="#o_docs_mobile_nav">
+                                    <i class="fa fa-bars me-1"></i> Navigation
+                                </button>
+                                <div class="collapse mt-2" id="o_docs_mobile_nav">
+                                    <nav class="o_docs_nav">
+                                        <t t-foreach="sidebar_structure or []" t-as="section">
+                                            <a t-att-href="'/documentation/' + section['slug']"
+                                               class="d-block py-2 border-bottom text-decoration-none">
+                                                <i class="fa fa-folder-o me-2"></i>
+                                                <span t-esc="section['name']"/>
+                                            </a>
+                                        </t>
+                                    </nav>
+                                </div>
+                            </div>
+
+                            <!-- Main Content Area -->
+                            <main class="col-lg-9 o_docs_main py-4">
+                                <div class="o_docs_content">
+                                    <!-- Breadcrumb -->
+                                    <nav aria-label="breadcrumb" class="mb-4">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">
+                                                <a href="/documentation">
+                                                    <i class="fa fa-book"></i> Docs
+                                                </a>
+                                            </li>
+                                            <t t-if="current_section">
+                                                <li class="breadcrumb-item">
+                                                    <a t-att-href="'/documentation/' + current_section['slug']" t-esc="current_section['name']"/>
+                                                </li>
+                                            </t>
+                                            <t t-if="current_subsection">
+                                                <li class="breadcrumb-item">
+                                                    <a t-att-href="'/documentation/' + current_section['slug'] + '/' + current_subsection['slug']" t-esc="current_subsection['name']"/>
+                                                </li>
+                                            </t>
+                                            <t t-if="current_article">
+                                                <li class="breadcrumb-item active" aria-current="page" t-esc="current_article['name']"/>
+                                            </t>
+                                        </ol>
+                                    </nav>
+
+                                    <!-- Page Content (injected by child templates) -->
+                                    <t t-out="0"/>
+                                </div>
+
+                                <!-- Page Navigation (Prev/Next) -->
+                                <t t-if="prev_article or next_article">
+                                    <nav class="o_docs_page_nav d-flex justify-content-between mt-5 pt-4 border-top">
+                                        <t t-if="prev_article">
+                                            <a t-att-href="'/documentation/' + current_section['slug'] + '/' + current_subsection['slug'] + '/' + prev_article['slug']"
+                                               class="btn btn-outline-secondary">
+                                                <i class="fa fa-arrow-left me-2"></i>
+                                                <span t-esc="prev_article['name']"/>
+                                            </a>
+                                        </t>
+                                        <t t-else="">
+                                            <div></div>
+                                        </t>
+
+                                        <t t-if="next_article">
+                                            <a t-att-href="'/documentation/' + current_section['slug'] + '/' + current_subsection['slug'] + '/' + next_article['slug']"
+                                               class="btn btn-outline-secondary">
+                                                <span t-esc="next_article['name']"/>
+                                                <i class="fa fa-arrow-right ms-2"></i>
+                                            </a>
+                                        </t>
+                                    </nav>
+                                </t>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- ================================================================
+             DOCUMENTATION HUB - INDEX PAGE (Landing)
+             ================================================================ -->
+
+        <template id="documentation_hub_index" name="Documentation Hub Index">
+            <t t-call="ai_sam_documentation.index">
+                <div class="o_docs_index">
+                    <!-- Hero Section -->
+                    <header class="text-center mb-5">
+                        <h1 class="display-5">SAM AI Documentation</h1>
+                        <p class="lead text-muted">Everything you need to build, deploy, and scale with SAM AI</p>
+                    </header>
+
+                    <!-- Section Cards -->
+                    <div class="row g-4 mb-5">
+                        <t t-foreach="sidebar_structure" t-as="section">
+                            <div class="col-md-6 col-lg-4">
+                                <a t-att-href="'/documentation/' + section['slug']" class="card h-100 text-decoration-none border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                                <i class="fa fa-folder-open-o fa-lg text-primary"></i>
+                                            </div>
+                                            <h5 class="card-title mb-0" t-esc="section['name']"/>
+                                        </div>
+                                        <p class="card-text text-muted small">
+                                            <t t-set="article_count" t-value="len(section.get('articles', [])) + sum(len(s.get('articles', [])) for s in section.get('subsections', []))"/>
+                                            <t t-esc="article_count"/> articles
+                                            <t t-if="section.get('subsections')">
+                                                in <t t-esc="len(section['subsections'])"/> topics
+                                            </t>
+                                        </p>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-0 text-end">
+                                        <span class="text-primary small">Explore <i class="fa fa-arrow-right"></i></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Quick Start Section -->
+                    <section class="bg-light rounded p-4">
+                        <h4 class="mb-4">Quick Start</h4>
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <a href="/documentation/search?q=getting+started" class="btn btn-outline-secondary w-100 py-3">
+                                    <i class="fa fa-rocket d-block mb-2 fa-lg"></i>
+                                    <small>Getting Started</small>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="/documentation/modules" class="btn btn-outline-secondary w-100 py-3">
+                                    <i class="fa fa-cubes d-block mb-2 fa-lg"></i>
+                                    <small>Modules</small>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="/documentation/search?q=api" class="btn btn-outline-secondary w-100 py-3">
+                                    <i class="fa fa-code d-block mb-2 fa-lg"></i>
+                                    <small>API Reference</small>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="/sam_insights/erd" class="btn btn-outline-secondary w-100 py-3">
+                                    <i class="fa fa-sitemap d-block mb-2 fa-lg"></i>
+                                    <small>DB Schema</small>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </t>
+        </template>
+
+        <!-- ================================================================
+             DOCUMENTATION HUB - SECTION PAGE (Overview)
+             ================================================================ -->
+
+        <template id="documentation_hub_section" name="Documentation Hub Section">
+            <t t-call="ai_sam_documentation.index">
+                <div class="o_docs_channel">
+                    <!-- Section Header -->
+                    <header class="mb-4 pb-3 border-bottom">
+                        <h1 t-esc="current_section['name']"/>
+                    </header>
+
+                    <!-- Table of Contents -->
+                    <section class="o_docs_toc">
+                        <h5 class="text-muted mb-3">Contents</h5>
+
+                        <!-- Direct articles in section -->
+                        <t t-if="current_section.get('articles')">
+                            <ul class="list-unstyled">
+                                <t t-foreach="current_section['articles']" t-as="article">
+                                    <li class="mb-2">
+                                        <a t-att-href="'/documentation/' + current_section['slug'] + '/' + article['slug']"
+                                           class="text-decoration-none">
+                                            <i class="fa fa-file-text-o me-2 text-muted"></i>
+                                            <span t-esc="article['name']"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+
+                        <!-- Subsections -->
+                        <t t-foreach="current_section.get('subsections', [])" t-as="subsection">
+                            <div class="mt-4">
+                                <h6 class="text-uppercase small text-muted mb-2" t-esc="subsection['name']"/>
+                                <ul class="list-unstyled ps-3">
+                                    <t t-foreach="subsection.get('articles', [])" t-as="article">
+                                        <li class="mb-2">
+                                            <a t-att-href="'/documentation/' + current_section['slug'] + '/' + subsection['slug'] + '/' + article['slug']"
+                                               class="text-decoration-none">
+                                                <i class="fa fa-file-text-o me-2 text-muted"></i>
+                                                <span t-esc="article['name']"/>
+                                            </a>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </t>
+
+                        <t t-if="not current_section.get('articles') and not current_section.get('subsections')">
+                            <p class="text-muted">No articles in this section yet.</p>
+                        </t>
+                    </section>
+                </div>
+            </t>
+        </template>
+
+        <!-- ================================================================
+             DOCUMENTATION HUB - ARTICLE PAGE (Content View)
+             ================================================================ -->
+
+        <template id="documentation_hub_article" name="Documentation Hub Article">
+            <t t-call="ai_sam_documentation.index">
+                <article class="o_docs_article">
+                    <t t-if="article_content">
+                        <!-- Article Header -->
+                        <header class="mb-4">
+                            <h1 t-esc="article_content['title']"/>
+                        </header>
+
+                        <!-- Article Content -->
+                        <div class="o_docs_article_content o_docs_markdown">
+                            <t t-out="article_content['content']"/>
+                        </div>
+
+                        <!-- Article Footer -->
+                        <footer class="mt-5 pt-4 border-top">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="text-muted small">Was this helpful?</span>
+                                <button class="btn btn-sm btn-outline-success" title="Yes">
+                                    <i class="fa fa-thumbs-up"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" title="No">
+                                    <i class="fa fa-thumbs-down"></i>
+                                </button>
+                            </div>
+                        </footer>
+                    </t>
+                    <t t-else="">
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle me-2"></i>
+                            Select an article from the sidebar to view its content.
+                        </div>
+                    </t>
+                </article>
+            </t>
+        </template>
+
+        <!-- ================================================================
+             DOCUMENTATION HUB - SEARCH RESULTS PAGE
+             ================================================================ -->
+
+        <template id="documentation_hub_search" name="Documentation Hub Search">
+            <t t-call="ai_sam_documentation.index">
+                <div class="o_docs_search_results">
+                    <!-- Search Header -->
+                    <header class="mb-4">
+                        <h1>
+                            <t t-if="search_query">
+                                Search results for "<t t-esc="search_query"/>"
+                            </t>
+                            <t t-else="">
+                                Search Documentation
+                            </t>
+                        </h1>
+                        <p class="text-muted">
+                            <t t-if="result_count">
+                                Found <t t-esc="result_count"/> result(s)
+                            </t>
+                        </p>
+                    </header>
+
+                    <!-- Search Form -->
+                    <div class="mb-4">
+                        <form action="/documentation/search" method="get">
+                            <div class="input-group input-group-lg">
+                                <input type="text" name="q" class="form-control"
+                                       placeholder="Search documentation..."
+                                       t-att-value="search_query or ''"/>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="o_docs_search_results_list">
+                        <t t-if="search_results">
+                            <t t-foreach="search_results" t-as="result">
+                                <a t-att-href="'/documentation/' + '/'.join(result['url_parts'][:-1]).replace('_', '-').lower() + '/' + result['url_parts'][-1].replace('.md', '').replace('.html', '').replace('_', '-').lower()"
+                                   class="card mb-3 text-decoration-none border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <div class="small text-muted mb-1">
+                                            <i class="fa fa-folder-o me-1"></i>
+                                            <t t-esc="result['section']"/>
+                                        </div>
+                                        <h5 class="card-title text-primary" t-esc="result['title']"/>
+                                        <p class="card-text text-muted small" t-esc="result['snippet']"/>
+                                    </div>
+                                </a>
+                            </t>
+                        </t>
+                        <t t-elif="search_query">
+                            <div class="text-center py-5">
+                                <i class="fa fa-search fa-3x text-muted mb-3"></i>
+                                <h4>No results found</h4>
+                                <p class="text-muted">Try different keywords or browse the documentation sections.</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>

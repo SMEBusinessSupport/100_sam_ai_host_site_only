@@ -1,0 +1,626 @@
+# Architecture
+
+**Original file:** `ARCHITECTURE.mermaid`
+**Type:** MERMAID
+
+---
+
+```mermaid
+```mermaid
+---
+title: SAM AI Base - System Architecture
+---
+
+graph TB
+    subgraph "Frontend Layer (ai_sam module)"
+        UI[JavaScript UI]
+        WebSocket[WebSocket/SSE]
+    end
+
+    subgraph "Controller Layer (HTTP Endpoints)"
+        ChatCtrl[sam_ai_chat_controller<br/>18 routes]
+        CanvasCtrl[canvas_controller<br/>15 routes]
+        MenuCtrl[menu_context_controller<br/>7 routes]
+        SessionCtrl[sam_session_controller<br/>12 routes]
+        OAuthCtrl[api_oauth_controller<br/>3 routes]
+        DevCtrl[sam_developer_mode<br/>7 routes]
+        VendorCtrl[vendor_registry_controller<br/>2 routes]
+        ServiceCtrl[service_populator_controller<br/>1 route]
+        MCPCtrl[mcp_download_controller<br/>3 routes]
+        MemoryCtrl[memory_graph_controller<br/>9 routes]
+    end
+
+    subgraph "Business Logic Layer (Abstract Models)"
+        AIService[ai.service<br/>API Integration]
+        ContextBuilder[ai.context.builder<br/>The All-Knowing Brain]
+        ContextAnalyzer[ai.context.analyzer<br/>Context Shift Detection]
+        CostOptimizer[ai.cost.optimizer<br/>Provider Selection]
+        VectorService[ai.vector.service<br/>ChromaDB]
+        GraphService[ai.graph.service<br/>Apache AGE]
+        MCPGenerator[mcp.server.generator<br/>MCP Server Generator]
+    end
+
+    subgraph "Data Layer - Conversation Management"
+        Conversation[ai.conversation<br/>Conversation Threads]
+        Message[ai.message<br/>Individual Messages]
+        ConvTag[ai.conversation.tag<br/>Tags]
+        ConvImport[ai.conversation.import<br/>Import Functionality]
+    end
+
+    subgraph "Data Layer - API Orchestration"
+        Provider[api.service.provider<br/>Multi-API Orchestration]
+        ProviderModel[ai.provider.model<br/>AI Models GPT-4, Claude]
+        ServiceType[ai.service.type<br/>Service Types]
+        Credentials[api.credentials<br/>API Keys OAuth Tokens]
+    end
+
+    subgraph "Data Layer - User Personalization"
+        UserProfile[sam.user.profile<br/>User Relationship Data]
+        UserSettings[sam.user.settings<br/>User Settings]
+        SamBehavior[sam.behavior<br/>SAM Personality]
+        ModeContext[sam.mode.context<br/>Mode-Specific Context]
+        SamEnv[sam.environment<br/>Environment Detection]
+    end
+
+    subgraph "Data Layer - Cost Intelligence"
+        TokenUsage[ai.token.usage<br/>Token Tracking]
+        CostBudget[ai.cost.budget<br/>Budget Management]
+        Benchmark[ai.provider.benchmark<br/>Performance Tracking]
+        CostComparison[ai.service.cost.comparison<br/>Cost Dashboard]
+    end
+
+    subgraph "Data Layer - Agent Ecosystem"
+        AgentDef[ai.agent.definition<br/>Agent Registry]
+        AgentKnowledge[ai.agent.knowledge<br/>Training Data]
+        AgentExec[ai.agent.execution<br/>Audit Trail]
+        KnowledgeDomain[ai.knowledge.domain<br/>Knowledge Domains]
+        KnowledgeSub[ai.knowledge.subcategory<br/>Subcategories]
+    end
+
+    subgraph "Data Layer - Memory System"
+        MemoryConfig[ai.memory.config<br/>Memory Configuration]
+        MemoryLog[ai.memory.search.log<br/>Search Logging]
+    end
+
+    subgraph "Data Layer - Canvas Platform"
+        CanvasPlatform[canvas.platform<br/>Platform Config]
+        Branches[ai.branches<br/>Conversation Branching]
+        Workspace[ai.workspace<br/>Team Workspaces]
+    end
+
+    subgraph "Data Layer - Module Intelligence"
+        ModuleIntel[ai.module.intelligence<br/>Module Training Data]
+        DocumentExtractor[ai.document.extractor<br/>Document Extraction]
+    end
+
+    subgraph "Data Layer - MCP Server"
+        MCPConfig[mcp.server.config<br/>MCP Server Config]
+        MCPFeature[mcp.feature<br/>MCP Features]
+    end
+
+    subgraph "External Services"
+        Anthropic[Anthropic Claude API]
+        OpenAI[OpenAI API]
+        Google[Google Cloud AI]
+        Azure[Microsoft Azure AI]
+        ChromaDB[(ChromaDB<br/>Vector Storage)]
+        ApacheAGE[(Apache AGE<br/>Graph Database)]
+    end
+
+    %% Frontend connections
+    UI --> ChatCtrl
+    UI --> CanvasCtrl
+    UI --> MenuCtrl
+    UI --> SessionCtrl
+    UI --> DevCtrl
+    WebSocket --> ChatCtrl
+
+    %% Controller to Business Logic
+    ChatCtrl --> AIService
+    ChatCtrl --> ContextBuilder
+    ChatCtrl --> CostOptimizer
+
+    CanvasCtrl --> ContextBuilder
+    MenuCtrl --> ContextBuilder
+    MenuCtrl --> ModuleIntel
+
+    SessionCtrl --> UserProfile
+    OAuthCtrl --> Credentials
+
+    DevCtrl --> UserProfile
+    MemoryCtrl --> VectorService
+    MemoryCtrl --> GraphService
+
+    %% Business Logic to Data
+    AIService --> Provider
+    AIService --> TokenUsage
+
+    ContextBuilder --> ModuleIntel
+    ContextBuilder --> Conversation
+    ContextBuilder --> UserProfile
+
+    CostOptimizer --> Provider
+    CostOptimizer --> ProviderModel
+    CostOptimizer --> Benchmark
+
+    VectorService --> MemoryConfig
+    VectorService --> MemoryLog
+
+    GraphService --> MemoryConfig
+
+    %% Data Layer Relationships
+    Conversation --> Message
+    Conversation --> UserProfile
+    Conversation --> ConvTag
+    Conversation --> AgentDef
+
+    Provider --> ProviderModel
+    Provider --> ServiceType
+    Provider --> Credentials
+
+    UserProfile --> UserSettings
+    UserProfile --> ModeContext
+
+    TokenUsage --> Provider
+    TokenUsage --> ProviderModel
+    TokenUsage --> Conversation
+    TokenUsage --> CostBudget
+
+    AgentDef --> AgentKnowledge
+    AgentDef --> AgentExec
+
+    KnowledgeDomain --> KnowledgeSub
+
+    CanvasPlatform --> Workspace
+    CanvasPlatform --> Branches
+
+    MCPConfig --> MCPFeature
+    MCPGenerator --> MCPConfig
+
+    %% External Service Connections
+    AIService -.->|API Calls| Anthropic
+    AIService -.->|API Calls| OpenAI
+    AIService -.->|API Calls| Google
+    AIService -.->|API Calls| Azure
+
+    VectorService -.->|Vector Operations| ChromaDB
+    GraphService -.->|Graph Queries| ApacheAGE
+
+    %% Styling
+    classDef frontend fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef controller fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    classDef logic fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef data fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef external fill:#ffebee,stroke:#b71c1c,stroke-width:2px,stroke-dasharray: 5 5
+
+    class UI,WebSocket frontend
+    class ChatCtrl,CanvasCtrl,MenuCtrl,SessionCtrl,OAuthCtrl,DevCtrl,VendorCtrl,ServiceCtrl,MCPCtrl,MemoryCtrl controller
+    class AIService,ContextBuilder,ContextAnalyzer,CostOptimizer,VectorService,GraphService,MCPGenerator logic
+    class Conversation,Message,ConvTag,ConvImport,Provider,ProviderModel,ServiceType,Credentials,UserProfile,UserSettings,SamBehavior,ModeContext,SamEnv,TokenUsage,CostBudget,Benchmark,CostComparison,AgentDef,AgentKnowledge,AgentExec,KnowledgeDomain,KnowledgeSub,MemoryConfig,MemoryLog,CanvasPlatform,Branches,Workspace,ModuleIntel,DocumentExtractor,MCPConfig,MCPFeature data
+    class Anthropic,OpenAI,Google,Azure,ChromaDB,ApacheAGE external
+```
+
+---
+
+## Model Relationship Diagram
+
+```mermaid
+---
+title: SAM AI Base - Data Model Relationships
+---
+
+erDiagram
+    %% Conversation Management
+    AI_CONVERSATION ||--o{ AI_MESSAGE : contains
+    AI_CONVERSATION }o--|| RES_USERS : owned_by
+    AI_CONVERSATION }o--o| AI_AGENT_DEFINITION : handled_by
+    AI_CONVERSATION }o--o{ AI_CONVERSATION_TAG : tagged_with
+    AI_CONVERSATION }o--|| ANY_MODEL : about
+
+    %% API Orchestration
+    API_SERVICE_PROVIDER ||--o{ AI_PROVIDER_MODEL : offers
+    API_SERVICE_PROVIDER }o--|| AI_SERVICE_TYPE : provides
+    API_SERVICE_PROVIDER }o--o| API_CREDENTIALS : authenticated_by
+
+    %% User Personalization
+    SAM_USER_PROFILE }o--|| RES_USERS : personalizes
+    SAM_USER_PROFILE ||--o{ SAM_USER_SETTINGS : has_settings
+    SAM_USER_PROFILE }o--o{ SAM_MODE_CONTEXT : uses_modes
+
+    %% Cost Intelligence
+    AI_TOKEN_USAGE }o--|| AI_CONVERSATION : tracks
+    AI_TOKEN_USAGE }o--|| API_SERVICE_PROVIDER : used_provider
+    AI_TOKEN_USAGE }o--|| AI_PROVIDER_MODEL : used_model
+    AI_TOKEN_USAGE }o--o| AI_COST_BUDGET : within_budget
+
+    AI_PROVIDER_BENCHMARK }o--|| API_SERVICE_PROVIDER : benchmarks
+    AI_SERVICE_COST_COMPARISON }o--|| AI_SERVICE_TYPE : compares
+
+    %% Agent Ecosystem
+    AI_AGENT_DEFINITION ||--o{ AI_AGENT_KNOWLEDGE : trained_with
+    AI_AGENT_DEFINITION ||--o{ AI_AGENT_EXECUTION : executes
+    AI_AGENT_EXECUTION }o--|| RES_USERS : executed_by
+    AI_AGENT_EXECUTION }o--o| AI_CONVERSATION : during_conversation
+
+    AI_KNOWLEDGE_DOMAIN ||--o{ AI_KNOWLEDGE_SUBCATEGORY : categorizes
+    AI_KNOWLEDGE_SUBCATEGORY }o--o{ AI_AGENT_KNOWLEDGE : organizes
+
+    %% Memory System
+    AI_MEMORY_CONFIG }o--|| RES_USERS : configures_for
+    AI_MEMORY_SEARCH_LOG }o--|| RES_USERS : logs_for
+
+    %% Canvas Platform
+    CANVAS_PLATFORM ||--o{ AI_WORKSPACE : supports
+    AI_WORKSPACE }o--o{ AI_CONVERSATION : shares
+    AI_BRANCHES }o--|| AI_CONVERSATION : branches_from
+
+    %% MCP Server
+    MCP_SERVER_CONFIG ||--o{ MCP_FEATURE : provides
+
+    %% Module Intelligence
+    AI_MODULE_INTELLIGENCE }o--|| IR_MODULE_MODULE : describes
+
+    %% Model Definitions
+    AI_CONVERSATION {
+        int id PK
+        int user_id FK
+        string name
+        string context_model
+        int context_id
+        int agent_id FK
+        datetime create_date
+    }
+
+    AI_MESSAGE {
+        int id PK
+        int conversation_id FK
+        string role
+        text content
+        datetime timestamp
+    }
+
+    RES_USERS {
+        int id PK
+        string name
+        string login
+    }
+
+    API_SERVICE_PROVIDER {
+        int id PK
+        string supplier
+        string service_type
+        string auth_type
+        string api_key
+        boolean is_template
+        string vendor_key
+    }
+
+    AI_PROVIDER_MODEL {
+        int id PK
+        int provider_id FK
+        string name
+        float cost_per_1k_input
+        float cost_per_1k_output
+        int context_window
+    }
+
+    SAM_USER_PROFILE {
+        int id PK
+        int user_id FK
+        string relationship_level
+        int trust_score
+        json personal_facts
+        string memory_permission
+        json approved_paths
+    }
+
+    AI_TOKEN_USAGE {
+        int id PK
+        int conversation_id FK
+        int provider_id FK
+        int model_id FK
+        int input_tokens
+        int output_tokens
+        float total_cost
+        datetime timestamp
+    }
+
+    AI_AGENT_DEFINITION {
+        int id PK
+        string name
+        string technical_name
+        text system_prompt
+        json capabilities
+    }
+
+    AI_AGENT_KNOWLEDGE {
+        int id PK
+        int agent_id FK
+        text content
+        string category
+    }
+```
+
+---
+
+## User Interaction Flow
+
+```mermaid
+---
+title: SAM AI - User Interaction Flow
+---
+
+sequenceDiagram
+    actor User
+    participant UI as Frontend UI
+    participant ChatCtrl as Chat Controller
+    participant ContextBuilder as Context Builder
+    participant UserProfile as User Profile
+    participant AIService as AI Service
+    participant Provider as API Provider
+    participant TokenUsage as Token Usage
+    participant Conversation as Conversation Model
+
+    User->>UI: Opens SAM chat
+    UI->>ChatCtrl: POST /sam_ai/chat/send
+    Note over ChatCtrl: {message, context_data}
+
+    ChatCtrl->>UserProfile: get_or_create_profile(user_id)
+    UserProfile-->>ChatCtrl: user_context (permissions, preferences)
+
+    ChatCtrl->>ContextBuilder: build_context_prompt(context_data)
+    ContextBuilder->>ContextBuilder: Detect current menu/module/record
+    ContextBuilder->>ContextBuilder: Load module intelligence
+    ContextBuilder-->>ChatCtrl: formatted_context_prompt
+
+    ChatCtrl->>Conversation: create_or_load_conversation()
+    Conversation-->>ChatCtrl: conversation object
+
+    ChatCtrl->>Conversation: add_message('user', message)
+
+    ChatCtrl->>AIService: send_message(message, context, user_profile)
+    AIService->>AIService: recommend_provider(service_type)
+    AIService->>Provider: call_api(messages)
+    Provider-->>AIService: API response
+
+    AIService->>TokenUsage: track_usage(tokens, cost)
+    AIService->>Conversation: add_message('assistant', response)
+    AIService-->>ChatCtrl: assistant_message
+
+    ChatCtrl->>UserProfile: propose_memory(learned_fact)
+    Note over UserProfile: If memory_permission = 'ask_always'
+
+    ChatCtrl-->>UI: {success, message, conversation_id}
+    UI-->>User: Display SAM response
+
+    alt Memory Permission Required
+        UI->>User: "Should I save this to memory?"
+        User->>UI: "yes"
+        UI->>ChatCtrl: POST /sam/memory/approve
+        ChatCtrl->>UserProfile: learn_fact(fact)
+    end
+```
+
+---
+
+## Cost Optimization Flow
+
+```mermaid
+---
+title: SAM AI - Cost Optimization Flow
+---
+
+flowchart TD
+    Start([User sends message]) --> LoadProfile[Load User Profile]
+    LoadProfile --> CheckBudget{Budget remaining?}
+
+    CheckBudget -->|No budget| Warn[Warn user: Budget exceeded]
+    CheckBudget -->|Budget OK| EstimateCost[Estimate token count]
+
+    EstimateCost --> GetProviders[Get all providers for service_type]
+    GetProviders --> CalcCost[Calculate cost per provider]
+
+    CalcCost --> RankProviders[Rank by: cost, performance, availability]
+    RankProviders --> SelectBest{Best provider available?}
+
+    SelectBest -->|Yes| CallAPI[Call selected provider API]
+    SelectBest -->|No| Fallback[Try fallback provider]
+
+    CallAPI --> Success{API Success?}
+    Success -->|Yes| TrackUsage[Track token usage & cost]
+    Success -->|No| Fallback
+
+    Fallback --> Retry{Retry count < 3?}
+    Retry -->|Yes| SelectBest
+    Retry -->|No| Error[Return error to user]
+
+    TrackUsage --> UpdateBudget[Update budget remaining]
+    UpdateBudget --> CheckThreshold{Budget threshold reached?}
+
+    CheckThreshold -->|Yes| Alert[Send budget alert]
+    CheckThreshold -->|No| Return[Return response to user]
+
+    Alert --> Return
+    Return --> End([End])
+
+    Warn --> End
+    Error --> End
+
+    style Start fill:#e1f5ff
+    style End fill:#e1f5ff
+    style CallAPI fill:#c8e6c9
+    style Error fill:#ffcdd2
+    style Alert fill:#fff9c4
+```
+
+---
+
+## Memory Permission Flow
+
+```mermaid
+---
+title: SAM AI - Memory Permission Flow
+---
+
+stateDiagram-v2
+    [*] --> NewUser: User first login
+
+    NewUser --> AskAlways: Default permission level
+
+    state AskAlways {
+        [*] --> DetectFact: SAM learns something
+        DetectFact --> AskUser: Propose memory
+        AskUser --> UserResponds: Wait for response
+
+        UserResponds --> SaveFact: User says "yes"
+        UserResponds --> DiscardFact: User says "no"
+        UserResponds --> UpgradeToAutoWork: User says "always" (work facts)
+
+        SaveFact --> [*]
+        DiscardFact --> [*]
+    }
+
+    AskAlways --> AutoWork: User chooses "auto-save work info"
+
+    state AutoWork {
+        [*] --> CategorizeNew: SAM learns something
+        CategorizeNew --> IsWorkFact{Work/technical fact?}
+
+        IsWorkFact --> AutoSaveWork: Yes (auto-save)
+        IsWorkFact --> AskPersonal: No (ask permission)
+
+        AskPersonal --> UserRespondsPersonal: Wait for response
+        UserRespondsPersonal --> SavePersonal: User says "yes"
+        UserRespondsPersonal --> DiscardPersonal: User says "no"
+        UserRespondsPersonal --> UpgradeToAutoAll: User says "always"
+
+        AutoSaveWork --> [*]
+        SavePersonal --> [*]
+        DiscardPersonal --> [*]
+    }
+
+    AutoWork --> AutoAll: User chooses "auto-save everything"
+
+    state AutoAll {
+        [*] --> AutoSaveAll: SAM learns anything
+        AutoSaveAll --> [*]: Save immediately
+    }
+
+    AutoAll --> AskAlways: User revokes trust
+    AutoWork --> AskAlways: User revokes trust
+
+    style NewUser fill:#e1f5ff
+    style AskAlways fill:#fff9c4
+    style AutoWork fill:#c8e6c9
+    style AutoAll fill:#b2dfdb
+```
+
+---
+
+## Deployment Architecture
+
+```mermaid
+---
+title: SAM AI - Deployment Architecture
+---
+
+graph TB
+    subgraph "Client Layer"
+        Browser[Web Browser]
+        Mobile[Mobile App]
+    end
+
+    subgraph "Load Balancer"
+        LB[Nginx / HAProxy]
+    end
+
+    subgraph "Odoo Application Servers"
+        Odoo1[Odoo Instance 1<br/>ai_sam_base + ai_sam]
+        Odoo2[Odoo Instance 2<br/>ai_sam_base + ai_sam]
+        Odoo3[Odoo Instance 3<br/>ai_sam_base + ai_sam]
+    end
+
+    subgraph "Database Layer"
+        PG_Primary[(PostgreSQL<br/>Primary)]
+        PG_Replica1[(PostgreSQL<br/>Replica 1)]
+        PG_Replica2[(PostgreSQL<br/>Replica 2)]
+    end
+
+    subgraph "Cache Layer"
+        Redis[(Redis<br/>Session Cache)]
+    end
+
+    subgraph "Memory Systems"
+        ChromaDB[(ChromaDB<br/>Vector Storage)]
+        ApacheAGE[(Apache AGE<br/>Graph Database)]
+    end
+
+    subgraph "External AI Services"
+        Anthropic[Anthropic API]
+        OpenAI[OpenAI API]
+        Google[Google Cloud AI]
+    end
+
+    subgraph "Monitoring"
+        Sentry[Sentry<br/>Error Tracking]
+        Grafana[Grafana<br/>Metrics Dashboard]
+    end
+
+    Browser --> LB
+    Mobile --> LB
+
+    LB --> Odoo1
+    LB --> Odoo2
+    LB --> Odoo3
+
+    Odoo1 --> PG_Primary
+    Odoo2 --> PG_Primary
+    Odoo3 --> PG_Primary
+
+    PG_Primary --> PG_Replica1
+    PG_Primary --> PG_Replica2
+
+    Odoo1 --> Redis
+    Odoo2 --> Redis
+    Odoo3 --> Redis
+
+    Odoo1 --> ChromaDB
+    Odoo2 --> ChromaDB
+    Odoo3 --> ChromaDB
+
+    Odoo1 --> ApacheAGE
+    Odoo2 --> ApacheAGE
+    Odoo3 --> ApacheAGE
+
+    Odoo1 -.->|API Calls| Anthropic
+    Odoo2 -.->|API Calls| OpenAI
+    Odoo3 -.->|API Calls| Google
+
+    Odoo1 --> Sentry
+    Odoo2 --> Sentry
+    Odoo3 --> Sentry
+
+    Odoo1 --> Grafana
+    Odoo2 --> Grafana
+    Odoo3 --> Grafana
+
+    style Browser fill:#e1f5ff
+    style Mobile fill:#e1f5ff
+    style LB fill:#fff9c4
+    style PG_Primary fill:#c8e6c9
+    style Redis fill:#ffccbc
+    style ChromaDB fill:#d1c4e9
+    style ApacheAGE fill:#d1c4e9
+```
+
+---
+
+**Note:** These diagrams are written in Mermaid syntax and can be rendered in:
+- GitHub (automatic rendering in .md files)
+- GitLab (automatic rendering)
+- VS Code (with Mermaid Preview extension)
+- Online: https://mermaid.live
+
+**Last Updated:** December 10, 2025
+
+```

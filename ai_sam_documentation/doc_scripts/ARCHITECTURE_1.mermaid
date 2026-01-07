@@ -1,0 +1,734 @@
+# SAM AI Workflows - Architecture Diagrams
+
+## System Architecture Overview
+
+```mermaid
+---
+title: SAM AI Workflows - System Architecture
+---
+
+graph TB
+    subgraph "User Layer"
+        Browser[Web Browser]
+        N8NCloud[N8N Cloud<br/>JSON Export]
+    end
+
+    subgraph "ai_sam_workflows (UI Layer - THIS MODULE)"
+        Views[20 View XML Files<br/>Workflow, Canvas, N8N]
+        Controllers[5 HTTP Controllers<br/>3 REST Endpoints]
+        CanvasJS[Canvas System<br/>canvas_manager.js]
+        NodeJS[Node System<br/>node_manager.js<br/>2,831 lines]
+        ConnectionJS[Connection System<br/>connection_system.js<br/>1,348 lines]
+        TheaterJS[Theater System<br/>theater_director.js]
+        VueComponents[Vue Components<br/>NodeSearchModal<br/>WorkflowCanvas]
+        N8NNodes[N8N Node Library<br/>306 Vendors<br/>2,600+ files]
+    end
+
+    subgraph "ai_sam_workflows_base (Data Layer)"
+        WorkflowModels[15 Workflow Models<br/>canvas, nodes, connections]
+        ExecutionModels[Execution Tracking<br/>execution history, logs]
+        CredentialModels[API Credentials<br/>encrypted storage]
+        N8NRefData[N8N Reference Data<br/>n8n.simple.node<br/>n8n.simple.supplier]
+    end
+
+    subgraph "ai_sam (Framework Layer)"
+        CanvasFramework[Canvas Framework<br/>platform registry]
+        PlatformRegistry[Platform Registry<br/>canvas.platform model]
+        VendorLibrary[Vendor Library<br/>301 SVG icons]
+    end
+
+    subgraph "ai_sam_base (Foundation Layer)"
+        CoreModels[43 Core Models<br/>AI conversations, config]
+        HTTPControllers[67 HTTP Endpoints<br/>chat, memory, canvas]
+    end
+
+    %% User interactions
+    Browser --> Views
+    Browser --> CanvasJS
+    N8NCloud -.->|JSON Import| Controllers
+
+    %% UI Layer connections
+    Views --> Controllers
+    CanvasJS --> NodeJS
+    CanvasJS --> ConnectionJS
+    NodeJS --> TheaterJS
+    NodeJS --> N8NNodes
+    VueComponents --> NodeJS
+
+    %% Backend connections
+    Controllers -->|AJAX/RPC| WorkflowModels
+    NodeJS -->|AJAX/RPC| WorkflowModels
+    WorkflowModels --> ExecutionModels
+    WorkflowModels --> CredentialModels
+    WorkflowModels --> N8NRefData
+
+    %% Framework connections
+    Controllers --> CanvasFramework
+    CanvasFramework --> PlatformRegistry
+    NodeJS --> VendorLibrary
+
+    %% Foundation connections
+    WorkflowModels --> CoreModels
+    Controllers --> HTTPControllers
+
+    classDef uiLayer fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef dataLayer fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef frameworkLayer fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    classDef foundationLayer fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef user fill:#ffebee,stroke:#b71c1c,stroke-width:2px
+
+    class Views,Controllers,CanvasJS,NodeJS,ConnectionJS,TheaterJS,VueComponents,N8NNodes uiLayer
+    class WorkflowModels,ExecutionModels,CredentialModels,N8NRefData dataLayer
+    class CanvasFramework,PlatformRegistry,VendorLibrary frameworkLayer
+    class CoreModels,HTTPControllers foundationLayer
+    class Browser,N8NCloud user
+```
+
+---
+
+## Platform Skin Architecture
+
+```mermaid
+---
+title: Platform Skin Architecture - Workflow Module
+---
+
+flowchart TB
+    subgraph "UI Layer: ai_sam_workflows"
+        direction TB
+        UIViews[20 View XML Files]
+        UIControllers[5 HTTP Controllers]
+        UIAssets[JavaScript Assets<br/>19 core + 2,600 vendor files]
+        UICSS[7 CSS/SCSS Files]
+        UIData[5 Data XML Files<br/>Platform registration, seeds]
+
+        UIViews --> UIControllers
+        UIControllers --> UIAssets
+        UIAssets --> UICSS
+    end
+
+    subgraph "Data Layer: ai_sam_workflows_base"
+        direction TB
+        DataModels[15 Python Models<br/>canvas, nodes, connections<br/>executions, credentials]
+        DataSecurity[Access Control<br/>ir.model.access.csv]
+        DataRPC[RPC Methods<br/>save_canvas_state<br/>load_canvas_state]
+
+        DataModels --> DataSecurity
+        DataModels --> DataRPC
+    end
+
+    subgraph "Framework Layer: ai_sam"
+        direction TB
+        CanvasEngine[Canvas Engine<br/>platform_loader.js]
+        PlatformReg[Platform Registry<br/>canvas.platform model]
+        VendorIcons[Vendor Library<br/>301 SVG icons]
+
+        CanvasEngine --> PlatformReg
+        CanvasEngine --> VendorIcons
+    end
+
+    UIViews -->|Depends on models| DataModels
+    UIControllers -->|AJAX/RPC calls| DataRPC
+    UIAssets -->|Uses framework| CanvasEngine
+    UIData -->|Registers platform| PlatformReg
+
+    style UIViews fill:#e1f5ff
+    style UIControllers fill:#e1f5ff
+    style UIAssets fill:#e1f5ff
+    style UICSS fill:#e1f5ff
+    style UIData fill:#e1f5ff
+
+    style DataModels fill:#e8f5e9
+    style DataSecurity fill:#e8f5e9
+    style DataRPC fill:#e8f5e9
+
+    style CanvasEngine fill:#fff9c4
+    style PlatformReg fill:#fff9c4
+    style VendorIcons fill:#fff9c4
+```
+
+**Benefits of Platform Skin Architecture:**
+- UI changes don't require Python restarts
+- Data persists even if UI module is uninstalled
+- Clear separation of concerns
+- Independent versioning and testing
+- Cleaner dependency graph
+
+---
+
+## JavaScript Architecture (19 Core Files)
+
+```mermaid
+---
+title: JavaScript Module Architecture
+---
+
+graph TB
+    subgraph "Canvas System"
+        CanvasManager[canvas_manager.js<br/>1,187 lines<br/>Pan, Zoom, Drag]
+        CanvasStyles[canvas_styles.scss]
+    end
+
+    subgraph "Node System"
+        NodeManager[node_manager.js<br/>2,831 lines<br/>Node Lifecycle]
+        NodeTypeRegistry[node_type_registry.js<br/>3,656 lines<br/>442 node types]
+        NodeStyleManager[node_style_manager.js<br/>Styling]
+        GroupToVisual[group_to_visual_map.js<br/>Group Mapping]
+    end
+
+    subgraph "Connection System"
+        ConnectionManager[connection_manager.js<br/>Base Infrastructure]
+        ConnectionSystem[connection_system.js<br/>1,348 lines<br/>Bezier Curves]
+    end
+
+    subgraph "Theater System"
+        TheaterDirector[theater_director.js<br/>590 lines<br/>Animated Assembly]
+    end
+
+    subgraph "Services"
+        IconService[icon_service.js<br/>Icon Management]
+        WorkflowParser[WorkflowParser.js<br/>N8N JSON Parsing]
+        OdooBridge[odoo_services_bridge.js<br/>Odoo API Access]
+    end
+
+    subgraph "Vue Components"
+        NodeSearchModal[NodeSearchModal.vue<br/>Add Node Dialog]
+        WorkflowCanvas[WorkflowCanvas.vue<br/>Main Canvas]
+        CanvasRegistry[workflow_canvas_registry.js]
+    end
+
+    subgraph "Branch Selection"
+        BranchSelector[branch_selector.js]
+        BranchDropdown[branch_selector_dropdown.js]
+    end
+
+    %% Canvas dependencies
+    CanvasManager --> NodeManager
+    CanvasManager --> ConnectionSystem
+
+    %% Node dependencies
+    NodeManager --> NodeTypeRegistry
+    NodeManager --> NodeStyleManager
+    NodeTypeRegistry --> GroupToVisual
+    NodeManager --> IconService
+    NodeManager --> TheaterDirector
+
+    %% Connection dependencies
+    ConnectionSystem --> ConnectionManager
+    ConnectionSystem --> NodeManager
+
+    %% Service dependencies
+    WorkflowParser --> NodeTypeRegistry
+    OdooBridge --> NodeManager
+
+    %% Vue dependencies
+    NodeSearchModal --> NodeTypeRegistry
+    WorkflowCanvas --> CanvasManager
+    WorkflowCanvas --> NodeManager
+    CanvasRegistry --> WorkflowCanvas
+
+    %% Branch dependencies
+    BranchSelector --> BranchDropdown
+    BranchSelector --> OdooBridge
+
+    classDef canvas fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef node fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    classDef connection fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef theater fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef service fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef vue fill:#e0f7fa,stroke:#00838f,stroke-width:2px
+
+    class CanvasManager,CanvasStyles canvas
+    class NodeManager,NodeTypeRegistry,NodeStyleManager,GroupToVisual node
+    class ConnectionManager,ConnectionSystem connection
+    class TheaterDirector theater
+    class IconService,WorkflowParser,OdooBridge service
+    class NodeSearchModal,WorkflowCanvas,CanvasRegistry vue
+```
+
+---
+
+## Canvas Rendering Flow
+
+```mermaid
+---
+title: Canvas Rendering Pipeline
+---
+
+sequenceDiagram
+    participant User
+    participant Canvas as CanvasManager
+    participant NodeMgr as NodeManager
+    participant TypeReg as NodeTypeRegistry
+    participant ConnSys as ConnectionSystem
+    participant Icons as IconService
+    participant Backend as ai_sam_workflows_base
+
+    User->>Canvas: Open Workflow
+    Canvas->>Backend: Load workflow JSON
+    Backend-->>Canvas: Workflow data
+
+    Canvas->>NodeMgr: Initialize nodes
+    loop For each node
+        NodeMgr->>TypeReg: Get node type info
+        TypeReg-->>NodeMgr: Type definition
+        NodeMgr->>Icons: Get node icon
+        Icons-->>NodeMgr: SVG icon path
+        NodeMgr->>NodeMgr: Render node DOM
+    end
+
+    Canvas->>ConnSys: Initialize connections
+    loop For each connection
+        ConnSys->>NodeMgr: Get source/target ports
+        NodeMgr-->>ConnSys: Port positions
+        ConnSys->>ConnSys: Draw Bezier curve
+    end
+
+    Canvas-->>User: Rendered workflow
+
+    User->>Canvas: Zoom/Pan
+    Canvas->>Canvas: Update transform matrix
+    Canvas->>NodeMgr: Update node positions
+    Canvas->>ConnSys: Redraw connections
+    Canvas-->>User: Updated view
+```
+
+---
+
+## N8N Node Library Structure (306 Vendors)
+
+```mermaid
+---
+title: N8N Node Library Organization
+---
+
+graph TB
+    subgraph "N8N Node Library (2,600+ files)"
+        Root[n8n_nodes/]
+
+        subgraph "Communication (15)"
+            Slack[Slack/]
+            Discord[Discord/]
+            Telegram[Telegram/]
+            Teams[Microsoft Teams/]
+        end
+
+        subgraph "CRM & Sales (18)"
+            Salesforce[Salesforce/]
+            HubSpot[HubSpot/]
+            Pipedrive[Pipedrive/]
+        end
+
+        subgraph "Project Management (15)"
+            Jira[Jira/]
+            Asana[Asana/]
+            Trello[Trello/]
+            Notion[Notion/]
+        end
+
+        subgraph "E-commerce (12)"
+            Shopify[Shopify/]
+            Stripe[Stripe/]
+            PayPal[PayPal/]
+        end
+
+        subgraph "Cloud Storage (8)"
+            AWS[AWS S3/]
+            GDrive[Google Drive/]
+            Dropbox[Dropbox/]
+        end
+
+        subgraph "Databases (10)"
+            Postgres[Postgres/]
+            MySQL[MySQL/]
+            MongoDB[MongoDB/]
+        end
+
+        subgraph "AI & LLM (8)"
+            OpenAI[OpenAI/]
+            MistralAI[MistralAI/]
+        end
+
+        subgraph "Utilities (25+)"
+            HTTP[HTTP Request/]
+            Code[Code/]
+            Transform[Transform/]
+        end
+    end
+
+    Root --> Communication
+    Root --> CRM
+    Root --> ProjectMgmt
+    Root --> Ecommerce
+    Root --> CloudStorage
+    Root --> Databases
+    Root --> AILLM
+    Root --> Utilities
+
+    subgraph "Node Structure"
+        NodeDir[VendorName/]
+        NodeJS[NodeName.node.js<br/>Implementation]
+        NodeJSON[NodeName.node.json<br/>Schema]
+        NodeIcon[icon.svg/png<br/>Visual]
+        NodeTypes[*.d.ts<br/>TypeScript Types]
+    end
+
+    NodeDir --> NodeJS
+    NodeDir --> NodeJSON
+    NodeDir --> NodeIcon
+    NodeDir --> NodeTypes
+```
+
+---
+
+## Workflow User Flow
+
+```mermaid
+---
+title: Workflow Creation User Flow
+---
+
+stateDiagram-v2
+    [*] --> WorkflowList: Navigate to SAM AI → Workflows
+
+    state WorkflowList {
+        [*] --> ViewList: Display workflows
+        ViewList --> CreateNew: Click Create
+        ViewList --> OpenExisting: Click workflow
+    }
+
+    WorkflowList --> WorkflowForm: Create/Open
+
+    state WorkflowForm {
+        [*] --> EditDetails: Name, Description
+        EditDetails --> OpenCanvas: Click "Open Canvas"
+        EditDetails --> SaveForm: Save details
+    }
+
+    WorkflowForm --> CanvasEditor: Open Canvas
+
+    state CanvasEditor {
+        [*] --> EmptyCanvas: New workflow
+
+        state "Node Operations" as NodeOps {
+            AddNode: Add Node (sidebar)
+            MoveNode: Drag to position
+            EditNode: Double-click to configure
+            DeleteNode: Delete key
+        }
+
+        state "Connection Operations" as ConnOps {
+            DrawConnection: Drag port to port
+            DeleteConnection: Click × on connection
+        }
+
+        EmptyCanvas --> NodeOps
+        NodeOps --> ConnOps
+        ConnOps --> NodeOps
+    }
+
+    CanvasEditor --> SaveWorkflow: Save
+    SaveWorkflow --> WorkflowList: Return to list
+
+    CanvasEditor --> ExecuteWorkflow: Execute
+    ExecuteWorkflow --> ExecutionView: View execution
+
+    state ExecutionView {
+        [*] --> Running: Workflow executing
+        Running --> Completed: Success
+        Running --> Failed: Error
+        Failed --> DebugNode: Click failed node
+    }
+
+    ExecutionView --> CanvasEditor: Back to edit
+
+    note right of CanvasEditor
+        Infinite canvas
+        Zoom: 0.1x - 3.0x
+        Pan: drag background
+        1,500+ nodes available
+    end note
+```
+
+---
+
+## N8N JSON Import Flow
+
+```mermaid
+---
+title: N8N Workflow Import Process
+---
+
+sequenceDiagram
+    participant User
+    participant ImportWizard as Import Wizard
+    participant Parser as WorkflowParser
+    participant TypeMapper as NodeTypeMapper
+    participant NodeMgr as NodeManager
+    participant Theater as TheaterDirector
+    participant Backend as ai_sam_workflows_base
+
+    User->>ImportWizard: Paste N8N JSON
+    ImportWizard->>Parser: Parse JSON string
+    Parser->>Parser: Validate N8N structure
+
+    alt Invalid JSON
+        Parser-->>ImportWizard: Validation error
+        ImportWizard-->>User: Show error message
+    else Valid JSON
+        Parser-->>ImportWizard: Parsed workflow object
+    end
+
+    ImportWizard->>TypeMapper: Map node types
+    loop For each N8N node type
+        TypeMapper->>TypeMapper: Convert "n8n-nodes-base.X" → DB ID
+        TypeMapper-->>ImportWizard: Mapped node type
+    end
+
+    ImportWizard->>User: Show preview
+    User->>ImportWizard: Confirm import
+
+    ImportWizard->>Backend: Create workflow record
+    Backend-->>ImportWizard: Workflow ID
+
+    ImportWizard->>NodeMgr: Initialize canvas
+    ImportWizard->>Theater: Start theatrical assembly
+
+    loop For each node (animated)
+        Theater->>NodeMgr: Create node with animation
+        NodeMgr->>NodeMgr: Render node
+        Theater->>Theater: Wait animation delay
+    end
+
+    Theater->>NodeMgr: Create all connections
+    Theater-->>User: Workflow imported & rendered
+```
+
+---
+
+## Theater System (Animated Assembly)
+
+```mermaid
+---
+title: Theater System - Theatrical Workflow Assembly
+---
+
+graph TB
+    subgraph "Theater Director"
+        Analyze[Analyze Workflow Structure]
+        Plan[Generate Assembly Plan]
+        Execute[Execute Animation Sequence]
+    end
+
+    subgraph "Animation Phases"
+        Phase1[Phase 1: Create Trigger Nodes<br/>Left column, animate in]
+        Phase2[Phase 2: Create Processing Nodes<br/>Center columns, stagger animation]
+        Phase3[Phase 3: Create Output Nodes<br/>Right column, animate in]
+        Phase4[Phase 4: Draw Connections<br/>Bezier curves, fade in]
+    end
+
+    subgraph "Layout Strategy"
+        Column1[Column 1: Triggers<br/>x: 100]
+        Column2[Column 2: Input Processing<br/>x: 400]
+        Column3[Column 3: Logic/Transform<br/>x: 700]
+        Column4[Column 4: Output/Actions<br/>x: 1000]
+    end
+
+    Analyze --> Plan
+    Plan --> Execute
+
+    Execute --> Phase1
+    Phase1 --> Phase2
+    Phase2 --> Phase3
+    Phase3 --> Phase4
+
+    Phase1 --> Column1
+    Phase2 --> Column2
+    Phase2 --> Column3
+    Phase3 --> Column4
+
+    style Analyze fill:#fce4ec
+    style Plan fill:#fce4ec
+    style Execute fill:#fce4ec
+    style Phase1 fill:#e8f5e9
+    style Phase2 fill:#e8f5e9
+    style Phase3 fill:#e8f5e9
+    style Phase4 fill:#e8f5e9
+```
+
+---
+
+## Controller Architecture (3 HTTP Endpoints)
+
+```mermaid
+---
+title: HTTP Controller Architecture
+---
+
+graph LR
+    subgraph "Branch API Controller"
+        BranchRoute[GET /canvas/api/branches/available]
+        BranchLogic[Get available branch types<br/>from platform registry]
+        BranchResponse[JSON: branch list]
+
+        BranchRoute --> BranchLogic --> BranchResponse
+    end
+
+    subgraph "Transition Control Controller"
+        TransitionRoute[GET /canvas/<workflow_id>/nodes]
+        TransitionLogic[Load workflow<br/>Initialize hierarchical manager<br/>Serve canvas view]
+        TransitionResponse[HTML: Canvas page]
+
+        TransitionRoute --> TransitionLogic --> TransitionResponse
+    end
+
+    subgraph "Workflow Orchestrator Controller"
+        OrchestratorRoute[POST /canvas/workflow/analyze]
+        OrchestratorLogic[Parse N8N JSON<br/>Analyze complexity<br/>Generate assembly plan]
+        OrchestratorResponse[JSON: Assembly plan]
+
+        OrchestratorRoute --> OrchestratorLogic --> OrchestratorResponse
+    end
+
+    Browser[Browser] --> BranchRoute
+    Browser --> TransitionRoute
+    Browser --> OrchestratorRoute
+
+    style BranchRoute fill:#e3f2fd
+    style TransitionRoute fill:#e3f2fd
+    style OrchestratorRoute fill:#e3f2fd
+```
+
+---
+
+## Data Flow: Save Workflow
+
+```mermaid
+---
+title: Workflow Save Data Flow
+---
+
+sequenceDiagram
+    participant User
+    participant Canvas as Canvas UI
+    participant NodeMgr as NodeManager
+    participant OdooBridge as odoo_services_bridge
+    participant RPC as Odoo JSON-RPC
+    participant Backend as ai_sam_workflows_base
+    participant DB as PostgreSQL
+
+    User->>Canvas: Click Save
+    Canvas->>NodeMgr: Get current state
+
+    NodeMgr->>NodeMgr: Collect all nodes
+    NodeMgr->>NodeMgr: Collect all connections
+    NodeMgr->>NodeMgr: Build JSON structure
+
+    NodeMgr->>OdooBridge: Call save method
+    OdooBridge->>RPC: JSON-RPC call
+
+    RPC->>Backend: canvas.save_canvas_state()
+    Backend->>Backend: Validate JSON
+    Backend->>Backend: Update json_definition field
+    Backend->>DB: UPDATE canvas SET json_definition = ...
+    DB-->>Backend: Success
+
+    Backend-->>RPC: {success: true}
+    RPC-->>OdooBridge: Response
+    OdooBridge-->>NodeMgr: Save confirmed
+    NodeMgr-->>Canvas: Update UI state
+    Canvas-->>User: "Workflow saved" notification
+```
+
+---
+
+## Deployment Architecture
+
+```mermaid
+---
+title: Deployment Architecture
+---
+
+graph TB
+    subgraph "Load Balancer"
+        LB[Nginx / HAProxy<br/>SSL Termination]
+    end
+
+    subgraph "Odoo Application"
+        Odoo1[Odoo Instance 1<br/>ai_sam_workflows]
+        Odoo2[Odoo Instance 2<br/>ai_sam_workflows]
+    end
+
+    subgraph "Database"
+        PG[(PostgreSQL<br/>Workflow data)]
+    end
+
+    subgraph "Static Assets"
+        CDN[CDN<br/>JavaScript, CSS, Icons]
+        N8NLib[N8N Node Library<br/>2,600+ files]
+    end
+
+    subgraph "External Services"
+        N8NCloud[N8N Cloud<br/>JSON Import]
+        APIs[External APIs<br/>Slack, HubSpot, etc.]
+    end
+
+    Users[Users] --> LB
+    LB --> Odoo1
+    LB --> Odoo2
+
+    Odoo1 --> PG
+    Odoo2 --> PG
+
+    Odoo1 --> CDN
+    Odoo2 --> CDN
+    CDN --> N8NLib
+
+    Odoo1 -.->|Import| N8NCloud
+    Odoo1 -.->|Execute| APIs
+
+    classDef user fill:#ffebee,stroke:#b71c1c
+    classDef lb fill:#e3f2fd,stroke:#1565c0
+    classDef app fill:#e8f5e9,stroke:#2e7d32
+    classDef db fill:#fff3e0,stroke:#ef6c00
+    classDef static fill:#f3e5f5,stroke:#7b1fa2
+    classDef external fill:#e0f7fa,stroke:#00838f
+
+    class Users user
+    class LB lb
+    class Odoo1,Odoo2 app
+    class PG db
+    class CDN,N8NLib static
+    class N8NCloud,APIs external
+```
+
+---
+
+## Module Statistics Summary
+
+```mermaid
+---
+title: Module Statistics
+---
+
+pie showData
+    title File Distribution (12,296 total)
+    "JavaScript (.js)" : 2651
+    "TypeScript (.d.ts)" : 2632
+    "JSON (.json)" : 1332
+    "XML (.xml)" : 27
+    "Python (.py)" : 8
+    "CSS/SCSS" : 7
+    "Other" : 1639
+```
+
+---
+
+**Last Updated:** December 12, 2025
+**Module:** ai_sam_workflows (UI Layer)
+**Version:** 18.0.2.35.0
+
+These diagrams can be rendered in:
+- GitHub/GitLab (automatic Mermaid rendering)
+- VS Code (Mermaid Preview extension)
+- Online: https://mermaid.live

@@ -1,0 +1,910 @@
+# Sam Ai Chat
+
+**Original file:** `sam-ai-chat.html`
+**Type:** HTML
+
+---
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM AI Assistant</title>
+    <style>
+        /* ===== CSS VARIABLES - Claude Code Color Palette ===== */
+        :root {
+            /* Brand Colors */
+            --claude-orange: #D97757;
+            --sam-primary: #D97757;
+
+            /* Sidebar */
+            --sidebar-bg: #F7F5F3;
+            --sidebar-icon-color: #6B6B6B;
+            --sidebar-icon-hover: #D97757;
+            --sidebar-icon-active: #D97757;
+            --sidebar-width: 48px;
+
+            /* Main Content */
+            --main-bg: #FFFFFF;
+            --header-bg: #F7F5F3;
+            --border-color: #E5E5E5;
+
+            /* Text */
+            --text-primary: #1A1A1A;
+            --text-secondary: #6B6B6B;
+            --text-muted: #999999;
+
+            /* Messages */
+            --message-user-bg: #F0F0F0;
+            --message-assistant-bg: #FFFFFF;
+            --message-border: #E5E5E5;
+
+            /* Input */
+            --input-bg: #FFFFFF;
+            --input-border: #D1D1D1;
+            --input-focus: #D97757;
+
+            /* Buttons */
+            --button-bg: #D97757;
+            --button-hover: #C6613F;
+            --button-text: #FFFFFF;
+
+            /* Tool toggles */
+            --tool-bg: #F0F0F0;
+            --tool-hover: #E5E5E5;
+            --tool-active-bg: #D97757;
+            --tool-active-text: #FFFFFF;
+
+            /* Code */
+            --code-bg: #F7F5F3;
+
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 24px;
+
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'SF Mono', Monaco, Menlo, Consolas, 'Courier New', monospace;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+
+            /* Animations */
+            --transition: all 0.2s ease;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --sidebar-bg: #252526;
+                --sidebar-icon-color: #8B8B8B;
+
+                --main-bg: #1E1E1E;
+                --header-bg: #252526;
+                --border-color: #3C3C3C;
+
+                --text-primary: #CCCCCC;
+                --text-secondary: #8B8B8B;
+                --text-muted: #6B6B6B;
+
+                --message-user-bg: #2D2D2D;
+                --message-assistant-bg: #1E1E1E;
+                --message-border: #3C3C3C;
+
+                --input-bg: #3C3C3C;
+                --input-border: #3C3C3C;
+
+                --tool-bg: #2D2D2D;
+                --tool-hover: #3C3C3C;
+
+                --code-bg: #252526;
+            }
+        }
+
+        /* ===== RESET ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+            background-color: var(--main-bg);
+            overflow: hidden;
+        }
+
+        /* ===== LAYOUT ===== */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            gap: var(--spacing-xs);
+        }
+
+        .sidebar-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--sidebar-icon-color);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .sidebar-icon:hover {
+            background-color: var(--tool-hover);
+            color: var(--sidebar-icon-hover);
+        }
+
+        .sidebar-icon.active {
+            color: var(--sidebar-icon-active);
+            background-color: var(--tool-active-bg);
+        }
+
+        .sidebar-icon.active svg {
+            fill: var(--button-text);
+        }
+
+        .sidebar-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .sidebar-divider {
+            width: 24px;
+            height: 1px;
+            background-color: var(--border-color);
+            margin: var(--spacing-sm) 0;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        .chat-header {
+            height: 48px;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .header-title {
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .model-badge {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            background-color: var(--tool-bg);
+            border-radius: 12px;
+        }
+
+        /* ===== MESSAGES CONTAINER ===== */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        .messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: var(--input-border);
+            border-radius: 4px;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: var(--spacing-lg);
+        }
+
+        /* Sam AI Avatar - Animated Shimmer */
+        .sam-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                #D97757 0%,
+                #E89A7D 25%,
+                #D97757 50%,
+                #C6613F 75%,
+                #D97757 100%
+            );
+            background-size: 400% 400%;
+            animation: shimmer 3s ease infinite;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(217, 119, 87, 0.3);
+        }
+
+        .sam-avatar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 48px;
+            height: 48px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: var(--main-bg);
+            opacity: 0.95;
+        }
+
+        .sam-avatar::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(217, 119, 87, 0.4) 50%,
+                transparent 70%
+            );
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .empty-state-subtitle {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            max-width: 400px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* ===== MESSAGES ===== */
+        .message {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: 8px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background-color: var(--message-user-bg);
+            border-left: 3px solid var(--sam-primary);
+        }
+
+        .message.assistant {
+            background-color: var(--message-assistant-bg);
+            border: 1px solid var(--message-border);
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .message-role {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .role-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .user .role-indicator {
+            background-color: var(--sam-primary);
+        }
+
+        .assistant .role-indicator {
+            background-color: #00A82D;
+        }
+
+        .message-timestamp {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .message-content {
+            color: var(--text-primary);
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .message-content code {
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+        }
+
+        .message-content pre {
+            background-color: var(--code-bg);
+            padding: var(--spacing-md);
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: var(--spacing-sm) 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .message-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .message:hover .message-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background: var(--tool-hover);
+            color: var(--text-primary);
+        }
+
+        /* Loading indicator */
+        .message.loading .message-content::after {
+            content: '●';
+            animation: blink 1s infinite;
+            margin-left: 4px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* ===== INPUT AREA ===== */
+        .input-area {
+            border-top: 1px solid var(--border-color);
+            background-color: var(--main-bg);
+            padding: var(--spacing-lg);
+        }
+
+        .input-tools {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            background: var(--tool-bg);
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tool-btn:hover {
+            background: var(--tool-hover);
+            color: var(--text-primary);
+        }
+
+        .tool-btn.active {
+            background: var(--tool-active-bg);
+            color: var(--tool-active-text);
+            border-color: var(--tool-active-bg);
+        }
+
+        .tool-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: flex-end;
+        }
+
+        .input-field {
+            flex: 1;
+            min-height: 44px;
+            max-height: 200px;
+            padding: 12px 16px;
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            resize: none;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .input-field:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 1px var(--input-focus);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-muted);
+        }
+
+        .send-btn {
+            padding: 12px 24px;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            color: var(--button-text);
+            background: var(--button-bg);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: var(--button-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(217, 119, 87, 0.3);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== UTILITIES ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 48px;
+                flex-direction: row;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 0 var(--spacing-sm);
+            }
+
+            .app-container {
+                flex-direction: column;
+            }
+
+            .messages-container {
+                padding: var(--spacing-md);
+            }
+
+            .input-wrapper {
+                flex-direction: column;
+            }
+
+            .send-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-icon active" title="Chat" data-view="chat">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                </svg>
+            </div>
+
+            <div class="sidebar-icon" title="History" data-view="history">
+                <svg viewBox="0 0 24 24">
+                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/>
+                </svg>
+            </div>
+
+            <div class="sidebar-icon" title="Settings" data-view="settings">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-icon" title="Help" data-view="help">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="header-title">SAM AI Assistant</div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState">
+                    <div class="sam-avatar"></div>
+                    <h2 class="empty-state-title">Hi, I'm Sam</h2>
+                    <p class="empty-state-subtitle">I look forward to helping you with coding, analysis, documentation, and much more.</p>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-tools">
+                    <button class="tool-btn" id="fileBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/>
+                        </svg>
+                        Attach File
+                    </button>
+
+                    <button class="tool-btn" id="codeBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+                        </svg>
+                        Code Mode
+                    </button>
+
+                    <button class="tool-btn" id="webBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                        Web Search
+                    </button>
+                </div>
+
+                <div class="input-wrapper">
+                    <textarea
+                        id="messageInput"
+                        class="input-field"
+                        placeholder="Ask me anything... (Ctrl+Enter to send)"
+                        rows="1"
+                    ></textarea>
+                    <button id="sendBtn" class="send-btn">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== STATE =====
+        const state = {
+            messages: [],
+            isProcessing: false,
+            tools: { file: false, code: false, web: false }
+        };
+
+        // ===== DOM ELEMENTS =====
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const emptyState = document.getElementById('emptyState');
+        const fileBtn = document.getElementById('fileBtn');
+        const codeBtn = document.getElementById('codeBtn');
+        const webBtn = document.getElementById('webBtn');
+
+        // ===== SIDEBAR NAVIGATION =====
+        document.querySelectorAll('.sidebar-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-icon').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                const view = this.dataset.view;
+                console.log('Switched to view:', view);
+                // Future: implement view switching
+            });
+        });
+
+        // ===== MESSAGE FUNCTIONS =====
+        function createMessage(role, content, timestamp = new Date()) {
+            return {
+                id: Date.now() + Math.random(),
+                role,
+                content,
+                timestamp,
+                tools: role === 'user' ? {...state.tools} : null
+            };
+        }
+
+        function renderMessage(message) {
+            const div = document.createElement('div');
+            div.className = `message ${message.role}`;
+            div.dataset.messageId = message.id;
+
+            const roleText = message.role === 'user' ? 'You' : 'Sam';
+            const timeStr = message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            div.innerHTML = `
+                <div class="message-header">
+                    <div class="message-role">
+                        <span class="role-indicator"></span>
+                        ${roleText}
+                    </div>
+                    <div class="message-timestamp">${timeStr}</div>
+                </div>
+                <div class="message-content">${formatContent(message.content)}</div>
+                <div class="message-actions">
+                    <button class="action-btn" onclick="copyMessage('${message.id}')">Copy</button>
+                    ${message.role === 'assistant' ? '<button class="action-btn">Regenerate</button>' : ''}
+                </div>
+            `;
+
+            return div;
+        }
+
+        function formatContent(content) {
+            return content
+                .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/^(.+)$/, '<p>$1</p>');
+        }
+
+        function addMessage(message) {
+            state.messages.push(message);
+
+            if (emptyState) {
+                emptyState.classList.add('hidden');
+            }
+
+            const messageElement = renderMessage(message);
+            messagesContainer.appendChild(messageElement);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // ===== AI RESPONSE SIMULATION =====
+        async function simulateAIResponse(userMessage) {
+            state.isProcessing = true;
+            sendBtn.disabled = true;
+
+            const loadingMessage = createMessage('assistant', 'Thinking...');
+            loadingMessage.loading = true;
+            addMessage(loadingMessage);
+
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const loadingElement = document.querySelector(`[data-message-id="${loadingMessage.id}"]`);
+            if (loadingElement) {
+                loadingElement.remove();
+                state.messages.pop();
+            }
+
+            const response = generateResponse(userMessage);
+            const assistantMessage = createMessage('assistant', response);
+            addMessage(assistantMessage);
+
+            state.isProcessing = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+
+        function generateResponse(userMessage) {
+            const lower = userMessage.toLowerCase();
+
+            if (lower.includes('async') && lower.includes('await')) {
+                return `**Async/Await in JavaScript**
+
+\`async\` and \`await\` make working with promises cleaner and more readable.
+
+\`\`\`javascript
+async function fetchData() {
+    try {
+        const response = await fetch('https://api.example.com/data');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+\`\`\`
+
+**Key Points:**
+- \`async\` functions always return a Promise
+- \`await\` pauses execution until the Promise resolves
+- Use \`try/catch\` for error handling`;
+            }
+
+            if (lower.includes('python') && lower.includes('email')) {
+                return `**Email Validation in Python**
+
+\`\`\`python
+import re
+
+def validate_email(email):
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
+print(validate_email('user@example.com'))  # True
+\`\`\``;
+            }
+
+            if (lower.includes('database') || lower.includes('query')) {
+                return `**Database Query Optimization Tips**
+
+1. **Use Indexes** - Index frequently queried columns
+2. **Avoid SELECT *** - Only fetch needed columns
+3. **Use EXPLAIN** - Analyze query execution plans
+4. **Batch Operations** - Group multiple operations
+5. **Connection Pooling** - Reuse connections
+6. **Caching** - Cache frequently accessed data`;
+            }
+
+            return `I understand you're asking about: "${userMessage}"
+
+I'm a demo interface. In production, I would:
+
+1. Process your request using Claude AI
+2. Access relevant tools and data
+3. Provide detailed, contextual answers
+4. Execute code or analyses as needed
+
+Try asking about programming, databases, or web development!`;
+        }
+
+        // ===== INPUT HANDLING =====
+        async function handleSend() {
+            const text = messageInput.value.trim();
+            if (!text || state.isProcessing) return;
+
+            const userMessage = createMessage('user', text);
+            addMessage(userMessage);
+
+            messageInput.value = '';
+            autoResize();
+
+            await simulateAIResponse(text);
+        }
+
+        function copyMessage(messageId) {
+            const message = state.messages.find(m => m.id == messageId);
+            if (message) {
+                navigator.clipboard.writeText(message.content);
+            }
+        }
+
+        function autoResize() {
+            messageInput.style.height = 'auto';
+            messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
+        }
+
+        // ===== TOOL TOGGLES =====
+        function toggleTool(toolName, button) {
+            state.tools[toolName] = !state.tools[toolName];
+            button.classList.toggle('active');
+        }
+
+        // ===== EVENT LISTENERS =====
+        sendBtn.addEventListener('click', handleSend);
+
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+
+        messageInput.addEventListener('input', autoResize);
+
+        fileBtn.addEventListener('click', () => toggleTool('file', fileBtn));
+        codeBtn.addEventListener('click', () => toggleTool('code', codeBtn));
+        webBtn.addEventListener('click', () => toggleTool('web', webBtn));
+
+        // ===== INIT =====
+        console.log('SAM AI Assistant loaded');
+    </script>
+</body>
+</html>
+
+```

@@ -1,0 +1,130 @@
+# Documentation Views
+
+**Original file:** `documentation_views.xml`
+**Type:** XML
+
+---
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Documentation List View -->
+        <record id="view_ai_automator_documentation_list" model="ir.ui.view">
+            <field name="name">AI Automator Documentation List</field>
+            <field name="model">ai.automator.documentation</field>
+            <field name="arch" type="xml">
+                <list string="Documentation" create="false" edit="false">
+                    <field name="title"/>
+                    <field name="category"/>
+                    <field name="file_type"/>
+                    <field name="file_size"/>
+                    <field name="last_modified"/>
+                    <button name="action_open_document" type="object"
+                            string="View" icon="fa-eye" class="btn-primary"/>
+                    <button name="action_show_file_path" type="object"
+                            string="Path" icon="fa-link" class="btn-info"/>
+                    <button name="action_download_document" type="object"
+                            string="Download" icon="fa-download" class="btn-secondary"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Documentation Form View -->
+        <record id="view_ai_automator_documentation_form" model="ir.ui.view">
+            <field name="name">AI Automator Documentation Form</field>
+            <field name="model">ai.automator.documentation</field>
+            <field name="arch" type="xml">
+                <form string="Document" create="false" edit="false">
+                    <header>
+                        <button name="action_open_document" string="View Document"
+                                type="object" class="btn-primary"/>
+                        <button name="action_show_file_path" string="Show Path"
+                                type="object" class="btn-info"/>
+                        <button name="action_download_document" string="Download"
+                                type="object" class="btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="title"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="file_path"/>
+                                <field name="file_type"/>
+                                <field name="category"/>
+                            </group>
+                            <group>
+                                <field name="file_size"/>
+                                <field name="last_modified"/>
+                            </group>
+                        </group>
+                        <group string="Content Preview">
+                            <field name="content_preview" readonly="1" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Documentation Search View -->
+        <record id="view_ai_automator_documentation_search" model="ir.ui.view">
+            <field name="name">AI Automator Documentation Search</field>
+            <field name="model">ai.automator.documentation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="title"/>
+                    <field name="content_preview"/>
+                    <filter string="HTML Files" name="html_files" domain="[('file_type', '=', 'html')]"/>
+                    <filter string="SQL Files" name="sql_files" domain="[('file_type', '=', 'sql')]"/>
+                    <filter string="Architecture Docs" name="architecture" domain="[('category', '=', 'architecture')]"/>
+                    <filter string="Database Docs" name="database" domain="[('category', '=', 'database')]"/>
+                    <filter string="Guides" name="guides" domain="[('category', '=', 'guides')]"/>
+                    <filter string="Node Management" name="management" domain="[('category', '=', 'management')]"/>
+                    <filter string="Strategy Docs" name="strategy" domain="[('category', '=', 'strategy')]"/>
+                    <filter string="Demos" name="demos" domain="[('category', '=', 'demos')]"/>
+                    <filter string="Reports" name="reports" domain="[('category', '=', 'reports')]"/>
+                    <filter string="Workflows" name="workflows" domain="[('category', '=', 'workflows')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                        <filter string="File Type" name="group_file_type" context="{'group_by': 'file_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Documentation Action -->
+        <record id="action_ai_automator_documentation" model="ir.actions.act_window">
+            <field name="name">Documentation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ai.automator.documentation</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_ai_automator_documentation_list"/>
+            <field name="search_view_id" ref="view_ai_automator_documentation_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No documentation found!
+                </p>
+                <p>
+                    Click "Scan Documentation" to discover documents in your docs folder.
+                </p>
+            </field>
+        </record>
+
+        <!-- Scan Documentation Action -->
+        <record id="action_scan_documentation" model="ir.actions.server">
+            <field name="name">Scan Documentation</field>
+            <field name="model_id" ref="ai_automator_base.model_ai_automator_documentation"/>
+            <field name="state">code</field>
+            <field name="code">
+model.scan_documentation_folder()
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'reload',
+}
+            </field>
+        </record>
+    </data>
+</odoo>
+
+```

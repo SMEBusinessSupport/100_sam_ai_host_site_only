@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- ================================================================
+             LOCAL DEVELOPMENT REPOSITORIES
+
+             These repositories point to local filesystem paths for testing.
+             They simulate what would be pulled from GitHub in production.
+             ================================================================ -->
+
+        <!-- SAM AI Full Modules (Local) -->
+        <record id="repo_samai_full_local" model="module.catalog.repository">
+            <field name="name">SAM AI Full Modules (Local Dev)</field>
+            <field name="sequence">10</field>
+            <field name="repository_type">local_filesystem</field>
+            <field name="local_path">D:\SAMAI-18-SaaS\github-repos\02-samai-odoo-18-full-modules</field>
+            <field name="source_type">samai</field>
+            <field name="default_license">LGPL-3</field>
+            <field name="is_private">False</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- SAM AI Core (Local) -->
+        <record id="repo_samai_core_local" model="module.catalog.repository">
+            <field name="name">SAM AI Core (Local Dev)</field>
+            <field name="sequence">20</field>
+            <field name="repository_type">local_filesystem</field>
+            <field name="local_path">D:\SAMAI-18-SaaS\github-repos\05-samai-core</field>
+            <field name="source_type">samai</field>
+            <field name="default_license">LGPL-3</field>
+            <field name="is_private">False</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- ================================================================
+             GITHUB REPOSITORIES (For reference / when ready)
+
+             These can be activated when you want to test GitHub scanning.
+             They use the same org/repo/branch that production would use.
+             ================================================================ -->
+
+        <!-- OCA Web (Public GitHub) -->
+        <record id="repo_oca_web_github" model="module.catalog.repository">
+            <field name="name">OCA Web Modules</field>
+            <field name="sequence">100</field>
+            <field name="repository_type">github_public</field>
+            <field name="github_org">OCA</field>
+            <field name="github_repo">web</field>
+            <field name="github_branch">18.0</field>
+            <field name="source_type">oca</field>
+            <field name="default_license">AGPL-3</field>
+            <field name="is_private">False</field>
+            <field name="active">False</field>
+        </record>
+
+        <!-- OCA Server Tools (Public GitHub) -->
+        <record id="repo_oca_server_tools_github" model="module.catalog.repository">
+            <field name="name">OCA Server Tools</field>
+            <field name="sequence">110</field>
+            <field name="repository_type">github_public</field>
+            <field name="github_org">OCA</field>
+            <field name="github_repo">server-tools</field>
+            <field name="github_branch">18.0</field>
+            <field name="source_type">oca</field>
+            <field name="default_license">AGPL-3</field>
+            <field name="is_private">False</field>
+            <field name="active">False</field>
+        </record>
+
+    </data>
+</odoo>

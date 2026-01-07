@@ -1,0 +1,31 @@
+#  Url Registry
+
+**Original file:** `_url_registry.json`
+**Type:** JSON
+
+---
+
+```json
+{
+  "_meta": {
+    "description": "Maps stable /sam_insights/ slugs to eLearning locations",
+    "note": "When content moves, update target_channel/target_slide here. Slug never changes.",
+    "updated": "2025-01-02"
+  },
+  "redirects": {
+    "cto-capabilities": {
+      "target_channel": "00-sam-skills",
+      "target_slide": "cto-capabilities",
+      "title": "CTO Capabilities",
+      "created": "2025-01-02"
+    },
+    "ai-brain-overview": {
+      "target_channel": "01-modules",
+      "target_slide": "ai-brain-description",
+      "title": "AI Brain Overview",
+      "created": "2025-01-02"
+    }
+  }
+}
+
+```

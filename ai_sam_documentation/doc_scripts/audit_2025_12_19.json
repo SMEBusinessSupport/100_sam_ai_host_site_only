@@ -1,0 +1,270 @@
+{
+  "audit_date": "2025-12-19",
+  "auditor": "CTO Auditor Agent",
+  "module": "ai_sam_base",
+  "module_version": "18.0.2.37",
+  "score": 6,
+  "score_breakdown": {
+    "cto_principles": 7,
+    "code_quality": 5,
+    "architecture": 8,
+    "technical_debt": "HIGH"
+  },
+  "summary": "Module has solid architecture but accumulated significant technical debt through rapid feature development",
+  "findings": [
+    {
+      "id": "CLEANUP-001",
+      "severity": "RED",
+      "type": "COLLISION",
+      "file": "models/res_config_settings.py",
+      "line": 1,
+      "scope": "file",
+      "title": "CLASS COLLISION - Delete Entire File",
+      "reason": "Both res_config_settings.py and settings.py define ResConfigSettings with _inherit='res.config.settings'. Python import order makes behavior unpredictable.",
+      "action": [
+        "DELETE this entire file (models/res_config_settings.py)",
+        "EDIT models/__init__.py - remove line: from . import res_config_settings",
+        "TEST: odoo -u ai_sam_base --stop-after-init"
+      ],
+      "score_impact": -1,
+      "estimated_time": "5 minutes"
+    },
+    {
+      "id": "CLEANUP-002",
+      "severity": "ORANGE",
+      "type": "DEPRECATED",
+      "file": "models/sam_user_profile.py",
+      "line": 169,
+      "scope": "block",
+      "end_line": 175,
+      "title": "Deprecated Field - approved_file_paths",
+      "reason": "Field deprecated 2025-12-17. Replaced by ai.access.gate model for path-level permissions.",
+      "action": [
+        "VERIFY replacement works: env['ai.access.gate'].search_count([])",
+        "SEARCH for usages: grep -rn 'approved_file_paths' --include='*.py' .",
+        "DELETE field definition (lines 169-175) if no usages found"
+      ],
+      "verification": "env['ai.access.gate'].search_count([]) > 0",
+      "deprecated_since": "2025-12-17",
+      "replacement": "ai.access.gate model",
+      "estimated_time": "15 minutes"
+    },
+    {
+      "id": "CLEANUP-003",
+      "severity": "ORANGE",
+      "type": "DEPRECATED",
+      "file": "models/sam_user_profile.py",
+      "line": 504,
+      "scope": "block",
+      "end_line": 552,
+      "title": "Deprecated Methods - approve_file_path() and check_path_permission()",
+      "reason": "Methods deprecated 2025-12-17. Now delegate to ai.access.gate but should be removed entirely.",
+      "action": [
+        "SEARCH for callers: grep -rn 'approve_file_path\\|check_path_permission' --include='*.py' .",
+        "UPDATE any callers to use ai.access.gate directly",
+        "DELETE method definitions (lines 504-552)"
+      ],
+      "verification": "No callers found outside sam_user_profile.py",
+      "deprecated_since": "2025-12-17",
+      "replacement": "ai.access.gate.action_approve(), ai.access.gate.check_path_access()",
+      "estimated_time": "30 minutes"
+    },
+    {
+      "id": "CLEANUP-004",
+      "severity": "ORANGE",
+      "type": "WRONG_TYPE",
+      "file": "models/ai_conversation_import.py",
+      "line": 20,
+      "scope": "line",
+      "title": "Wrong Model Type - Should be TransientModel",
+      "reason": "Wizard defined as models.Model (persistent). Records accumulate forever in database, wasting storage.",
+      "action": [
+        "CHANGE line 20: models.Model -> models.TransientModel",
+        "TEST module upgrade: odoo -u ai_sam_base --stop-after-init",
+        "OPTIONAL: Clean old records: DELETE FROM ai_conversation_import WHERE create_date < NOW() - INTERVAL '30 days'"
+      ],
+      "estimated_time": "10 minutes"
+    },
+    {
+      "id": "CLEANUP-005",
+      "severity": "ORANGE",
+      "type": "DEAD_CODE",
+      "file": "models/api_service_provider.py",
+      "line": 116,
+      "scope": "comments",
+      "title": "Dead Comments - REMOVED markers still present",
+      "reason": "Multiple '# REMOVED 2025-12-12' comments clutter the code. The code is gone, comments should go too.",
+      "action": [
+        "SEARCH: grep -n 'REMOVED 2025-12-12' models/api_service_provider.py",
+        "DELETE comment lines at: 116, 1111, 1356",
+        "DELETE commented code at: 1869, 1932 (self.env.cr.commit lines)"
+      ],
+      "estimated_time": "10 minutes"
+    },
+    {
+      "id": "CLEANUP-006",
+      "severity": "YELLOW",
+      "type": "DRY",
+      "file": "models/ai_token_usage.py",
+      "line": 220,
+      "scope": "method",
+      "title": "Cost Calculation Duplicated in 5 Files",
+      "reason": "Same token cost formula (tokens/1M * cost_per_1m) repeated in: ai_agent_execution.py, ai_cost_optimizer.py, ai_provider_model.py, ai_service_cost_comparison.py, ai_token_usage.py",
+      "action": [
+        "CREATE shared utility in ai_cost_optimizer.py: calculate_token_cost()",
+        "REFACTOR all 5 files to use the shared utility",
+        "TEST cost displays in UI still work correctly"
+      ],
+      "related_files": [
+        "models/ai_agent_execution.py:141",
+        "models/ai_cost_optimizer.py:336-385",
+        "models/ai_provider_model.py:108,207",
+        "models/ai_service_cost_comparison.py:220-247",
+        "models/ai_token_usage.py:221-260"
+      ],
+      "estimated_time": "1 hour"
+    },
+    {
+      "id": "CLEANUP-007",
+      "severity": "YELLOW",
+      "type": "CONSOLIDATE",
+      "file": "models/api_credentials.py",
+      "line": 1,
+      "scope": "file",
+      "title": "Auth Pattern Scattered Across 6 Files",
+      "reason": "Authentication configuration spread across api_credentials.py, api_service_provider.py, ai_service_type.py, ai_brain.py, mcp_server_config.py. No single source of truth.",
+      "action": [
+        "DOCUMENT current auth pattern usage",
+        "CONSOLIDATE: api_credentials.py for secret storage",
+        "CONSOLIDATE: api_service_provider.py for provider config",
+        "REMOVE redundant auth fields from ai_service_type.py"
+      ],
+      "related_files": [
+        "models/api_credentials.py",
+        "models/api_service_provider.py",
+        "models/ai_service_type.py",
+        "models/ai_brain.py",
+        "models/mcp_server_config.py"
+      ],
+      "estimated_time": "2 hours"
+    },
+    {
+      "id": "CLEANUP-008",
+      "severity": "YELLOW",
+      "type": "TODO",
+      "file": "models/ai_brain.py",
+      "line": 1319,
+      "scope": "line",
+      "title": "TODO - Benchmark Logging Hangs",
+      "reason": "TODO comment says benchmark logging was disabled because it causes hangs. Should investigate root cause.",
+      "action": [
+        "INVESTIGATE why benchmark logging causes request hang",
+        "FIX root cause (likely transaction/commit issue)",
+        "RE-ENABLE benchmark logging or REMOVE if not needed"
+      ],
+      "estimated_time": "2 hours"
+    },
+    {
+      "id": "CLEANUP-009",
+      "severity": "YELLOW",
+      "type": "TODO",
+      "file": "models/ai_brain.py",
+      "line": 2891,
+      "scope": "line",
+      "title": "TODO - Implement Google Gemini Streaming",
+      "reason": "NotImplementedError for Gemini streaming. Either implement or remove if not needed.",
+      "action": [
+        "DECIDE: Is Gemini streaming needed?",
+        "IF YES: Implement using google-generativeai SDK",
+        "IF NO: Remove the streaming path or return error"
+      ],
+      "estimated_time": "3 hours"
+    },
+    {
+      "id": "CLEANUP-010",
+      "severity": "YELLOW",
+      "type": "DEPRECATED",
+      "file": "controllers/canvas_controller.py",
+      "line": 153,
+      "scope": "block",
+      "title": "Deprecated Route - Creatives Canvas",
+      "reason": "TODO comment from 2025-10-31 says to remove elif block after frontend updated.",
+      "action": [
+        "VERIFY frontend no longer uses this route",
+        "DELETE the deprecated elif block (lines 153-165 approx)",
+        "TEST creative canvas still works"
+      ],
+      "deprecated_since": "2025-10-31",
+      "estimated_time": "20 minutes"
+    },
+    {
+      "id": "CLEANUP-011",
+      "severity": "GREEN",
+      "type": "SPLIT",
+      "file": "models/api_service_provider.py",
+      "line": 1,
+      "scope": "file",
+      "title": "Large File - 3629 Lines",
+      "reason": "File is very large, harder to navigate. Consider splitting for maintainability.",
+      "action": [
+        "CONSIDER extracting vendor templates (lines 1150-1600) to api_vendor_templates.py",
+        "CONSIDER extracting OAuth logic (lines 2800-3100) to api_provider_oauth.py",
+        "KEEP core provider model in api_service_provider.py"
+      ],
+      "estimated_time": "4 hours"
+    },
+    {
+      "id": "CLEANUP-012",
+      "severity": "GREEN",
+      "type": "SPLIT",
+      "file": "models/ai_brain.py",
+      "line": 1,
+      "scope": "file",
+      "title": "Large File - 3581 Lines",
+      "reason": "File is very large. Contains streaming logic that could be extracted.",
+      "action": [
+        "CONSIDER extracting streaming logic to ai_streaming.py",
+        "KEEP core orchestration in ai_brain.py"
+      ],
+      "estimated_time": "4 hours"
+    },
+    {
+      "id": "CLEANUP-013",
+      "severity": "GREEN",
+      "type": "MERGE",
+      "file": "models/ai_conversation_history_importer.py",
+      "line": 1,
+      "scope": "file",
+      "title": "Similar Wizards Could Merge",
+      "reason": "ai_conversation_history_importer.py and ai_conversation_import.py both import conversations. Could be one wizard with format detection.",
+      "action": [
+        "EVALUATE if merging provides value",
+        "IF YES: Merge into single wizard with format auto-detection",
+        "IF NO: Document why they're separate"
+      ],
+      "related_files": [
+        "models/ai_conversation_history_importer.py",
+        "models/ai_conversation_import.py"
+      ],
+      "estimated_time": "3 hours"
+    }
+  ],
+  "recommended_order": [
+    "CLEANUP-001 (5 min) - DELETE res_config_settings.py",
+    "CLEANUP-005 (10 min) - Remove dead comments",
+    "CLEANUP-004 (10 min) - Fix model type",
+    "CLEANUP-002 (15 min) - Remove deprecated field",
+    "CLEANUP-003 (30 min) - Remove deprecated methods",
+    "CLEANUP-010 (20 min) - Remove deprecated route",
+    "CLEANUP-006 (1 hr) - Extract cost calculation utility",
+    "CLEANUP-008 (2 hr) - Fix benchmark logging",
+    "CLEANUP-007 (2 hr) - Consolidate auth patterns",
+    "CLEANUP-009 (3 hr) - Implement/remove Gemini streaming",
+    "CLEANUP-011 (4 hr) - Split api_service_provider.py",
+    "CLEANUP-012 (4 hr) - Split ai_brain.py",
+    "CLEANUP-013 (3 hr) - Consider merging import wizards"
+  ],
+  "total_estimated_time": "21 hours",
+  "quick_wins": ["CLEANUP-001", "CLEANUP-004", "CLEANUP-005"],
+  "quick_wins_time": "25 minutes"
+}

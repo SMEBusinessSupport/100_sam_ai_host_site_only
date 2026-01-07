@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #D4AF37; }
+        h2 { color: #333; border-bottom: 2px solid #D4AF37; padding-bottom: 5px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0; }
+        .feature { background: #f5f5f5; padding: 15px; border-radius: 8px; border-left: 4px solid #D4AF37; }
+        .feature h3 { margin-top: 0; color: #1a1a2e; }
+        code { background: #eee; padding: 2px 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>SAM AI Insights</h1>
+    <p><strong>Ecosystem Intelligence Tool</strong> - Know EVERYTHING about your SAM AI codebase</p>
+
+    <h2>What It Detects</h2>
+    <div class="feature-grid">
+        <div class="feature">
+            <h3>Duplicate Code</h3>
+            <ul>
+                <li>Similar models with high overlap</li>
+                <li>Duplicate functions across modules</li>
+                <li>CSS classes defined multiple times</li>
+                <li>Renamed components (_old, _v2, backup)</li>
+            </ul>
+        </div>
+        <div class="feature">
+            <h3>Orphaned Components</h3>
+            <ul>
+                <li>Models with no views</li>
+                <li>Actions with no menus</li>
+                <li>JS/CSS files not in bundles</li>
+                <li>Python files not imported</li>
+            </ul>
+        </div>
+        <div class="feature">
+            <h3>Dangling References</h3>
+            <ul>
+                <li>Views referencing missing fields</li>
+                <li>Actions pointing to deleted models</li>
+                <li>Broken menu item references</li>
+                <li>Invalid model relations</li>
+            </ul>
+        </div>
+        <div class="feature">
+            <h3>Relationship Mapping</h3>
+            <ul>
+                <li>Model → View → Action → Menu traces</li>
+                <li>Field usage across all views</li>
+                <li>Module dependency graph</li>
+                <li>Inheritance chains</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>Features</h2>
+    <ul>
+        <li><strong>Static Analysis:</strong> Python AST parsing, XML view parsing, JS/CSS scanning</li>
+        <li><strong>Runtime Analysis:</strong> Odoo registry queries for live validation</li>
+        <li><strong>Health Score:</strong> 0-100 ecosystem health metric</li>
+        <li><strong>HTML Reports:</strong> Beautiful, shareable reports</li>
+        <li><strong>JSON Export:</strong> Full data export for external tools</li>
+        <li><strong>Scheduled Scans:</strong> Weekly automated analysis</li>
+        <li><strong>Dashboard:</strong> Kanban-style overview of scan results</li>
+    </ul>
+
+    <h2>Usage</h2>
+    <ol>
+        <li>Install the <code>ai_sam_insights</code> module</li>
+        <li>Navigate to <strong>SAM Insights → Ecosystem Health</strong></li>
+        <li>Click <strong>Run Quick Scan</strong> to analyze SAM AI modules</li>
+        <li>Review findings and recommendations</li>
+        <li>Click <strong>View Report</strong> for the full HTML report</li>
+    </ol>
+
+    <h2>Architecture</h2>
+    <pre>
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   SCANNER   │───▶│  ANALYZER   │───▶│  REPORTER   │───▶│  DASHBOARD  │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+      │                   │                  │                   │
+      ▼                   ▼                  ▼                   ▼
+  • Python AST       • Duplicates       • HTML Report      • Kanban View
+  • XML Parser       • Orphans          • JSON Export      • Health Score
+  • JS/CSS Scan      • Relations        • Findings List    • Issue Tracking
+    </pre>
+</body>
+</html>

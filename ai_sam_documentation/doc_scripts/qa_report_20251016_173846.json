@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-10-16T17:38:46.556615",
+  "modules": [],
+  "summary": {
+    "total_errors": 1,
+    "total_warnings": 0,
+    "status": "FAIL",
+    "modules_checked": 1
+  },
+  "refactoring_suggestions": [],
+  "code_smells": [
+    {
+      "type": "missing_type_hints",
+      "file": "memory_graph_controller.py",
+      "count": 9,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    }
+  ],
+  "ai_teaching_prompts": [],
+  "errors": [
+    "ai_conversation_reader_views.xml: Odoo 18 incompatible - Use <list> instead of <tree> for list views"
+  ],
+  "warnings": []
+}

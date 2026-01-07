@@ -1,0 +1,934 @@
+# Triggers Actions Cards Dev
+
+**Original file:** `triggers_actions_cards_dev.html`
+**Type:** HTML
+
+---
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Hierarchy Flow - ActiveCampaign vs Google</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+
+        .overlay-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        .overlay-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        /* View States */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Initial Selection View */
+        .initial-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 40px;
+        }
+
+        .provider-card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .provider-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .provider-card.activecampaign {
+            border-color: #ff6900;
+        }
+
+        .provider-card.activecampaign:hover {
+            border-color: #e55a00;
+            background: #fff8f5;
+        }
+
+        .provider-card.google {
+            border-color: #4285f4;
+        }
+
+        .provider-card.google:hover {
+            border-color: #1a73e8;
+            background: #f8fbff;
+        }
+
+        .provider-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .provider-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .provider-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .provider-type {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .activecampaign .provider-type {
+            background: #ff6900;
+            color: white;
+        }
+
+        .google .provider-type {
+            background: #4285f4;
+            color: white;
+        }
+
+        /* Cards Layout for Triggers/Actions */
+        .cards-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .triggers-card, .actions-card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .triggers-card {
+            border-color: #28a745;
+        }
+
+        .actions-card {
+            border-color: #007bff;
+        }
+
+        .triggers-card:hover, .actions-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+        }
+
+        .triggers-card .card-header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .actions-card .card-header {
+            background: linear-gradient(135deg, #007bff, #6610f2);
+        }
+
+        .card-body {
+            padding: 0;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .card-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #f8f9fa;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-item:hover {
+            background: #f8f9fa;
+        }
+
+        .card-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .item-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .item-icon {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .triggers-card .item-icon {
+            color: #28a745;
+        }
+
+        .actions-card .item-icon {
+            color: #007bff;
+        }
+
+        .card-count {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        /* Google Sub-folders View */
+        .subfolders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .subfolder-card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .subfolder-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            border-color: #4285f4;
+            background: #f8fbff;
+        }
+
+        .subfolder-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subfolder-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .subfolder-description {
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* Navigation */
+        .nav-breadcrumb {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        @media (max-width: 768px) {
+            .initial-selection,
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            .subfolders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay-container">
+
+        <!-- VIEW 1: Initial Selection (ActiveCampaign vs Google) -->
+        <div id="initial-view" class="view active">
+            <div class="overlay-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">⚡ N8N Node Selection</h4>
+                    <button class="btn btn-sm btn-outline-light" onclick="closeOverlay()">✖ Close</button>
+                </div>
+            </div>
+
+            <!-- 🔍 CODE VALIDATION: This view is generated by createN8nNodeSelectionContent() line 678 -->
+            <!-- 🔍 DATA SOURCE: window.DISCOVERED_SERVICES populated from /canvas/n8n/parent API -->
+            <div style="background: #f0f8ff; padding: 10px; margin: 10px; border-radius: 6px; font-size: 12px;">
+                <strong>📋 CODE MAPPING:</strong><br>
+                • <code>createN8nNodeSelectionContent()</code> - Line 678<br>
+                • Data: <code>window.DISCOVERED_SERVICES</code><br>
+                • API: <code>/canvas/n8n/parent</code> - Lines 613-654<br>
+                • Node click handler: <code>addN8nNodeSelectionListeners()</code> - Line 840<br>
+                • <strong>THE IF STATEMENT:</strong> Line 1344-1352 determines which path below
+            </div>
+
+            <div class="initial-selection">
+                <!-- ActiveCampaign Option -->
+                <div class="provider-card activecampaign" onclick="showActiveCampaignView()">
+                    <div class="provider-icon">📧</div>
+                    <div class="provider-name">ActiveCampaign</div>
+                    <div class="provider-description">Email marketing and automation platform</div>
+                    <div class="provider-type">Direct Access (JSON)</div>
+
+                    <!-- 📊 VISUAL SAMPLE DATA PREVIEW -->
+                    <div style="margin-top: 15px; padding: 10px; background: #fff8f5; border-radius: 6px; border: 1px solid #ff6900;">
+                        <div style="font-size: 12px; font-weight: 600; color: #ff6900; margin-bottom: 8px;">📊 Available:</div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                            <span style="color: #28a745;">🔔 Triggers: <strong>1</strong></span>
+                            <span style="color: #007bff;">⚡ Actions: <strong>48</strong></span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; font-size: 10px; color: #666;">
+                        has_node_json = <strong>true</strong> → showJsonBreakdown()
+                    </div>
+                </div>
+
+                <!-- Google Option -->
+                <div class="provider-card google" onclick="showGoogleFoldersView()">
+                    <div class="provider-icon">🌐</div>
+                    <div class="provider-name">Google</div>
+                    <div class="provider-description">Google Workspace services and integrations</div>
+                    <div class="provider-type">Folder Navigation</div>
+
+                    <!-- 📊 VISUAL SAMPLE DATA PREVIEW -->
+                    <div style="margin-top: 15px; padding: 10px; background: #f8fbff; border-radius: 6px; border: 1px solid #4285f4;">
+                        <div style="font-size: 12px; font-weight: 600; color: #4285f4; margin-bottom: 8px;">📊 Available:</div>
+                        <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                            <span style="color: #666;">📁 Sub-Services: <strong>4</strong></span>
+                            <span style="color: #999;">Gmail, Sheets, Drive, Calendar</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; font-size: 10px; color: #666;">
+                        has_node_json = <strong>false</strong> → showFolderHierarchy()
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: ActiveCampaign Triggers & Actions -->
+        <div id="activecampaign-view" class="view">
+            <div class="overlay-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">⚡ ActiveCampaign - Triggers & Actions</h4>
+                    <button class="btn btn-sm btn-outline-light" onclick="showInitialView()">← Back to Selection</button>
+                </div>
+            </div>
+
+            <!-- 🔍 CODE VALIDATION: ActiveCampaign JSON Path (has_node_json = true) -->
+            <div style="background: #fff5f5; padding: 10px; margin: 10px; border-radius: 6px; font-size: 12px; border-left: 4px solid #ff6900;">
+                <strong>🎯 ACTIVECAMPAIGN CODE PATH:</strong><br>
+                • <strong>IF CONDITION:</strong> <code>parentNode.has_node_json === true</code> (Line 1344)<br>
+                • <strong>METHOD CALLED:</strong> <code>showJsonBreakdown()</code> - Lines 1356-1415<br>
+                • <strong>API ENDPOINT:</strong> <code>/canvas/n8n/node_structure</code> - Line 1376<br>
+                • <strong>HTML BUILDER:</strong> <code>buildJsonBreakdownHTML()</code> - Lines 1452-1539<br>
+                • <strong>EXPECTED DATA:</strong> <code>result.structure.triggers</code> + <code>result.structure.actions</code><br>
+                • <strong>VALIDATION POINT:</strong> Check if API returns triggers/actions data!
+            </div>
+
+            <div class="cards-container">
+                <!-- Triggers Card -->
+                <div class="triggers-card">
+                    <div class="card-header">
+                        🔔 Triggers
+                        <span class="card-count">1</span>
+                    </div>
+                    <!-- 📋 DATA VALIDATION: This should be populated by nodeStructure.triggers from API -->
+                    <div style="background: #e8f5e8; padding: 8px; font-size: 10px; border-bottom: 1px solid #ddd;">
+                        <strong>Data Source:</strong> <code>nodeStructure.triggers</code> (Lines 1468-1500)<br>
+                        <strong>Loop:</strong> <code>nodeStructure.triggers.forEach(trigger =>...)</code><br>
+                        <strong>Expected:</strong> 1 trigger for ActiveCampaign
+                    </div>
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">🔄</span>
+                                    <div>
+                                        <div class="item-name">Contact Updated</div>
+                                        <div class="item-description">Triggers when a contact is updated in ActiveCampaign</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Card -->
+                <div class="actions-card">
+                    <div class="card-header">
+                        ⚡ Actions
+                        <span class="card-count">48</span>
+                    </div>
+                    <!-- 📋 DATA VALIDATION: This should be populated by nodeStructure.actions from API -->
+                    <div style="background: #e8f2ff; padding: 8px; font-size: 10px; border-bottom: 1px solid #ddd;">
+                        <strong>Data Source:</strong> <code>nodeStructure.actions</code> (Lines 1503-1535)<br>
+                        <strong>Loop:</strong> <code>nodeStructure.actions.forEach(action =>...)</code><br>
+                        <strong>Expected:</strong> 48 actions for ActiveCampaign
+                    </div>
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">✉️</span>
+                                    <div>
+                                        <div class="item-name">Send Campaign</div>
+                                        <div class="item-description">Send an email campaign to subscribers</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">👤</span>
+                                    <div>
+                                        <div class="item-name">Create Contact</div>
+                                        <div class="item-description">Add a new contact to ActiveCampaign</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">📝</span>
+                                    <div>
+                                        <div class="item-name">Update Contact</div>
+                                        <div class="item-description">Update an existing contact's information</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">🏷️</span>
+                                    <div>
+                                        <div class="item-name">Add Tag</div>
+                                        <div class="item-description">Add a tag to a contact</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">❌</span>
+                                    <div>
+                                        <div class="item-name">Remove Tag</div>
+                                        <div class="item-description">Remove a tag from a contact</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item" style="background: #f8f9fa; font-style: italic; color: #666;">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">⋯</span>
+                                    <div>
+                                        <div class="item-name">+ 43 more actions...</div>
+                                        <div class="item-description">Additional ActiveCampaign operations</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: Google Sub-folders -->
+        <div id="google-folders-view" class="view">
+            <div class="overlay-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">📁 Google - Sub-Services</h4>
+                    <button class="btn btn-sm btn-outline-light" onclick="showInitialView()">← Back to Selection</button>
+                </div>
+            </div>
+
+            <!-- 🔍 CODE VALIDATION: Google Folder Path (has_node_json = false) -->
+            <div style="background: #f5f8ff; padding: 10px; margin: 10px; border-radius: 6px; font-size: 12px; border-left: 4px solid #4285f4;">
+                <strong>📁 GOOGLE FOLDER CODE PATH:</strong><br>
+                • <strong>IF CONDITION:</strong> <code>parentNode.has_node_json === false</code> (Line 1348)<br>
+                • <strong>METHOD CALLED:</strong> <code>showFolderHierarchy()</code> - Lines 1418-1449<br>
+                • <strong>DATA FETCHER:</strong> <code>getSubFolders()</code> - Lines 1594-1654<br>
+                • <strong>API ENDPOINT:</strong> <code>/canvas/n8n/l1_children</code> - Line 1600<br>
+                • <strong>HTML BUILDER:</strong> <code>buildFolderHierarchyHTML()</code> - Lines 1542-1592<br>
+                • <strong>EXPECTED DATA:</strong> <code>result.children[]</code> with Gmail, Sheets, Drive, Calendar<br>
+                • <strong>VALIDATION POINT:</strong> Check if L1 children API returns sub-folders!
+            </div>
+
+            <div class="subfolders-grid">
+                <div class="subfolder-card" onclick="showGmailView()">
+                    <div class="subfolder-icon">📧</div>
+                    <div class="subfolder-name">Gmail</div>
+                    <div class="subfolder-description">Email service integration</div>
+                </div>
+
+                <div class="subfolder-card" onclick="showGoogleSheetsView()">
+                    <div class="subfolder-icon">📊</div>
+                    <div class="subfolder-name">Google Sheets</div>
+                    <div class="subfolder-description">Spreadsheet operations</div>
+                </div>
+
+                <div class="subfolder-card" onclick="showGoogleDriveView()">
+                    <div class="subfolder-icon">💾</div>
+                    <div class="subfolder-name">Google Drive</div>
+                    <div class="subfolder-description">File storage and sharing</div>
+                </div>
+
+                <div class="subfolder-card" onclick="showGoogleCalendarView()">
+                    <div class="subfolder-icon">📅</div>
+                    <div class="subfolder-name">Google Calendar</div>
+                    <div class="subfolder-description">Calendar and event management</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 4: Gmail Triggers & Actions -->
+        <div id="gmail-view" class="view">
+            <div class="overlay-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">📧 Gmail - Triggers & Actions</h4>
+                    <button class="btn btn-sm btn-outline-light" onclick="showGoogleFoldersView()">← Back to Google</button>
+                </div>
+            </div>
+
+            <!-- 🔍 CODE VALIDATION: Gmail L1 Service Path -->
+            <div style="background: #f0fff0; padding: 10px; margin: 10px; border-radius: 6px; font-size: 12px; border-left: 4px solid #28a745;">
+                <strong>📧 GMAIL L1 CODE PATH:</strong><br>
+                • <strong>CLICK HANDLER:</strong> <code>handleSubFolderClick()</code> - Lines 1665-1730<br>
+                • <strong>API ENDPOINT:</strong> <code>/canvas/n8n/l1_structure</code> - Line 1688<br>
+                • <strong>HTML BUILDER:</strong> <code>buildL1BreakdownHTML()</code> - Lines 1733-1812<br>
+                • <strong>EXPECTED DATA:</strong> <code>result.structure.triggers</code> + <code>result.structure.actions</code><br>
+                • <strong>VALIDATION POINT:</strong> Check if L1 structure API returns Gmail triggers/actions!
+            </div>
+
+            <div class="cards-container">
+                <!-- Gmail Triggers -->
+                <div class="triggers-card">
+                    <div class="card-header">
+                        🔔 Triggers
+                        <span class="card-count">3</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">📨</span>
+                                    <div>
+                                        <div class="item-name">New Email</div>
+                                        <div class="item-description">Triggers when a new email is received</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">⭐</span>
+                                    <div>
+                                        <div class="item-name">Email Starred</div>
+                                        <div class="item-description">Triggers when an email is starred</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">🏷️</span>
+                                    <div>
+                                        <div class="item-name">Label Added</div>
+                                        <div class="item-description">Triggers when a label is added to an email</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gmail Actions -->
+                <div class="actions-card">
+                    <div class="card-header">
+                        ⚡ Actions
+                        <span class="card-count">12</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">📤</span>
+                                    <div>
+                                        <div class="item-name">Send Email</div>
+                                        <div class="item-description">Send an email message</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">↩️</span>
+                                    <div>
+                                        <div class="item-name">Reply to Email</div>
+                                        <div class="item-description">Reply to an existing email</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">➡️</span>
+                                    <div>
+                                        <div class="item-name">Forward Email</div>
+                                        <div class="item-description">Forward an email to others</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">🏷️</span>
+                                    <div>
+                                        <div class="item-name">Add Label</div>
+                                        <div class="item-description">Add a label to an email</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">📂</span>
+                                    <div>
+                                        <div class="item-name">Move to Folder</div>
+                                        <div class="item-description">Move email to a specific folder</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-item" style="background: #f8f9fa; font-style: italic; color: #666;">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <span class="item-icon">⋯</span>
+                                    <div>
+                                        <div class="item-name">+ 7 more actions...</div>
+                                        <div class="item-description">Additional Gmail operations</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🚨 DEBUGGING & VALIDATION SECTION -->
+        <div style="background: #2c3e50; color: white; padding: 20px; margin-top: 20px;">
+            <h5>🔧 DEBUGGING COMMANDS - Run These in Browser Console</h5>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+
+                <!-- Data Source Validation -->
+                <div style="background: #34495e; padding: 15px; border-radius: 6px;">
+                    <h6>📊 Data Source Validation</h6>
+                    <pre style="font-size: 11px; background: #1a252f; padding: 8px; border-radius: 4px; margin: 5px 0;">
+// Check if initial data is loaded
+console.log('DISCOVERED_SERVICES:', window.DISCOVERED_SERVICES);
+console.log('API_CONFIG:', window.API_CONFIG);
+
+// Check specific nodes
+const activeCampaign = window.DISCOVERED_SERVICES?.['ActiveCampaign'];
+const google = window.DISCOVERED_SERVICES?.['Google'];
+console.log('ActiveCampaign has_node_json:', activeCampaign?.has_node_json);
+console.log('Google has_node_json:', google?.has_node_json);</pre>
+                </div>
+
+                <!-- API Testing -->
+                <div style="background: #34495e; padding: 15px; border-radius: 6px;">
+                    <h6>🌐 API Endpoint Testing</h6>
+                    <pre style="font-size: 11px; background: #1a252f; padding: 8px; border-radius: 4px; margin: 5px 0;">
+// Test ActiveCampaign API
+fetch('/canvas/n8n/node_structure', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+        params: {folder_name: 'ActiveCampaign', parent_id: 1}
+    })
+}).then(r => r.json()).then(console.log);
+
+// Test Google L1 children API
+fetch('/canvas/n8n/l1_children', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+        params: {parent_id: 2, parent_folder: 'Google'}
+    })
+}).then(r => r.json()).then(console.log);</pre>
+                </div>
+
+                <!-- Function Testing -->
+                <div style="background: #34495e; padding: 15px; border-radius: 6px;">
+                    <h6>⚙️ Function Testing</h6>
+                    <pre style="font-size: 11px; background: #1a252f; padding: 8px; border-radius: 4px; margin: 5px 0;">
+// Test if overlay manager exists
+console.log('overlayManager exists:', !!window.overlayManager);
+
+// Test the critical if statement logic
+function testIfStatement(folderName) {
+    const parentNode = window.DISCOVERED_SERVICES?.[folderName];
+    console.log(`Testing ${folderName}:`);
+    console.log('  parentNode:', parentNode);
+    console.log('  has_node_json:', parentNode?.has_node_json);
+
+    if (parentNode && parentNode.has_node_json === true) {
+        console.log('  ✅ Would call showJsonBreakdown()');
+    } else {
+        console.log('  ✅ Would call showFolderHierarchy()');
+    }
+}
+
+testIfStatement('ActiveCampaign');
+testIfStatement('Google');</pre>
+                </div>
+
+                <!-- Expected Data Structure -->
+                <div style="background: #34495e; padding: 15px; border-radius: 6px;">
+                    <h6>📋 Expected Data Structures</h6>
+                    <pre style="font-size: 11px; background: #1a252f; padding: 8px; border-radius: 4px; margin: 5px 0;">
+// Expected ActiveCampaign API response:
+{
+  "success": true,
+  "structure": {
+    "triggers": [
+      {"name": "Contact Updated", "displayName": "Contact Updated"}
+    ],
+    "actions": [
+      {"name": "Send Campaign", "displayName": "Send Campaign"},
+      // ... 47 more actions
+    ]
+  }
+}
+
+// Expected Google L1 children response:
+{
+  "success": true,
+  "children": [
+    {"id": 1, "display_name": "Gmail", "folder_name": "gmail"},
+    {"id": 2, "display_name": "Google Sheets", "folder_name": "googleSheets"},
+    {"id": 3, "display_name": "Google Drive", "folder_name": "googleDrive"}
+  ]
+}</pre>
+                </div>
+
+            </div>
+
+            <div style="background: #fff; color: #333; border: 3px solid #e74c3c; padding: 15px; border-radius: 6px; margin-top: 15px;">
+                <strong style="color: #e74c3c; font-size: 16px;">🚨 MOST LIKELY ISSUES:</strong><br><br>
+                <div style="font-size: 14px; line-height: 1.6;">
+                    <strong>1.</strong> <code style="background: #f8f9fa; padding: 2px 4px;">window.DISCOVERED_SERVICES</code> is empty or missing <code style="background: #f8f9fa; padding: 2px 4px;">has_node_json</code> field<br><br>
+                    <strong>2.</strong> API endpoints <code style="background: #f8f9fa; padding: 2px 4px;">/canvas/n8n/node_structure</code> or <code style="background: #f8f9fa; padding: 2px 4px;">/canvas/n8n/l1_children</code> are failing<br><br>
+                    <strong>3.</strong> Database tables <code style="background: #f8f9fa; padding: 2px 4px;">n8n_folder_information</code> or <code style="background: #f8f9fa; padding: 2px 4px;">n8n.nodes.l1</code> are empty<br><br>
+                    <strong>4.</strong> Controllers are not returning expected JSON structure
+                </div>
+            </div>
+
+            <!-- 🎯 IMPLEMENTATION GUIDE -->
+            <div style="background: #e8f5e8; color: #333; border: 3px solid #28a745; padding: 15px; border-radius: 6px; margin-top: 15px;">
+                <strong style="color: #28a745; font-size: 16px;">🎯 IMPLEMENTATION: Visual Data Preview on Cards</strong><br><br>
+                <div style="font-size: 14px; line-height: 1.6;">
+                    <strong>Goal:</strong> Show data counts on initial cards BEFORE clicking<br><br>
+
+                    <strong>ActiveCampaign Card Should Show:</strong><br>
+                    • 🔔 Triggers: <strong>1</strong> (from <code>nodeStructure.triggers.length</code>)<br>
+                    • ⚡ Actions: <strong>48</strong> (from <code>nodeStructure.actions.length</code>)<br><br>
+
+                    <strong>Google Card Should Show:</strong><br>
+                    • 📁 Sub-Services: <strong>4</strong> (from <code>subFolders.length</code>)<br>
+                    • Names: Gmail, Sheets, Drive, Calendar<br><br>
+
+                    <strong>Implementation Location:</strong> <code>createNodesList()</code> method in overlay_manager.js<br>
+                    <strong>Data Source:</strong> Pre-fetch counts via API calls before rendering cards<br>
+                    <strong>Benefit:</strong> Instant validation if data layer is working or broken!
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // View Management System
+        function hideAllViews() {
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.remove('active');
+            });
+        }
+
+        function showView(viewId) {
+            hideAllViews();
+            document.getElementById(viewId).classList.add('active');
+            console.log('Switched to view:', viewId);
+        }
+
+        // Navigation Functions
+        function showInitialView() {
+            showView('initial-view');
+        }
+
+        function showActiveCampaignView() {
+            showView('activecampaign-view');
+        }
+
+        function showGoogleFoldersView() {
+            showView('google-folders-view');
+        }
+
+        function showGmailView() {
+            showView('gmail-view');
+        }
+
+        function showGoogleSheetsView() {
+            alert('Google Sheets view would show here!\n\nThis demonstrates the hierarchical flow:\n1. Google → 2. Google Sheets → 3. Sheets Triggers & Actions');
+        }
+
+        function showGoogleDriveView() {
+            alert('Google Drive view would show here!\n\nThis demonstrates the hierarchical flow:\n1. Google → 2. Google Drive → 3. Drive Triggers & Actions');
+        }
+
+        function showGoogleCalendarView() {
+            alert('Google Calendar view would show here!\n\nThis demonstrates the hierarchical flow:\n1. Google → 2. Google Calendar → 3. Calendar Triggers & Actions');
+        }
+
+        function closeOverlay() {
+            alert('Overlay would close here!\n\nThis is the complete interactive demonstration of:\n✅ ActiveCampaign: Direct to triggers/actions\n✅ Google: Folder navigation → Gmail → triggers/actions');
+        }
+
+        // Add click handlers for trigger/action items
+        document.addEventListener('DOMContentLoaded', function() {
+            // Universal click handler for all card items
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.card-item')) {
+                    const item = e.target.closest('.card-item');
+
+                    // Skip if it's a placeholder item
+                    if (item.textContent.includes('+ ')) return;
+
+                    // Visual feedback
+                    const originalBg = item.style.background;
+                    item.style.background = '#e3f2fd';
+                    setTimeout(() => {
+                        item.style.background = originalBg;
+                    }, 300);
+
+                    const name = item.querySelector('.item-name').textContent;
+                    const description = item.querySelector('.item-description').textContent;
+
+                    console.log('Selected:', name, '-', description);
+
+                    // Show selection feedback
+                    const currentView = document.querySelector('.view.active').id;
+                    let serviceName = 'Unknown';
+                    if (currentView.includes('activecampaign')) serviceName = 'ActiveCampaign';
+                    if (currentView.includes('gmail')) serviceName = 'Gmail';
+
+                    alert(`✅ Selected: ${name}\n\nService: ${serviceName}\nDescription: ${description}\n\nIn the real system, this would add the node to your canvas!`);
+                }
+            });
+
+            // Add hover effects for provider cards
+            document.querySelectorAll('.provider-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add hover effects for subfolder cards
+            document.querySelectorAll('.subfolder-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            console.log('🎯 Interactive Hierarchy Demo Ready!');
+            console.log('Flow: Initial → ActiveCampaign OR Google → Gmail → Actions');
+            console.log('Click through the complete user journey!');
+        });
+    </script>
+</body>
+</html>
+```

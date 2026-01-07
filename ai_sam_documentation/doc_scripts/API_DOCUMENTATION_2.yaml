@@ -1,0 +1,761 @@
+openapi: 3.0.3
+info:
+  title: SAM AI Workflows Base API
+  description: |
+    API documentation for SAM AI Workflows Base module (ai_sam_workflows_base).
+
+    **Important:** This module is a **pure data layer** with NO HTTP controllers.
+    All methods are **RPC-callable** via Odoo's JSON-RPC protocol.
+
+    SAM AI Workflows provides:
+    - N8N-compatible workflow automation
+    - Visual workflow canvas (stores JSON definitions)
+    - Workflow execution engine with logging
+    - Reusable workflow templates with marketplace
+    - Multi-API integration support (14+ credential types)
+
+    **Base URL:** `https://your-odoo-instance.com/jsonrpc`
+
+    **Authentication:** Odoo session authentication required for all methods.
+  version: 1.0.2
+  contact:
+    name: SAM AI Support
+    url: https://samai.com
+    email: support@samai.com
+  license:
+    name: LGPL-3
+    url: https://www.gnu.org/licenses/lgpl-3.0.html
+
+servers:
+  - url: https://your-odoo-instance.com/jsonrpc
+    description: Production server (JSON-RPC endpoint)
+  - url: http://localhost:8069/jsonrpc
+    description: Local development server (JSON-RPC endpoint)
+
+tags:
+  - name: Canvas RPC
+    description: Canvas model RPC methods (frontend integration)
+  - name: Execution
+    description: Workflow execution methods
+  - name: Templates
+    description: Workflow template methods
+  - name: Import/Export
+    description: N8N workflow import/export
+  - name: Node Metadata
+    description: Node type metadata loading
+
+paths:
+  # ========================================================================
+  # CANVAS MODEL RPC METHODS
+  # ========================================================================
+
+  /canvas/save_canvas_state:
+    post:
+      tags: [Canvas RPC]
+      summary: Save canvas visual state (RPC)
+      description: |
+        Save complete canvas state to `json_definition` field.
+
+        This is the **primary method** used by frontend to persist workflow changes.
+
+        **Usage:** Called from JavaScript when user saves workflow.
+
+        **RPC Format:**
+        ```json
+        {
+          "jsonrpc": "2.0",
+          "method": "call",
+          "params": {
+            "service": "object",
+            "method": "execute",
+            "args": [
+              "database_name",
+              uid,
+              "password",
+              "canvas",
+              "save_canvas_state",
+              canvas_id,
+              canvas_data
+            ]
+          },
+          "id": 1
+        }
+        ```
+      operationId: saveCanvasState
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                canvas_id:
+                  type: integer
+                  description: Canvas record ID
+                  example: 42
+                canvas_data:
+                  type: object
+                  description: Complete N8N JSON structure
+                  properties:
+                    nodes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: "node-1"
+                          name:
+                            type: string
+                            example: "Start"
+                          type:
+                            type: string
+                            example: "n8n-nodes-base.start"
+                          position:
+                            type: array
+                            items:
+                              type: number
+                            example: [250, 300]
+                          parameters:
+                            type: object
+                    connections:
+                      type: object
+                      description: Node connections
+                      example:
+                        Start:
+                          main: [[{"node": "HTTP Request", "type": "main", "index": 0}]]
+                    settings:
+                      type: object
+                      properties:
+                        executionOrder:
+                          type: string
+                          example: "v1"
+      responses:
+        '200':
+          description: Canvas state saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jsonrpc:
+                    type: string
+                    example: "2.0"
+                  id:
+                    type: integer
+                    example: 1
+                  result:
+                    type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: "Canvas state saved successfully"
+
+  /canvas/load_canvas_state:
+    post:
+      tags: [Canvas RPC]
+      summary: Load canvas state (RPC)
+      description: Load canvas state from database for frontend rendering.
+      operationId: loadCanvasState
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - canvas_id
+              properties:
+                canvas_id:
+                  type: integer
+                  example: 42
+      responses:
+        '200':
+          description: Canvas state loaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jsonrpc:
+                    type: string
+                    example: "2.0"
+                  result:
+                    type: object
+                    description: Complete N8N JSON structure
+                    properties:
+                      nodes:
+                        type: array
+                      connections:
+                        type: object
+                      settings:
+                        type: object
+
+  /canvas/update_workflow_name:
+    post:
+      tags: [Canvas RPC]
+      summary: Update workflow name (RPC)
+      description: Update workflow name without reloading entire canvas.
+      operationId: updateWorkflowName
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - canvas_id
+                - new_name
+              properties:
+                canvas_id:
+                  type: integer
+                  example: 42
+                new_name:
+                  type: string
+                  example: "Updated Workflow Name"
+      responses:
+        '200':
+          description: Name updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+  /canvas/get_n8n_node_metadata:
+    post:
+      tags: [Node Metadata]
+      summary: Get N8N node metadata (RPC)
+      description: |
+        Get N8N node type metadata from external JSON file.
+
+        **Loads:** `ai_sam/static/src/vendor_library/_registry/node_metadata.json`
+
+        **Contains:** 195 N8N node types
+      operationId: getN8nNodeMetadata
+      responses:
+        '200':
+          description: Node metadata loaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: "HTTP Request"
+                        type:
+                          type: string
+                          example: "n8n-nodes-base.httpRequest"
+                        category:
+                          type: string
+                          example: "API & Web Services"
+                        inputs:
+                          type: array
+                        outputs:
+                          type: array
+                        parameters:
+                          type: object
+
+  /canvas/get_content_node_metadata:
+    post:
+      tags: [Node Metadata]
+      summary: Get SAM Content node metadata (RPC)
+      description: |
+        Get SAM Content node metadata from external JSON file.
+
+        **Loads:** `ai_sam_workflows/static/src/nodes/_content_nodes_registry/content_nodes.json`
+      operationId: getContentNodeMetadata
+      responses:
+        '200':
+          description: Content node metadata loaded
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /canvas/get_agent_node_metadata:
+    post:
+      tags: [Node Metadata]
+      summary: Get AI Agent node metadata (RPC)
+      description: |
+        Get AI Agent node metadata from external JSON file.
+
+        **Loads:** `ai_sam_workflows/static/src/nodes/_agent_nodes_registry/agent_nodes.json`
+      operationId: getAgentNodeMetadata
+      responses:
+        '200':
+          description: Agent node metadata loaded
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /canvas/action_execute_workflow:
+    post:
+      tags: [Execution]
+      summary: Execute workflow manually
+      description: Execute workflow manually from UI button.
+      operationId: actionExecuteWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - canvas_id
+              properties:
+                canvas_id:
+                  type: integer
+                  example: 42
+      responses:
+        '200':
+          description: Execution started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: "ir.actions.act_window"
+                  res_model:
+                    type: string
+                    example: "executions"
+                  res_id:
+                    type: integer
+                    description: Created execution record ID
+                    example: 123
+
+  /canvas/action_generate_code:
+    post:
+      tags: [Canvas RPC]
+      summary: Generate Python & JavaScript code
+      description: Generate code from workflow JSON definition.
+      operationId: actionGenerateCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - canvas_id
+              properties:
+                canvas_id:
+                  type: integer
+                  example: 42
+      responses:
+        '200':
+          description: Code generated and saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  python_code:
+                    type: string
+                    description: Generated Python code
+                  javascript_code:
+                    type: string
+                    description: Generated JavaScript code
+
+  /canvas/create_from_template:
+    post:
+      tags: [Templates]
+      summary: Create workflow from template (RPC)
+      description: Create a new workflow from an existing template.
+      operationId: createFromTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - template_id
+              properties:
+                template_id:
+                  type: integer
+                  description: Template record ID
+                  example: 5
+      responses:
+        '200':
+          description: Workflow created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  canvas_id:
+                    type: integer
+                    description: Created workflow ID
+                    example: 100
+
+  # ========================================================================
+  # EXECUTIONS MODEL METHODS
+  # ========================================================================
+
+  /executions/action_start_execution:
+    post:
+      tags: [Execution]
+      summary: Start workflow execution
+      description: Start manual execution of a workflow.
+      operationId: actionStartExecution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - execution_id
+              properties:
+                execution_id:
+                  type: integer
+                  example: 123
+      responses:
+        '200':
+          description: Execution started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  state:
+                    type: string
+                    example: "running"
+
+  /executions/action_cancel_execution:
+    post:
+      tags: [Execution]
+      summary: Cancel running execution
+      description: Cancel a currently running execution.
+      operationId: actionCancelExecution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - execution_id
+              properties:
+                execution_id:
+                  type: integer
+                  example: 123
+      responses:
+        '200':
+          description: Execution cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  state:
+                    type: string
+                    example: "cancelled"
+
+  /executions/action_retry_execution:
+    post:
+      tags: [Execution]
+      summary: Retry failed execution
+      description: Retry a failed execution.
+      operationId: actionRetryExecution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - execution_id
+              properties:
+                execution_id:
+                  type: integer
+                  example: 123
+      responses:
+        '200':
+          description: Execution retried
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  new_execution_id:
+                    type: integer
+                    description: New execution record ID
+                    example: 124
+
+  # ========================================================================
+  # WORKFLOW TEMPLATE METHODS
+  # ========================================================================
+
+  /workflow.template/action_create_workflow:
+    post:
+      tags: [Templates]
+      summary: Create workflow from template
+      description: Create a new workflow from this template.
+      operationId: templateActionCreateWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - template_id
+              properties:
+                template_id:
+                  type: integer
+                  example: 5
+      responses:
+        '200':
+          description: Workflow created from template
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: "ir.actions.act_window"
+                  res_model:
+                    type: string
+                    example: "canvas"
+                  res_id:
+                    type: integer
+                    example: 100
+
+  /workflow.template/action_validate_template:
+    post:
+      tags: [Templates]
+      summary: Validate template structure
+      description: Validate template JSON structure and mark as validated.
+      operationId: actionValidateTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - template_id
+              properties:
+                template_id:
+                  type: integer
+                  example: 5
+      responses:
+        '200':
+          description: Template validated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  is_validated:
+                    type: boolean
+                    example: true
+                  validation_notes:
+                    type: string
+                    example: "Template structure is valid"
+
+  /workflow.template/import_n8n_workflow:
+    post:
+      tags: [Import/Export]
+      summary: Import N8N workflow as template (RPC)
+      description: |
+        Import N8N workflow JSON as a template.
+
+        **Static method** - can be called without a template_id.
+      operationId: importN8nWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - json_data
+              properties:
+                json_data:
+                  type: object
+                  description: Complete N8N workflow JSON
+                  properties:
+                    nodes:
+                      type: array
+                    connections:
+                      type: object
+                    settings:
+                      type: object
+                template_name:
+                  type: string
+                  example: "Imported Workflow"
+                category:
+                  type: string
+                  enum: [crm, marketing, project, hr, finance, inventory, integration, automation, reporting, custom]
+                  example: "automation"
+      responses:
+        '200':
+          description: Template created from N8N workflow
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  template_id:
+                    type: integer
+                    example: 10
+
+  /workflow.template/get_marketplace_templates:
+    post:
+      tags: [Templates]
+      summary: Get marketplace templates (RPC)
+      description: |
+        Get all public marketplace templates.
+
+        **Static method** - returns all templates with visibility='marketplace'.
+      operationId: getMarketplaceTemplates
+      responses:
+        '200':
+          description: List of marketplace templates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  templates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: "Email Automation Template"
+                        category:
+                          type: string
+                          example: "automation"
+                        usage_count:
+                          type: integer
+                          example: 50
+                        preview_image:
+                          type: string
+                          format: binary
+                        documentation:
+                          type: string
+                          description: HTML documentation
+
+components:
+  securitySchemes:
+    odooJsonRpcAuth:
+      type: http
+      scheme: basic
+      description: |
+        Odoo JSON-RPC authentication using database name, username, and password.
+
+        **Example request:**
+        ```json
+        {
+          "jsonrpc": "2.0",
+          "method": "call",
+          "params": {
+            "service": "object",
+            "method": "execute",
+            "args": [
+              "your_database",
+              uid,
+              "your_password",
+              "canvas",
+              "method_name",
+              arg1,
+              arg2
+            ]
+          },
+          "id": 1
+        }
+        ```
+
+  schemas:
+    N8nWorkflowJson:
+      type: object
+      required:
+        - nodes
+        - connections
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/N8nNode'
+        connections:
+          type: object
+          description: Node connections map
+        settings:
+          type: object
+          properties:
+            executionOrder:
+              type: string
+              example: "v1"
+
+    N8nNode:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - position
+      properties:
+        id:
+          type: string
+          example: "node-1"
+        name:
+          type: string
+          example: "HTTP Request"
+        type:
+          type: string
+          example: "n8n-nodes-base.httpRequest"
+        position:
+          type: array
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+          example: [250, 300]
+        parameters:
+          type: object
+          description: Node-specific parameters
+
+security:
+  - odooJsonRpcAuth: []

@@ -1,0 +1,590 @@
+{
+  "timestamp": "2025-10-13T23:43:22.634886",
+  "modules": [],
+  "summary": {
+    "total_errors": 1,
+    "total_warnings": 27,
+    "status": "FAIL",
+    "modules_checked": 3
+  },
+  "refactoring_suggestions": [
+    {
+      "type": "duplicate_code",
+      "file": "ai_memory_config.py",
+      "line": 116,
+      "suggestion": "Duplicate code pattern detected near line 116. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "ai_voice_service.py",
+      "line": 181,
+      "suggestion": "Duplicate code pattern detected near line 181. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "api_credentials.py",
+      "line": 256,
+      "suggestion": "Duplicate code pattern detected near line 256. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "sam_user_settings.py",
+      "line": 131,
+      "suggestion": "Duplicate code pattern detected near line 131. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "canvas_controller.py",
+      "line": 226,
+      "suggestion": "Duplicate code pattern detected near line 226. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "canvas_controller.py",
+      "line": 316,
+      "suggestion": "Duplicate code pattern detected near line 316. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "canvas_controller.py",
+      "line": 341,
+      "suggestion": "Duplicate code pattern detected near line 341. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "sam_ai_chat_controller.py",
+      "line": 291,
+      "suggestion": "Duplicate code pattern detected near line 291. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "sam_developer_mode.py",
+      "line": 166,
+      "suggestion": "Duplicate code pattern detected near line 166. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "sam_developer_mode.py",
+      "line": 331,
+      "suggestion": "Duplicate code pattern detected near line 331. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "sam_orchestrator.py",
+      "line": 136,
+      "suggestion": "Duplicate code pattern detected near line 136. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "sam_session_controller.py",
+      "line": 176,
+      "suggestion": "Duplicate code pattern detected near line 176. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "sam_session_controller.py",
+      "line": 206,
+      "suggestion": "Duplicate code pattern detected near line 206. Consider extracting to a helper function."
+    },
+    {
+      "type": "duplicate_code",
+      "file": "sam_session_controller.py",
+      "line": 251,
+      "suggestion": "Duplicate code pattern detected near line 251. Consider extracting to a helper function."
+    }
+  ],
+  "code_smells": [
+    {
+      "type": "missing_type_hints",
+      "file": "ai_agent_definition.py",
+      "count": 1,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_agent_execution.py",
+      "count": 2,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_agent_knowledge.py",
+      "count": 1,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_artifact_version.py",
+      "count": 3,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_automator_config.py",
+      "count": 2,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_branches.py",
+      "count": 8,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_claude_history_importer.py",
+      "count": 6,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_context_builder.py",
+      "count": 13,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_conversation.py",
+      "count": 11,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "long_function",
+      "file": "ai_conversation_import.py",
+      "function": "action_validate_source",
+      "lines": 141,
+      "suggestion": "Consider breaking action_validate_source() into smaller functions (current: 141 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "long_function",
+      "file": "ai_conversation_import.py",
+      "function": "action_import_data",
+      "lines": 121,
+      "suggestion": "Consider breaking action_import_data() into smaller functions (current: 121 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "long_function",
+      "file": "ai_conversation_import.py",
+      "function": "_parse_conversations",
+      "lines": 126,
+      "suggestion": "Consider breaking _parse_conversations() into smaller functions (current: 126 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_conversation_import.py",
+      "count": 9,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_document_extractor.py",
+      "count": 24,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_graph_service.py",
+      "count": 9,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "long_function",
+      "file": "ai_memory_config.py",
+      "function": "action_export_memory_backup",
+      "lines": 194,
+      "suggestion": "Consider breaking action_export_memory_backup() into smaller functions (current: 194 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_memory_config.py",
+      "count": 8,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_memory_import_wizard.py",
+      "count": 4,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_memory_uninstall_wizard.py",
+      "count": 5,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_message.py",
+      "count": 3,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_registry_watcher.py",
+      "count": 7,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "long_function",
+      "file": "ai_service.py",
+      "function": "send_message",
+      "lines": 226,
+      "suggestion": "Consider breaking send_message() into smaller functions (current: 226 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "long_function",
+      "file": "ai_service.py",
+      "function": "_call_claude_api",
+      "lines": 128,
+      "suggestion": "Consider breaking _call_claude_api() into smaller functions (current: 128 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "long_function",
+      "file": "ai_service.py",
+      "function": "_build_system_prompt",
+      "lines": 119,
+      "suggestion": "Consider breaking _build_system_prompt() into smaller functions (current: 119 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_service.py",
+      "count": 18,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "long_function",
+      "file": "ai_service_config.py",
+      "function": "write",
+      "lines": 252,
+      "suggestion": "Consider breaking write() into smaller functions (current: 252 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_service_config.py",
+      "count": 18,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_service_provider.py",
+      "count": 7,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_token_usage.py",
+      "count": 7,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_vector_service.py",
+      "count": 9,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_voice_service.py",
+      "count": 3,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_workspace.py",
+      "count": 4,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "api_credentials.py",
+      "count": 9,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "business_unit.py",
+      "count": 4,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "canvas.py",
+      "count": 30,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "canvas_extension.py",
+      "count": 1,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "canvas_pan_move.py",
+      "count": 4,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "connections.py",
+      "count": 2,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "creatives_landing_card.py",
+      "count": 7,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "documentation_manager.py",
+      "count": 13,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "executions.py",
+      "count": 18,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "n8n_dynamic_menus.py",
+      "count": 3,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "n8n_import_wizard.py",
+      "count": 3,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "n8n_menu_debug.py",
+      "count": 3,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "n8n_node_category.py",
+      "count": 1,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "n8n_node_types.py",
+      "count": 1,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "long_function",
+      "file": "n8n_simple_extractor.py",
+      "function": "_generate_overlay_preview",
+      "lines": 457,
+      "suggestion": "Consider breaking _generate_overlay_preview() into smaller functions (current: 457 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "long_function",
+      "file": "n8n_simple_extractor.py",
+      "function": "_generate_new_overlay",
+      "lines": 282,
+      "suggestion": "Consider breaking _generate_new_overlay() into smaller functions (current: 282 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "long_function",
+      "file": "n8n_simple_extractor.py",
+      "function": "extract_all_nodes",
+      "lines": 146,
+      "suggestion": "Consider breaking extract_all_nodes() into smaller functions (current: 146 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "long_function",
+      "file": "n8n_simple_extractor.py",
+      "function": "_extract_node_from_file",
+      "lines": 103,
+      "suggestion": "Consider breaking _extract_node_from_file() into smaller functions (current: 103 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "n8n_simple_extractor.py",
+      "count": 8,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "long_function",
+      "file": "n8n_simple_nodes.py",
+      "function": "_compute_node_counts",
+      "lines": 113,
+      "suggestion": "Consider breaking _compute_node_counts() into smaller functions (current: 113 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "n8n_simple_nodes.py",
+      "count": 13,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "nodes.py",
+      "count": 27,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_brain_modes.py",
+      "count": 3,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_chat_session.py",
+      "count": 6,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_environment.py",
+      "count": 5,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_knowledge_doc.py",
+      "count": 10,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "long_function",
+      "file": "sam_mode_context.py",
+      "function": "create_default_modes",
+      "lines": 116,
+      "suggestion": "Consider breaking create_default_modes() into smaller functions (current: 116 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_mode_context.py",
+      "count": 5,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_personality.py",
+      "count": 7,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_user_profile.py",
+      "count": 10,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_user_settings.py",
+      "count": 5,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "workflow_templates.py",
+      "count": 11,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "workflow_types.py",
+      "count": 1,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "ai_workspace_add_conversations_wizard.py",
+      "count": 2,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "hooks.py",
+      "count": 2,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "canvas_controller.py",
+      "count": 15,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_ai_chat_controller.py",
+      "count": 10,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_developer_mode.py",
+      "count": 9,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "long_function",
+      "file": "sam_orchestrator.py",
+      "function": "_select_agent",
+      "lines": 105,
+      "suggestion": "Consider breaking _select_agent() into smaller functions (current: 105 lines, recommend: <50 lines)"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_orchestrator.py",
+      "count": 9,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "sam_session_controller.py",
+      "count": 6,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    },
+    {
+      "type": "missing_type_hints",
+      "file": "memory_graph_controller.py",
+      "count": 2,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    }
+  ],
+  "ai_teaching_prompts": [],
+  "errors": [
+    "C:\\Working With AI\\ai_sam\\ai_sam\\ai_sam_memory\\views\\ai_memory_menu.xml: Duplicate IDs found: {'action_memory_graph_view'}"
+  ],
+  "warnings": [
+    "sam_ai_chat_interface.xml: XML file exists but NOT in manifest['data']. If obsolete, move to uncertain_files/. If needed, add to manifest: 'static/src/components/sam_ai_chat_interface.xml'",
+    "sam_code_mode_button.xml: XML file exists but NOT in manifest['data']. If obsolete, move to uncertain_files/. If needed, add to manifest: 'static/src/components/sam_code_mode_button.xml'",
+    "sam_permission_handler.xml: XML file exists but NOT in manifest['data']. If obsolete, move to uncertain_files/. If needed, add to manifest: 'static/src/components/sam_permission_handler.xml'",
+    "sam_profile_settings.xml: XML file exists but NOT in manifest['data']. If obsolete, move to uncertain_files/. If needed, add to manifest: 'static/src/components/sam_profile_settings.xml'",
+    "sam_ai_chat_interface.js:sendMessage() - Async function without try/catch",
+    "sam_ai_chat_interface.js:switchMode() - Async function without try/catch",
+    "sam_ai_chat_interface.js:toggleVoiceRecording() - Async function without try/catch",
+    "sam_ai_chat_interface.js:transcribeRecording() - Async function without try/catch",
+    "sam_ai_chat_interface.js:requestPathPermission() - Async function without try/catch",
+    "sam_ai_chat_interface.js:loadCurrentPowerPrompt() - Async function without try/catch",
+    "sam_ai_chat_interface.js:savePowerPrompt() - Async function without try/catch",
+    "sam_ai_chat_interface.js:viewPromptHistory() - Async function without try/catch",
+    "sam_ai_chat_interface.js:toggleSessionHistory() - Async function without try/catch",
+    "sam_ai_chat_interface.js:clearAllSessions() - Async function without try/catch",
+    "sam_ai_chat_interface.js:autoSaveSession() - Async function without try/catch",
+    "sam_permission_handler.js:approveMemory() - Async function without try/catch",
+    "sam_permission_handler.js:approveFilePath() - Async function without try/catch",
+    "sam_config.js:loadEnvironmentConfig() - Async function without try/catch",
+    "node_manager.js:initialize() - Async function without try/catch",
+    "node_manager.js:updateNode() - Async function without try/catch",
+    "node_manager.js:deleteNode() - Async function without try/catch",
+    "node_manager.js:_rpcCall() - Async function without try/catch",
+    "platform_loader.js:fetchPlatformConfig() - Async function without try/catch",
+    "platform_loader.js:loadRendererModule() - Async function without try/catch",
+    "sam_ai_chat_widget.js:sendMessage() - Async function without try/catch",
+    "sam_ai_chat_widget.js:_rpcCall() - Async function without try/catch",
+    "sam_code_mode_button.js:toggleCodeMode() - Async function without try/catch"
+  ]
+}

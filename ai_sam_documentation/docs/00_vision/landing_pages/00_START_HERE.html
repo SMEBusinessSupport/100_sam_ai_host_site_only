@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The SAM Way - Start Here | Everyone Starts Here</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #000;
+        }
+
+        /* ========================================
+           HERO SECTION - FULLY STACKED WOW
+        ======================================== */
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .hero-kicker {
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #fdcb6e;
+            font-weight: 700;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-headline {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #fff 0%, #667eea 50%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-headline-impact {
+            display: block;
+            font-size: 6rem;
+            margin-top: 20px;
+            color: white;
+            -webkit-text-fill-color: white;
+            text-shadow: 0 0 40px rgba(253, 203, 110, 0.6);
+        }
+
+        .hero-subheadline {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .hero-subheadline strong {
+            color: #fdcb6e;
+            font-weight: 600;
+        }
+
+        /* The Stack Visualization */
+        .stack-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .stack-column {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+
+        .stack-column:hover {
+            border-color: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+            transform: translateY(-10px);
+        }
+
+        .stack-column-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fdcb6e;
+        }
+
+        .stack-column-subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stack-items {
+            list-style: none;
+        }
+
+        .stack-items li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stack-items li:last-child {
+            border-bottom: none;
+        }
+
+        .stack-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .plus-symbol {
+            text-align: center;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #fdcb6e;
+            margin: 40px 0;
+            text-shadow: 0 0 30px rgba(253, 203, 110, 0.6);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+        }
+
+        .section {
+            margin: 50px 0;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .section h3 {
+            font-size: 1.8rem;
+            color: #764ba2;
+            margin: 30px 0 20px;
+            font-weight: 600;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .section ul {
+            margin: 20px 0 20px 30px;
+            line-height: 2;
+        }
+
+        /* Vision Box */
+        .vision-box {
+            background: linear-gradient(135deg, #fdcb6e 0%, #f39c12 100%);
+            color: #1a1a2e;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(253, 203, 110, 0.3);
+        }
+
+        .vision-box h2 {
+            font-size: 3rem;
+            color: #1a1a2e;
+            border: none;
+            margin-bottom: 20px;
+            padding: 0;
+        }
+
+        .vision-box p {
+            font-size: 1.4rem;
+            color: #1a1a2e;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Lean Principles */
+        .principle {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .principle:hover {
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            transform: translateX(5px);
+        }
+
+        .principle h3 {
+            margin-top: 0;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .principle-emoji {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        /* Workflow Steps */
+        .workflow-step {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .workflow-number {
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-right: 25px;
+            flex-shrink: 0;
+        }
+
+        .workflow-content {
+            flex: 1;
+            font-size: 1.1rem;
+        }
+
+        /* Architecture Diagram */
+        .arch-layer {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .arch-layer h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        /* Callout Boxes */
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        /* Role Cards Grid */
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .role-card {
+            background: white;
+            border: 3px solid #ecf0f1;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .role-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .role-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .role-card h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .role-card p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        .read-time {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        /* Deep Context Links */
+        .deep-context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .context-link {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .context-link:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .context-link h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .context-link p {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 2px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
+            .hero-headline {
+                font-size: 3rem;
+            }
+
+            .hero-headline-impact {
+                font-size: 3.5rem;
+            }
+
+            .hero-subheadline {
+                font-size: 1.3rem;
+            }
+
+            .stack-visual {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+         HERO SECTION - FULLY STACKED WOW
+    ======================================== -->
+
+    <div class="hero">
+        <div class="hero-content">
+
+            <!-- Kicker -->
+            <div class="hero-kicker">SAM AI</div>
+
+            <!-- Headline: The Big Wow -->
+            <h1 class="hero-headline">
+                The World's First
+                <span class="hero-headline-impact">Fully Stacked AI-Powered Business System</span>
+            </h1>
+
+            <!-- Subheadline: The Explanation -->
+            <p class="hero-subheadline">
+                Everything you need to deliver excellence—<strong>complete business platform</strong>
+                + <strong>your team of AI agents</strong>—unified, intelligent, ready to create <strong>WOW</strong> experiences.
+            </p>
+
+            <!-- The Visual Stack -->
+            <div class="stack-visual">
+
+                <!-- Column 1: The Platform -->
+                <div class="stack-column">
+                    <div class="stack-column-title">🏗️ Full Business Platform</div>
+                    <div class="stack-column-subtitle">Everything Integrated</div>
+                    <ul class="stack-items">
+                        <li><span class="stack-icon">💼</span> CRM & Sales Pipeline</li>
+                        <li><span class="stack-icon">💰</span> Accounting & Finance</li>
+                        <li><span class="stack-icon">📧</span> Marketing Automation</li>
+                        <li><span class="stack-icon">📦</span> Inventory & Supply Chain</li>
+                        <li><span class="stack-icon">🏭</span> Manufacturing & Operations</li>
+                        <li><span class="stack-icon">🌐</span> Website & eCommerce</li>
+                        <li><span class="stack-icon">👥</span> HR & Payroll</li>
+                        <li><span class="stack-icon">📊</span> Analytics & Reporting</li>
+                    </ul>
+                </div>
+
+                <!-- Column 2: The AI Team -->
+                <div class="stack-column">
+                    <div class="stack-column-title">🤖 Your AI Agent Team</div>
+                    <div class="stack-column-subtitle">Intelligence & Expertise Working WITH You</div>
+                    <ul class="stack-items">
+                        <li><span class="stack-icon">🎩</span> Board of Directors (CMO, CTO, CFO, COO)</li>
+                        <li><span class="stack-icon">✍️</span> Marketing Specialists</li>
+                        <li><span class="stack-icon">👨‍💻</span> Development Team</li>
+                        <li><span class="stack-icon">📞</span> Customer Support Agents</li>
+                        <li><span class="stack-icon">🧠</span> Perfect Memory System</li>
+                        <li><span class="stack-icon">⚙️</span> Workflow Automation Engine</li>
+                        <li><span class="stack-icon">📚</span> Continuous Learning AI</li>
+                        <li><span class="stack-icon">🎯</span> Strategic Decision Support</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Plus Symbol (Ending Point from HERO_CONCEPT_v2) -->
+
+
+        </div>
+    </div>
+
+    <!-- ========================================
+         MAIN CONTENT
+    ======================================== -->
+
+    <div class="container">
+
+        <!-- SECTION 1: OUR VISION -->
+        <div class="vision-box">
+            <h2>🎯 Our Vision</h2>
+            <p><strong>WOW Business Owners With Overwhelming Support & Capacity</strong></p>
+        </div>
+
+        <div class="info-box">
+            <h3>📖 How This Works</h3>
+            <p><strong>Everyone starts here.</strong> Whether you're a human team member, contractor, or AI agent—this is your foundation.</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Step 1:</strong> Read this page completely (understand WHO WE ARE and HOW WE THINK)</li>
+                <li><strong>Step 2:</strong> Choose your role below (get your specific training)</li>
+                <li><strong>Step 3:</strong> Start creating WOW experiences</li>
+            </ul>
+            <p style="margin-top: 20px;"><strong>Time to get started:</strong> 5-10 minutes. That's it. No confusion. No wasted time.</p>
+        </div>
+
+        <!-- SECTION 2: HOW WE THINK - LEAN THINKING FRAMEWORK -->
+        <div class="section">
+            <h2>🏭 How We Think - The Lean Thinking Framework</h2>
+
+            <div class="warning-box">
+                <h3>⚠️ This Is Non-Negotiable</h3>
+                <p><strong>Everyone at SAM AI thinks this way. Humans AND AI agents. No exceptions.</strong></p>
+                <p>This isn't just a work methodology—it's our cognitive operating system. Every decision, every action, every solution flows through this lens.</p>
+            </div>
+
+            <h3>The Philosophy</h3>
+            <p>SAM AI was built by a founder with <strong>decades of lean manufacturing experience</strong> (Toyota Production System, 5S, continuous improvement, waste elimination). This isn't just software development—this is <strong>lean thinking applied to business systems and AI agent design</strong>.</p>
+
+            <p><strong>Core Belief:</strong> The best solutions come from:</p>
+            <ul>
+                <li>Understanding the <strong>complete value stream</strong> (not isolated pieces)</li>
+                <li>Eliminating <strong>waste</strong> (time, effort, code, tech debt, confusion)</li>
+                <li>Predicting <strong>ripple effects</strong> (before they happen)</li>
+                <li>Fixing at the <strong>deepest root cause</strong> (not surface symptoms)</li>
+                <li><strong>Continuous improvement</strong> (learn patterns, prevent recurrence)</li>
+            </ul>
+
+            <h3>The 8 Principles (Before ANY Action)</h3>
+
+            <div class="principle">
+                <h3><span class="principle-emoji">🎯</span>1. Define Value (What's the REAL Goal?)</h3>
+                <p><strong>Don't take requests literally.</strong> Dig deeper to understand the real value.</p>
+                <p><strong>Example:</strong> User says "Fix this button" → Real value is "Restore complete user workflow"</p>
+                <p><strong>Always ask:</strong> "What does the user ACTUALLY need to accomplish?"</p>
+            </div>
+
+            <div class="principle">
+                <h3><span class="principle-emoji">🗺️</span>2. Map the Value Stream (What's the Complete Flow?)</h3>
+                <p><strong>Understand the entire system</strong> before touching one piece.</p>
+                <p><strong>Ask:</strong> What's upstream? Where am I? What's downstream? Where are the bottlenecks?</p>
+                <p><strong>Never optimize one step without understanding the entire stream.</strong></p>
+            </div>
+
+            <div class="principle">
+                <h3><span class="principle-emoji">🗑️</span>3. Identify Waste (8 Wastes - DOWNTIME)</h3>
+                <p><strong>Before creating or fixing anything, ask: "Am I about to create waste?"</strong></p>
+                <ul>
+                    <li><strong>D</strong>efects - Will this break something else?</li>
+                    <li><strong>O</strong>verproduction - Am I creating unused code?</li>
+                    <li><strong>W</strong>aiting - Will this create bottlenecks?</li>
+                    <li><strong>N</strong>on-utilized talent - Am I wasting expertise?</li>
+                    <li><strong>T</strong>ransportation - Am I moving problems instead of solving them?</li>
+                    <li><strong>I</strong>nventory - Am I creating tech debt?</li>
+                    <li><strong>M</strong>otion - Am I fragmenting related fixes?</li>
+                    <li><strong>E</strong>xtra processing - Does this already exist?</li>
+                </ul>
+            </div>
+
+            <div class="principle">
+                <h3><span class="principle-emoji">🌊</span>4. Ripple Effect Analysis (5 What-Ifs)</h3>
+                <p><strong>Map consequences BEFORE implementing.</strong> This separates great work from mediocre work.</p>
+                <p><strong>Ask:</strong> What if I change this? What if that breaks? What if users do X? What if the system scales?</p>
+                <p><strong>MAP THE RIPPLES BEFORE ACTING.</strong></p>
+            </div>
+
+            <div class="principle">
+                <h3><span class="principle-emoji">🔍</span>5. Root Cause Analysis (5 Whys)</h3>
+                <p><strong>Dig to the DEEPEST cause.</strong> Don't stop at surface symptoms.</p>
+                <p><strong>Example:</strong> Why doesn't X work? → Error Y → Why Y? → Config Z → Why Z? → Migration didn't update → Why? → <strong>No systematic audit process</strong></p>
+                <p><strong>Fix the deepest cause, not the symptom.</strong></p>
+            </div>
+
+            <div class="principle">
+                <h3><span class="principle-emoji">🔎</span>6. "Does This Already Exist?" (Search Exhaustively)</h3>
+                <p><strong>Before creating anything, search exhaustively.</strong></p>
+                <p>SAM AI is a mature system. Most things already exist—they may have been renamed, refactored, or moved. Search old patterns, new patterns, documentation, commented code.</p>
+                <p><strong>ONLY create if truly missing + user confirms rebuild needed.</strong></p>
+            </div>
+
+            <div class="principle">
+                <h3><span class="principle-emoji">🎨</span>7. Holistic Fix Design (Optimize Entire Flow)</h3>
+                <p><strong>Design fixes that optimize the ENTIRE value stream.</strong></p>
+                <p>Address: Root cause + Ripple effects + Pattern (not just instance) + Complete flow</p>
+                <p><strong>GOAL:</strong> User tests ONCE, entire flow works. Swift production return.</p>
+            </div>
+
+            <div class="principle">
+                <h3><span class="principle-emoji">📈</span>8. Continuous Improvement (Learn & Document)</h3>
+                <p><strong>Every fix is a learning opportunity.</strong></p>
+                <p>After every solution: What pattern did we learn? How do we prevent this? Where do we document it?</p>
+                <p><strong>GOAL:</strong> Future team members don't repeat this waste.</p>
+            </div>
+
+            <h3>Your Lean Thinking Workflow (Every Task)</h3>
+
+            <div class="workflow-step">
+                <div class="workflow-number">1</div>
+                <div class="workflow-content"><strong>Define Value</strong> - What's the real goal?</div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">2</div>
+                <div class="workflow-content"><strong>Map Value Stream</strong> - What's the complete flow?</div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">3</div>
+                <div class="workflow-content"><strong>Identify Waste</strong> - Am I creating waste? (DOWNTIME)</div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">4</div>
+                <div class="workflow-content"><strong>Analyze Ripples</strong> - 5 What-Ifs (map consequences)</div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">5</div>
+                <div class="workflow-content"><strong>Root Cause</strong> - 5 Whys (dig deep)</div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">6</div>
+                <div class="workflow-content"><strong>Check Existing</strong> - Does this already exist?</div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">7</div>
+                <div class="workflow-content"><strong>Design Holistically</strong> - Fix entire flow</div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">8</div>
+                <div class="workflow-content"><strong>Implement</strong> - Execute with confidence</div>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">9</div>
+                <div class="workflow-content"><strong>Document & Learn</strong> - Continuous improvement</div>
+            </div>
+
+            <div class="success-box">
+                <h3>✅ Expected Outcomes</h3>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Fix once, fix completely</strong> (no endless test cycles)</li>
+                    <li><strong>No ripple effect surprises</strong> (consequences predicted and handled)</li>
+                    <li><strong>Swift production return</strong> (no wasted time on surface fixes)</li>
+                    <li><strong>Future team learns from patterns</strong> (continuous improvement)</li>
+                    <li><strong>Zero waste</strong> (no duplicate code, no tech debt, no bottlenecks)</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- SECTION 3: OUR ARCHITECTURE -->
+        <div class="section">
+            <h2>🏗️ Our Architecture</h2>
+
+            <p>SAM AI follows a strict <strong>3-layer architecture</strong> with a <strong>platform skin model</strong> for maximum flexibility and safety.</p>
+
+            <div class="arch-layer">
+                <h3>Layer 1: UI & User Interaction (Platform Skins)</h3>
+                <ul>
+                    <li><strong>Modules:</strong> ai_sam_workflows, ai_sam_sales, ai_sam_analytics, etc.</li>
+                    <li><strong>Contains:</strong> Views, controllers, JavaScript, CSS</li>
+                    <li><strong>Data models:</strong> ZERO (UI only - uninstall-safe!)</li>
+                    <li><strong>Purpose:</strong> All UI components reference Layer 2 for data</li>
+                </ul>
+            </div>
+
+            <div class="arch-layer">
+                <h3>Layer 2: Business Logic & Data Models (ai_brain)</h3>
+                <ul>
+                    <li><strong>Module:</strong> ai_brain (core intelligence)</li>
+                    <li><strong>Contains:</strong> Canvas, nodes, connections, executions, API credentials, business logic</li>
+                    <li><strong>Database:</strong> PostgreSQL with JSONB (high performance, flexible)</li>
+                    <li><strong>Purpose:</strong> Platform skins can be uninstalled → Data persists in ai_brain</li>
+                </ul>
+            </div>
+
+            <div class="arch-layer">
+                <h3>Layer 3: Shared Foundation (ai_sam)</h3>
+                <ul>
+                    <li><strong>Module:</strong> ai_sam (shared utilities)</li>
+                    <li><strong>Contains:</strong> Shared JavaScript, utilities, base models, some raw JSON storage</li>
+                    <li><strong>Purpose:</strong> Shared across all platform skins</li>
+                </ul>
+            </div>
+
+            <h3>Platform Skin Model (Why This Matters)</h3>
+            <p><strong>Key Concept:</strong> Platform skins are UI-only modules that can be installed/uninstalled without data loss.</p>
+            <ul>
+                <li><strong>Install:</strong> ai_sam_workflows → Get N8N workflow automation UI</li>
+                <li><strong>Uninstall:</strong> ai_sam_workflows → UI gone, but workflow data persists in ai_brain</li>
+                <li><strong>Reinstall:</strong> ai_sam_workflows → All data still there, UI returns</li>
+            </ul>
+            <p><strong>Benefit:</strong> Safe debugging, modular architecture, scalable ecosystem, no data loss risk</p>
+
+            <h3>Recent Architecture: Flatline Migration</h3>
+            <p><strong>ai_sam_workflows underwent 93% code reduction</strong> (dual-storage → flatline/JSON-only):</p>
+            <ul>
+                <li><strong>OLD:</strong> Dual-storage (database tables + JSON, 18 transitions, complex state management)</li>
+                <li><strong>NEW:</strong> Flatline (JSON-only storage, 5 transitions, 72% complexity reduction)</li>
+                <li><strong>Key change:</strong> User interactions in-memory (JavaScript), saved to database on explicit SAVE</li>
+            </ul>
+            <p><strong>Impact:</strong> Faster, simpler, more maintainable. This is lean thinking applied to architecture.</p>
+
+        </div>
+
+        <!-- SECTION 4: CHOOSE YOUR ROLE - HUMANS -->
+        <div class="section">
+            <h2>👥 Choose Your Role (Human Team Members)</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 30px;">Welcome! Select your role to get your personalized onboarding brief:</p>
+
+            <div class="role-grid">
+
+                <!-- New Employee -->
+                <a href="01_ROLE_BRIEFS/for_new_employee.html" class="role-card">
+                    <div class="role-icon">🌟</div>
+                    <h3>New Employee</h3>
+                    <p>Welcome to the team! Everything you need to know about our business</p>
+                    <span class="read-time">📖 10 min read</span>
+                </a>
+
+                <!-- Sales Team Member -->
+                <a href="01_ROLE_BRIEFS/for_sales_team.html" class="role-card">
+                    <div class="role-icon">💼</div>
+                    <h3>Sales Team Member</h3>
+                    <p>Sales process, ideal client, objection handling, SAM AI value proposition</p>
+                    <span class="read-time">📖 7 min read</span>
+                </a>
+
+                <!-- Customer Support -->
+                <a href="01_ROLE_BRIEFS/for_customer_support.html" class="role-card">
+                    <div class="role-icon">🎧</div>
+                    <h3>Customer Support</h3>
+                    <p>Common questions, troubleshooting, escalation process, knowledge base</p>
+                    <span class="read-time">📖 6 min read</span>
+                </a>
+
+                <!-- Contractor/Freelancer -->
+                <a href="01_ROLE_BRIEFS/for_contractor.html" class="role-card">
+                    <div class="role-icon">🤝</div>
+                    <h3>Contractor / Freelancer</h3>
+                    <p>Quick onboarding, project context, communication standards, deliverables</p>
+                    <span class="read-time">📖 5 min read</span>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- SECTION 5: CHOOSE YOUR ROLE - AI AGENTS -->
+        <div class="section">
+            <h2>🤖 Choose Your Role (AI Agents)</h2>
+            <p>For AI agents (Claude sessions, specialist bots): Select the agent role for your role-specific brief:</p>
+
+            <div class="role-grid">
+
+                <!-- Sales Copywriter -->
+                <a href="01_ROLE_BRIEFS/for_sales_copywriter.html" class="role-card">
+                    <div class="role-icon">✍️</div>
+                    <h3>Sales Copywriter</h3>
+                    <p>Direct response copy that converts SME business owners to SAM AI waitlist</p>
+                    <span class="read-time">📖 3 min read</span>
+                </a>
+
+                <!-- CMO (Chief Marketing Officer) -->
+                <a href="01_ROLE_BRIEFS/for_cmo.html" class="role-card">
+                    <div class="role-icon">📊</div>
+                    <h3>CMO (Chief Marketing Officer)</h3>
+                    <p>Strategic marketing direction, campaigns, positioning, brand management</p>
+                    <span class="read-time">📖 4 min read</span>
+                </a>
+
+                <!-- Developer -->
+                <a href="01_ROLE_BRIEFS/for_developer.html" class="role-card">
+                    <div class="role-icon">👩‍💻</div>
+                    <h3>Developer (Odoo 18)</h3>
+                    <p>Build features, write code, follow architecture, pass QA Guardian checks</p>
+                    <span class="read-time">📖 5 min read</span>
+                </a>
+
+                <!-- CTO (Chief Technology Officer) -->
+                <a href="01_ROLE_BRIEFS/for_cto.html" class="role-card">
+                    <div class="role-icon">🏗️</div>
+                    <h3>CTO (Chief Technology Officer)</h3>
+                    <p>Infrastructure strategy, architecture decisions, scaling, DevOps</p>
+                    <span class="read-time">📖 4 min read</span>
+                </a>
+
+                <!-- Debug Agent -->
+                <a href="01_ROLE_BRIEFS/for_debug.html" class="role-card">
+                    <div class="role-icon">🐛</div>
+                    <h3>Debug Agent</h3>
+                    <p>Troubleshoot errors, analyze logs, track bug history, suggest fixes</p>
+                    <span class="read-time">📖 3 min read</span>
+                </a>
+
+                <!-- Documentation Master -->
+                <a href="01_ROLE_BRIEFS/for_docs_master.html" class="role-card">
+                    <div class="role-icon">📚</div>
+                    <h3>Documentation Master</h3>
+                    <p>Maintain ecosystem truth, prevent agent naivety, generate schema docs</p>
+                    <span class="read-time">📖 4 min read</span>
+                </a>
+
+                <!-- QA Guardian -->
+                <a href="01_ROLE_BRIEFS/for_qa_guardian.html" class="role-card">
+                    <div class="role-icon">✅</div>
+                    <h3>QA Guardian</h3>
+                    <p>Pre-commit quality gate, catch Odoo 18 errors, auto-fix patterns</p>
+                    <span class="read-time">📖 3 min read</span>
+                </a>
+
+                <!-- COS (Chief of Staff) -->
+                <a href="01_ROLE_BRIEFS/for_cos.html" class="role-card">
+                    <div class="role-icon">🎩</div>
+                    <h3>COS (Chief of Staff)</h3>
+                    <p>Manage agent ecosystem, strategic team advisor, boardroom context</p>
+                    <span class="read-time">📖 5 min read</span>
+                </a>
+
+                <!-- SAM Herself (Generalist) -->
+                <a href="01_ROLE_BRIEFS/for_sam_generalist.html" class="role-card">
+                    <div class="role-icon">💗</div>
+                    <h3>SAM (Generalist Mode)</h3>
+                    <p>Warm, collaborative, creative brainstorming, general conversations</p>
+                    <span class="read-time">📖 4 min read</span>
+                </a>
+
+                <!-- Online Sales Strategist -->
+                <a href="01_ROLE_BRIEFS/for_online_sales_strategist.html" class="role-card">
+                    <div class="role-icon">🎯</div>
+                    <h3>Online Sales Strategist</h3>
+                    <p>Russell Brunson-trained funnel architect + Dan Kennedy-level copywriter. Builds complete conversion systems (funnels, copy, emails) that make sales online</p>
+                    <span class="read-time">📖 7 min read</span>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- SECTION 6: DEEP CONTEXT (OPTIONAL) -->
+        <div class="section">
+            <h2>📖 Deep Context (Optional - Only if You Need It)</h2>
+            <p>
+                Most people won't need these. But if your role-specific brief links here,
+                or you want to understand SAM's full depth:
+            </p>
+
+            <div class="deep-context-grid">
+
+                <a href="02_DEEP_CONTEXT/index.html" class="context-link">
+                    <h4>📊 Technical Overview</h4>
+                    <p>40+ data models, 1,500+ connectors, cost optimization (43% reduction)</p>
+                </a>
+
+                <a href="02_DEEP_CONTEXT/PLATFORM_SKIN_MODEL.html" class="context-link">
+                    <h4>🏗️ Architecture Deep Dive</h4>
+                    <p>ONE CORE, MANY SKINS model - how SAM's canvas platform works</p>
+                </a>
+
+                <a href="02_DEEP_CONTEXT/schema_diagram.html" class="context-link">
+                    <h4>🗄️ Database Schema</h4>
+                    <p>Entity-relationship diagrams, 40+ models mapped visually</p>
+                </a>
+
+                <a href="02_DEEP_CONTEXT/ideal_client_persona.html" class="context-link">
+                    <h4>🎯 Ideal Client Persona</h4>
+                    <p>SME business owner (10-50 employees, pain points, desired outcomes)</p>
+                </a>
+
+                <a href="introducing_sam.html" class="context-link">
+                    <h4>💗 Introducing SAM (Landing Page)</h4>
+                    <p>Full sales page - 7 sections, super powers, comparison matrix, ROI calculator</p>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <h2>🎯 Remember: This Is The SAM Way</h2>
+            <p>Every team member. Every AI agent. Every session. Every time.</p>
+            <p>Lean thinking is not optional - it's <strong>how we think</strong>.</p>
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #ecf0f1;">
+            <p>
+                <strong>Questions?</strong> Contact <a href="mailto:anthony@sme.ec">anthony@sme.ec</a>
+            </p>
+            <p style="margin-top: 20px;">
+                <strong>Document Version:</strong> 2.0 (Enhanced with Lean Thinking Framework)<br>
+                <strong>Last Updated:</strong> November 1, 2025<br>
+                <strong>Maintained By:</strong> Chief of Staff (/cos)<br>
+                Built with 💗 by the SAM AI Team
+            </p>
+        </div>
+
+    </div>
+
+</body>
+</html>

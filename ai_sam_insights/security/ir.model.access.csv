@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_insights_scan_user,insights.scan.user,model_insights_scan,base.group_user,1,1,1,1
+access_insights_finding_user,insights.finding.user,model_insights_finding,base.group_user,1,1,1,1
+access_insights_relationship_user,insights.relationship.user,model_insights_relationship,base.group_user,1,1,1,1
+access_insights_scan_settings_user,insights.scan.settings.user,model_insights_scan_settings,base.group_user,1,1,1,1
+access_insights_scan_module_user,insights.scan.module.user,model_insights_scan_module,base.group_user,1,1,1,1

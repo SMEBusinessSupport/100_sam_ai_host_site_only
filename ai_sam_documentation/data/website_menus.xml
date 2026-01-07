@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Documentation Hub Menu (Primary - GitBook style) -->
+        <record id="menu_documentation" model="website.menu">
+            <field name="name">Documentation</field>
+            <field name="url">/documentation</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">49</field>
+        </record>
+
+        <!-- SAM Docs Menu (Internal - eLearning view) -->
+        <record id="menu_sam_docs" model="website.menu">
+            <field name="name">SAM Docs</field>
+            <field name="url">/sam_insights/</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- Learn Menu (Free) -->
+        <record id="menu_learn" model="website.menu">
+            <field name="name">Learn</field>
+            <field name="url">/learn/</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">51</field>
+        </record>
+
+        <!-- Training Menu (Premium) -->
+        <record id="menu_training" model="website.menu">
+            <field name="name">Training</field>
+            <field name="url">/training/</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">52</field>
+        </record>
+    </data>
+</odoo>

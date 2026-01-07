@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SAM AI Module Catalog - Dev Environment</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 40px; background: #f5f5f5; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #875A7B; margin-bottom: 5px; }
+        .subtitle { color: #666; font-size: 1.1em; margin-bottom: 30px; }
+        h2 { color: #333; border-bottom: 2px solid #875A7B; padding-bottom: 10px; margin-top: 40px; }
+        h3 { color: #875A7B; margin-top: 25px; }
+        .step { background: #f9f9f9; padding: 20px; margin: 15px 0; border-radius: 6px; border-left: 4px solid #875A7B; }
+        .step-number { display: inline-block; background: #875A7B; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 10px; }
+        code { background: #e8e8e8; padding: 2px 8px; border-radius: 4px; font-family: 'Consolas', monospace; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 6px; overflow-x: auto; }
+        .warning { background: #fff3cd; border-left-color: #ffc107; }
+        .success { background: #d4edda; border-left-color: #28a745; }
+        .info { background: #d1ecf1; border-left-color: #17a2b8; }
+        .dev-only { background: #f8d7da; border-left-color: #dc3545; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #875A7B; color: white; }
+        .path { background: #1e1e1e; color: #d4d4d4; padding: 10px 15px; border-radius: 4px; font-family: 'Consolas', monospace; margin: 10px 0; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SAM AI Module Catalog - Dev Environment</h1>
+        <p class="subtitle">Local Development Setup for Testing Module Distribution</p>
+
+        <div class="step dev-only">
+            <strong>Development Only!</strong><br>
+            This module is for LOCAL DEVELOPMENT and testing only. Do NOT install this on production SaaS instances.
+            It provides local filesystem scanning to simulate what the SaaS proxy would do.
+        </div>
+
+        <h2>What This Module Does</h2>
+
+        <div class="step info">
+            <strong>Purpose:</strong>
+            <ul>
+                <li>Test module catalog functionality without hitting GitHub API</li>
+                <li>Scan local filesystem paths for Odoo modules</li>
+                <li>Simulate the SaaS download behavior locally</li>
+                <li>Pre-configure your development repositories</li>
+            </ul>
+        </div>
+
+        <h2>Pre-Configured Repositories</h2>
+
+        <p>After installation, these repositories are automatically configured:</p>
+
+        <table>
+            <tr>
+                <th>Repository</th>
+                <th>Local Path</th>
+                <th>Type</th>
+            </tr>
+            <tr>
+                <td>SAM AI Full Modules</td>
+                <td><code>D:\SAMAI-18-SaaS\github-repos\02-samai-odoo-18-full-modules</code></td>
+                <td>Local Filesystem</td>
+            </tr>
+            <tr>
+                <td>SAM AI Core</td>
+                <td><code>D:\SAMAI-18-SaaS\github-repos\05-samai-core</code></td>
+                <td>Local Filesystem</td>
+            </tr>
+        </table>
+
+        <h2>Quick Start</h2>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Install the Module</strong>
+            <p>Install <code>sam_ai_odoo_modules_dev</code> from Apps. It will automatically install the base <code>sam_ai_odoo_modules</code> module as a dependency.</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>View Pre-Configured Repositories</strong>
+            <p>Go to <strong>Module Catalog &rarr; Configuration &rarr; Repositories</strong></p>
+            <p>You'll see the pre-configured local repositories ready to scan.</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Scan a Repository</strong>
+            <p>Click on a repository, then click <strong>Scan Repository</strong></p>
+            <p>The system will:</p>
+            <ul>
+                <li>Walk through the local filesystem path</li>
+                <li>Find all <code>__manifest__.py</code> files</li>
+                <li>Parse and extract module metadata</li>
+                <li>Create catalog entries for each module</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Browse the Catalog</strong>
+            <p>Go to <strong>Module Catalog &rarr; Catalog &rarr; All Modules</strong></p>
+            <p>All discovered modules are now visible with their metadata.</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Download a Module</strong>
+            <p>Click <strong>Download</strong> on any module. In dev mode, this:</p>
+            <ul>
+                <li>Copies the module from the local source path</li>
+                <li>Places it in your configured addons directory</li>
+                <li>No GitHub API calls are made</li>
+            </ul>
+        </div>
+
+        <h2>Configuration</h2>
+
+        <h3>Download Path</h3>
+
+        <div class="step info">
+            <p>Downloaded modules are placed in:</p>
+            <div class="path">C:\Program Files\SAM AI\server\odoo\addons</div>
+            <p>This is configured via System Parameters:</p>
+            <ul>
+                <li><code>sam_ai_odoo_modules.custom_addons_path</code></li>
+            </ul>
+        </div>
+
+        <h3>Dev Mode Settings</h3>
+
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><code>sam_ai_odoo_modules.dev_mode</code></td>
+                <td>True</td>
+                <td>Enables development mode features</td>
+            </tr>
+            <tr>
+                <td><code>sam_ai_odoo_modules.prefer_local_copy</code></td>
+                <td>True</td>
+                <td>Copy from local path instead of GitHub download</td>
+            </tr>
+            <tr>
+                <td><code>sam_ai_odoo_modules.custom_addons_path</code></td>
+                <td>C:\Program Files\SAM AI\server\odoo\addons</td>
+                <td>Where to place downloaded modules</td>
+            </tr>
+        </table>
+
+        <h2>Adding Your Own Local Repository</h2>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Create New Repository</strong>
+            <p>Go to <strong>Module Catalog &rarr; Configuration &rarr; Repositories</strong></p>
+            <p>Click <strong>Create</strong></p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Configure as Local Filesystem</strong>
+            <ul>
+                <li><strong>Name:</strong> Your descriptive name</li>
+                <li><strong>Repository Type:</strong> Select <code>Local Filesystem</code></li>
+                <li><strong>Local Path:</strong> Full path to your modules folder</li>
+                <li><strong>Source Type:</strong> Select appropriate type (SAM AI, Custom, etc.)</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Test and Scan</strong>
+            <p>Click <strong>Test Connection</strong> to verify the path exists</p>
+            <p>Click <strong>Scan Repository</strong> to discover modules</p>
+        </div>
+
+        <h2>How It Simulates Production</h2>
+
+        <div class="step info">
+            <table>
+                <tr>
+                    <th>Dev Environment</th>
+                    <th>Production SaaS</th>
+                </tr>
+                <tr>
+                    <td>Local filesystem path</td>
+                    <td>GitHub repository URL</td>
+                </tr>
+                <tr>
+                    <td>Direct file copy</td>
+                    <td>GitHub ZIP download via proxy</td>
+                </tr>
+                <tr>
+                    <td>No authentication needed</td>
+                    <td>GitHub token on master server</td>
+                </tr>
+                <tr>
+                    <td>Instant scanning</td>
+                    <td>GitHub API rate limits apply</td>
+                </tr>
+            </table>
+        </div>
+
+        <h2>Troubleshooting</h2>
+
+        <div class="step warning">
+            <strong>Path Not Found Error</strong>
+            <p>Ensure the local path exists and is accessible. Use full absolute paths like:</p>
+            <div class="path">D:\SAMAI-18-SaaS\github-repos\02-samai-odoo-18-full-modules</div>
+        </div>
+
+        <div class="step warning">
+            <strong>No Modules Found</strong>
+            <p>The scanner looks for <code>__manifest__.py</code> files in immediate subdirectories. Ensure your path points to a folder containing module folders, not to a single module.</p>
+        </div>
+
+        <div class="step warning">
+            <strong>Download Fails</strong>
+            <p>Check that the target addons path is writable:</p>
+            <div class="path">C:\Program Files\SAM AI\server\odoo\addons</div>
+            <p>You may need to run Odoo with administrator privileges or change the path.</p>
+        </div>
+
+        <hr style="margin-top: 40px;">
+        <p style="color: #666; font-size: 0.9em;">
+            <strong>SAM AI Module Catalog - Dev Environment</strong> v18.0.1.0.0<br>
+            &copy; 2025 Better Business Builders<br>
+            License: LGPL-3<br><br>
+            <em>For development and testing only. Not for production deployment.</em>
+        </p>
+    </div>
+</body>
+</html>

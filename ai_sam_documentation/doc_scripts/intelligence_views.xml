@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Documentation Intelligence Tree View -->
+    <record id="view_documentation_intelligence_tree" model="ir.ui.view">
+        <field name="name">documentation.intelligence.tree</field>
+        <field name="model">documentation.intelligence</field>
+        <field name="arch" type="xml">
+            <list string="Documentation Intelligence Reports">
+                <field name="timestamp"/>
+                <field name="name"/>
+                <field name="total_modules"/>
+                <field name="total_models"/>
+                <field name="total_agents"/>
+                <field name="total_agent_words"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Documentation Intelligence Form View -->
+    <record id="view_documentation_intelligence_form" model="ir.ui.view">
+        <field name="name">documentation.intelligence.form</field>
+        <field name="model">documentation.intelligence</field>
+        <field name="arch" type="xml">
+            <form string="Documentation Intelligence Report">
+                <header>
+                    <button name="action_view_report" string="View Report" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group name="current_state" string="Current State">
+                            <field name="timestamp" readonly="1"/>
+                            <field name="entrypoint" readonly="1"/>
+                            <field name="total_modules" readonly="1"/>
+                            <field name="total_models" readonly="1"/>
+                            <field name="total_agents" readonly="1"/>
+                            <field name="total_agent_words" readonly="1"/>
+                        </group>
+                        <group name="active_excluded" string="Active vs Excluded">
+                            <field name="active_modules" readonly="1" widget="text"/>
+                            <field name="excluded_paths" readonly="1" widget="text"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Changes Detected" name="changes">
+                            <group>
+                                <field name="modules_changed" readonly="1" widget="text"/>
+                                <field name="schema_changed" readonly="1" widget="text"/>
+                                <field name="agents_changed" readonly="1" widget="text"/>
+                            </group>
+                        </page>
+
+                        <page string="Misalignments" name="misalignments">
+                            <group>
+                                <field name="wrong_references" readonly="1" widget="text"/>
+                                <field name="redundant_files" readonly="1" widget="text"/>
+                                <field name="future_leaks" readonly="1" widget="text"/>
+                            </group>
+                        </page>
+
+                        <page string="Actions Taken" name="actions">
+                            <group>
+                                <field name="auto_fixes_applied" readonly="1" widget="text"/>
+                                <field name="requires_anthony" readonly="1" widget="text"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Documentation Intelligence Action -->
+    <record id="action_documentation_intelligence" model="ir.actions.act_window">
+        <field name="name">Documentation Intelligence</field>
+        <field name="res_model">documentation.intelligence</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Run Documentation Intelligence Analysis
+            </p>
+            <p>
+                Click "New" to run a new intelligence analysis.<br/>
+                The system will discover current state, detect changes, and identify misalignments.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item under SAM AI Docs -->
+    <menuitem
+        id="menu_documentation_intelligence"
+        name="Documentation Intelligence"
+        parent="menu_sam_ai_docs_root"
+        action="action_documentation_intelligence"
+        sequence="10"/>
+
+</odoo>

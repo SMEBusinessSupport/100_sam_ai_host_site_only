@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-10-14T13:02:38.386749",
+  "modules": [],
+  "summary": {
+    "total_errors": 0,
+    "total_warnings": 1,
+    "status": "PASS",
+    "modules_checked": 1
+  },
+  "refactoring_suggestions": [],
+  "code_smells": [
+    {
+      "type": "missing_type_hints",
+      "file": "hooks.py",
+      "count": 1,
+      "suggestion": "Add type hints to improve code clarity and catch type errors"
+    }
+  ],
+  "ai_teaching_prompts": [],
+  "errors": [],
+  "warnings": [
+    "No security file found (security/ir.model.access.csv)"
+  ]
+}

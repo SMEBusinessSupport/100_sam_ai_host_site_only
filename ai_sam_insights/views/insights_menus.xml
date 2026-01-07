@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Root Menu -->
+    <menuitem id="menu_insights_root"
+              name="SAM Insights"
+              web_icon="ai_sam_insights,static/description/icon.png"
+              sequence="97"/>
+
+    <!-- Settings Menu (FIRST) -->
+    <menuitem id="menu_insights_settings"
+              name="Scan Default Settings"
+              parent="menu_insights_root"
+              action="action_open_settings"
+              sequence="5"/>
+
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_insights_dashboard"
+              name="Ecosystem Health"
+              parent="menu_insights_root"
+              action="action_insights_dashboard"
+              sequence="10"/>
+
+    <!-- Scans Menu -->
+    <menuitem id="menu_insights_scans"
+              name="Scans"
+              parent="menu_insights_root"
+              action="action_insights_scan"
+              sequence="20"/>
+
+    <!-- Findings Menu -->
+    <menuitem id="menu_insights_findings_root"
+              name="Findings"
+              parent="menu_insights_root"
+              sequence="30"/>
+
+    <menuitem id="menu_insights_all_findings"
+              name="All Findings"
+              parent="menu_insights_findings_root"
+              action="action_insights_finding"
+              sequence="10"/>
+
+    <menuitem id="menu_insights_critical"
+              name="Critical Issues"
+              parent="menu_insights_findings_root"
+              action="action_insights_critical"
+              sequence="20"/>
+
+    <menuitem id="menu_insights_analysis"
+              name="Analysis"
+              parent="menu_insights_findings_root"
+              action="action_insights_analysis"
+              sequence="30"/>
+
+    <!-- Relationships Menu -->
+    <menuitem id="menu_insights_relationships"
+              name="Relationships"
+              parent="menu_insights_root"
+              action="action_insights_relationship"
+              sequence="40"/>
+
+</odoo>

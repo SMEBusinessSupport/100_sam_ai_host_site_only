@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM AI - Launching Soon | The Business System That Never Forgets</title>
+    <meta name="description" content="SAM AI is launching. Join the waitlist for the AI-powered business system built on Odoo 18 that remembers everything, automates intelligently, and grows with you.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* SAM AI BRAND COLOR SYSTEM */
+            --blue-primary: #4A90E2;
+            --blue-light: #E8F4FD;
+            --blue-dark: #2C5F7F;
+            --blue-hover: #3A7BC8;
+
+            --gold-sparkle: #F4C430;
+            --gold-trust: #D4AF37;
+            --gold-soft: #FFF4D6;
+
+            --neutral-50: #FAFBFC;
+            --neutral-100: #F5F7F9;
+            --neutral-200: #E8ECEF;
+            --neutral-300: #D4DCE2;
+            --neutral-400: #9CA8B4;
+            --neutral-600: #5A6C7D;
+            --neutral-700: #3D4F5F;
+            --neutral-800: #2D3748;
+
+            --success-primary: #48C78E;
+            --urgency-primary: #FF6B35;
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --shadow-blue: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--neutral-800);
+            background: var(--neutral-50);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ========================================
+           SECTION 1: HERO
+           ======================================== */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            color: white;
+            overflow: hidden;
+            padding: 100px 24px 80px;
+            text-align: center;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(244, 196, 48, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-kicker {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold-sparkle);
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 24px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.95;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: var(--gold-sparkle);
+            color: var(--neutral-800);
+            padding: 18px 48px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-cta:hover {
+            background: var(--gold-trust);
+            transform: translateY(-2px);
+        }
+
+        .hero-note {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* ========================================
+           SECTION 2: PROBLEM AGITATION
+           ======================================== */
+        .problem-section {
+            background: var(--neutral-100);
+            padding: 80px 24px;
+        }
+
+        .problem-section h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            text-align: center;
+            margin-bottom: 16px;
+            color: var(--neutral-800);
+        }
+
+        .problem-stat {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--neutral-600);
+            margin-bottom: 48px;
+        }
+
+        .problem-stat strong {
+            color: var(--urgency-primary);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .problem-card {
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--urgency-primary);
+        }
+
+        .problem-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--neutral-800);
+        }
+
+        .problem-card p {
+            color: var(--neutral-600);
+            font-size: 1rem;
+        }
+
+        .problem-card .quote {
+            font-style: italic;
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--neutral-100);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+        }
+
+        /* ========================================
+           SECTION 3: THE AG STORY
+           ======================================== */
+        .story-section {
+            background: white;
+            padding: 80px 24px;
+        }
+
+        .story-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .story-hook {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            text-align: center;
+            color: var(--blue-dark);
+            margin-bottom: 48px;
+            line-height: 1.4;
+        }
+
+        .story-body {
+            font-size: 1.1rem;
+            line-height: 1.9;
+        }
+
+        .story-body p {
+            margin-bottom: 24px;
+        }
+
+        .story-highlight {
+            background: var(--blue-light);
+            padding: 24px 32px;
+            border-radius: var(--radius-md);
+            margin: 32px 0;
+            border-left: 4px solid var(--blue-primary);
+        }
+
+        .story-highlight p {
+            margin: 0;
+            font-weight: 500;
+            color: var(--blue-dark);
+        }
+
+        .story-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 24px;
+            margin: 48px 0;
+            text-align: center;
+        }
+
+        .story-stat {
+            padding: 20px;
+        }
+
+        .story-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--blue-primary);
+        }
+
+        .story-stat-label {
+            font-size: 0.9rem;
+            color: var(--neutral-600);
+            margin-top: 4px;
+        }
+
+        /* ========================================
+           SECTION 4: SOLUTION REVEAL
+           ======================================== */
+        .solution-section {
+            background: linear-gradient(135deg, var(--blue-dark) 0%, #1a3a4a 100%);
+            color: white;
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .solution-section h2 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            margin-bottom: 24px;
+        }
+
+        .solution-tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 48px;
+        }
+
+        .solution-promise {
+            background: rgba(255,255,255,0.1);
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            font-style: italic;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* ========================================
+           SECTION 5: SAM AS TEAM MEMBER
+           ======================================== */
+        .team-member-section {
+            background: var(--neutral-50);
+            padding: 80px 24px;
+        }
+
+        .team-member-section h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .team-member-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--neutral-600);
+            margin-bottom: 48px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .comparison-table {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .comparison-header {
+            background: var(--neutral-200);
+            font-weight: 700;
+            padding: 16px 24px;
+            text-align: center;
+        }
+
+        .comparison-header.sam {
+            background: var(--blue-primary);
+            color: white;
+        }
+
+        .comparison-cell {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .comparison-cell.chatbot {
+            color: var(--neutral-600);
+        }
+
+        .comparison-cell.sam {
+            background: var(--blue-light);
+            color: var(--blue-dark);
+            font-weight: 500;
+        }
+
+        /* ========================================
+           SECTION 6: CAPACITY STATEMENT
+           ======================================== */
+        .capacity-section {
+            background: white;
+            padding: 80px 24px;
+        }
+
+        .capacity-section h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .capacity-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--neutral-600);
+            margin-bottom: 48px;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .module-card {
+            background: var(--neutral-100);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover {
+            background: var(--blue-light);
+            transform: translateY(-4px);
+        }
+
+        .module-card h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: var(--blue-dark);
+        }
+
+        .module-card p {
+            font-size: 0.9rem;
+            color: var(--neutral-600);
+        }
+
+        .capacity-note {
+            text-align: center;
+            margin-top: 40px;
+            padding: 24px;
+            background: var(--gold-soft);
+            border-radius: var(--radius-md);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ========================================
+           SECTION 7: VALUE STACK
+           ======================================== */
+        .value-section {
+            background: var(--neutral-100);
+            padding: 80px 24px;
+        }
+
+        .value-section h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .value-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .value-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .value-box {
+            background: white;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .value-box.chaos {
+            border-top: 4px solid var(--urgency-primary);
+        }
+
+        .value-box.sam {
+            border-top: 4px solid var(--success-primary);
+        }
+
+        .value-box h3 {
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .value-list {
+            list-style: none;
+        }
+
+        .value-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--neutral-200);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .value-list li:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding-top: 16px;
+        }
+
+        .value-total {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .value-total .savings {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success-primary);
+        }
+
+        .no-user-fees {
+            background: var(--gold-soft);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            max-width: 600px;
+            margin: 40px auto 0;
+        }
+
+        .no-user-fees h4 {
+            color: var(--gold-trust);
+            margin-bottom: 8px;
+        }
+
+        /* ========================================
+           SECTION 8: FINAL CTA
+           ======================================== */
+        .cta-section {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            color: white;
+            padding: 100px 24px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold-sparkle);
+        }
+
+        .cta-form button {
+            width: 100%;
+            background: var(--gold-sparkle);
+            color: var(--neutral-800);
+            padding: 18px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-form button:hover {
+            background: var(--gold-trust);
+            transform: translateY(-2px);
+        }
+
+        .form-note {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 16px;
+        }
+
+        /* ========================================
+           SECTION 9: PS SECTION
+           ======================================== */
+        .ps-section {
+            background: var(--neutral-800);
+            color: white;
+            padding: 60px 24px;
+        }
+
+        .ps-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .ps-content strong {
+            color: var(--gold-sparkle);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: var(--neutral-800);
+            color: var(--neutral-400);
+            padding: 24px;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--neutral-700);
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 768px) {
+            .comparison-row {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-header:first-child {
+                display: none;
+            }
+
+            .comparison-cell.chatbot {
+                display: none;
+            }
+
+            .story-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECTION 1: HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="hero-kicker">The Business Platform That Never Forgets</p>
+            <h1>Business Used to Be Simpler.<br>We're Bringing That Back.</h1>
+            <p class="hero-subtitle">
+                After 18 months of obsessive development, 1.5 million words of coded intelligence,
+                and 40 years of business lessons learned the hard way &mdash; <strong>SAM AI is ready to launch.</strong>
+            </p>
+            <a href="#join" class="hero-cta">Join the Launch List</a>
+            <p class="hero-note">No payment required. Just early access.</p>
+        </div>
+    </section>
+
+    <!-- SECTION 2: PROBLEM AGITATION -->
+    <section class="problem-section">
+        <div class="container">
+            <h2>Why Is Running Your Business Harder Now?</h2>
+            <p class="problem-stat"><strong>65% of business owners</strong> say it's harder today than 5 years ago.</p>
+
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h3>The Labor Problem</h3>
+                    <p>44% cite labor shortages as their top concern. Finding qualified people is harder than ever.</p>
+                    <p class="quote">"I don't even know how to find the next right person anymore."</p>
+                </div>
+
+                <div class="problem-card">
+                    <h3>The Cash Flow Problem</h3>
+                    <p>Not a revenue problem &mdash; an efficiency problem. Disconnected systems drain time and money.</p>
+                    <p class="quote">"Time and money just vanishing before your very eyes."</p>
+                </div>
+
+                <div class="problem-card">
+                    <h3>The Complexity Problem</h3>
+                    <p>The average business uses 253 software applications. 41% of employees manually transfer data between them.</p>
+                    <p class="quote">"It's getting HARDER when it should be getting EASIER."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: THE AG STORY -->
+    <section class="story-section">
+        <div class="story-content">
+            <p class="story-hook">"I built a $35 million business.<br>And I still couldn't get people to follow the systems."</p>
+
+            <div class="story-body">
+                <p>I've been in business since I was 19. Built a high-risk manufacturing business from scratch. Hired specialists. Documented every process. Created proven systems.</p>
+
+                <p>And still &mdash; I'd watch profits drop because new recruits with specialized skills <em>still didn't follow the proven systems and processes</em>.</p>
+
+                <div class="story-highlight">
+                    <p>"It seemed no one cared. I knew that wasn't true. But it made me question everything."</p>
+                </div>
+
+                <p>Then I realized something: <strong>systems failed people before people failed systems.</strong></p>
+
+                <p>The problem wasn't the people. The problem was that nothing remembered. Nothing connected. Nothing compounded. Every new hire started from zero. Every process got re-explained. Every lesson got re-learned.</p>
+
+                <p>There had to be a smarter, more cost-effective way.</p>
+
+                <p>So I spent 6 months coding what I wish I'd had 40 years ago. I call it <strong>Anthony's Intelligence</strong> &mdash; the coded wisdom of four decades of business experience, packaged into a system that actually remembers.</p>
+            </div>
+
+            <div class="story-stats">
+                <div class="story-stat">
+                    <div class="story-stat-number">40+</div>
+                    <div class="story-stat-label">Years in Business</div>
+                </div>
+                <div class="story-stat">
+                    <div class="story-stat-number">$35M</div>
+                    <div class="story-stat-label">Business Built</div>
+                </div>
+                <div class="story-stat">
+                    <div class="story-stat-number">14</div>
+                    <div class="story-stat-label">Years Using Odoo</div>
+                </div>
+                <div class="story-stat">
+                    <div class="story-stat-number">1.5M</div>
+                    <div class="story-stat-label">Words of Code</div>
+                </div>
+            </div>
+
+            <div class="story-highlight">
+                <p>"So now I automate what I used to delegate."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: SOLUTION REVEAL -->
+    <section class="solution-section">
+        <div class="container">
+            <h2>Introducing SAM AI</h2>
+            <p class="solution-tagline">
+                The complete AI-powered business system built on Odoo 18 &mdash; the world's most complete open-source business platform.
+            </p>
+            <div class="solution-promise">
+                "SAM isn't a chatbot. SAM is a team member who never sleeps, never forgets, and never needs to be trained twice."
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: SAM AS TEAM MEMBER -->
+    <section class="team-member-section">
+        <div class="container">
+            <h2>SAM Works Like a Team Member</h2>
+            <p class="team-member-subtitle">
+                SAM is set up as an actual User in your system &mdash; ready to work 24/7, 365 days a year, even while you sleep.
+            </p>
+
+            <div class="comparison-table">
+                <div class="comparison-row">
+                    <div class="comparison-header">Standard Chatbot</div>
+                    <div class="comparison-header sam">SAM AI</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell chatbot">Answers FAQs</div>
+                    <div class="comparison-cell sam">Knows YOUR business</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell chatbot">Limited to website</div>
+                    <div class="comparison-cell sam">Present in EVERY module</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell chatbot">Generic responses</div>
+                    <div class="comparison-cell sam">Context-aware (knows where you are)</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell chatbot">Reactive only</div>
+                    <div class="comparison-cell sam">Proactive suggestions</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell chatbot">Forgets conversations</div>
+                    <div class="comparison-cell sam">Remembers EVERYTHING</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell chatbot">Works when you're online</div>
+                    <div class="comparison-cell sam">Works 24/7/365</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: CAPACITY STATEMENT -->
+    <section class="capacity-section">
+        <div class="container">
+            <h2>Everything You Need. Nothing You Don't.</h2>
+            <p class="capacity-subtitle">One click to install. Everything integrates automatically.</p>
+
+            <div class="module-grid">
+                <div class="module-card">
+                    <h3>Sales & CRM</h3>
+                    <p>CRM, Sales, Subscriptions, Rental</p>
+                </div>
+                <div class="module-card">
+                    <h3>Website & E-Commerce</h3>
+                    <p>Website Builder, E-Commerce, Blog, Forum</p>
+                </div>
+                <div class="module-card">
+                    <h3>Inventory & Manufacturing</h3>
+                    <p>Inventory, Manufacturing, Purchase, PLM</p>
+                </div>
+                <div class="module-card">
+                    <h3>Finance</h3>
+                    <p>Invoicing, Expenses, Spreadsheet</p>
+                </div>
+                <div class="module-card">
+                    <h3>HR & Recruitment</h3>
+                    <p>Employees, Recruitment, Time Off, Payroll</p>
+                </div>
+                <div class="module-card">
+                    <h3>Marketing</h3>
+                    <p>Email Marketing, SMS, Social, Events</p>
+                </div>
+                <div class="module-card">
+                    <h3>Services</h3>
+                    <p>Project, Timesheets, Field Service, Helpdesk</p>
+                </div>
+                <div class="module-card">
+                    <h3>Productivity</h3>
+                    <p>Discuss, Calendar, Notes, Approvals</p>
+                </div>
+            </div>
+
+            <div class="capacity-note">
+                <strong>Most businesses start with 3-5 modules.</strong> As you grow, add more. No migration. No new systems. No starting over.
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: VALUE STACK -->
+    <section class="value-section">
+        <div class="container">
+            <h2>What Would It Cost to Build This Yourself?</h2>
+
+            <div class="value-comparison">
+                <div class="value-box chaos">
+                    <h3>Separate Tools</h3>
+                    <ul class="value-list">
+                        <li><span>CRM (Salesforce)</span><span>$125</span></li>
+                        <li><span>Email (Mailchimp)</span><span>$49</span></li>
+                        <li><span>Funnels (ClickFunnels)</span><span>$147</span></li>
+                        <li><span>Automation (Zapier)</span><span>$50</span></li>
+                        <li><span>Projects (Asana)</span><span>$60</span></li>
+                        <li><span>Inventory</span><span>$99</span></li>
+                        <li><span>Helpdesk (Zendesk)</span><span>$55</span></li>
+                        <li><span>+ 6 more tools...</span><span>$311</span></li>
+                        <li><span>TOTAL</span><span>$996/mo</span></li>
+                    </ul>
+                </div>
+
+                <div class="value-box sam">
+                    <h3>SAM AI</h3>
+                    <ul class="value-list">
+                        <li><span>Everything above</span><span>Included</span></li>
+                        <li><span>1,500+ integrations</span><span>Included</span></li>
+                        <li><span>AI that knows your business</span><span>Included</span></li>
+                        <li><span>Memory that compounds</span><span>Included</span></li>
+                        <li><span>E-Learning for your team</span><span>Included</span></li>
+                        <li><span>No per-user fees</span><span>Included</span></li>
+                        <li><span>One system. One truth.</span><span>Included</span></li>
+                        <li><span>&nbsp;</span><span>&nbsp;</span></li>
+                        <li><span>TOTAL</span><span>$147/mo</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="value-total">
+                <p class="savings">Annual Savings: $10,188+</p>
+            </div>
+
+            <div class="no-user-fees">
+                <h4>No Per-User Fees. Ever.</h4>
+                <p>Your whole team gets access. As you grow, your costs stay flat. Theirs don't.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: FINAL CTA -->
+    <section class="cta-section" id="join">
+        <div class="container">
+            <h2>The Launch Is Coming</h2>
+            <p>Join the list. Be first to know. No commitment required.</p>
+
+            <div class="cta-form">
+                <div class="form-group">
+                    <input type="text" placeholder="First Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Company Name (Optional)">
+                </div>
+                <div class="form-group">
+                    <select>
+                        <option value="">Team Size (Optional)</option>
+                        <option value="1-10">1-10 employees</option>
+                        <option value="11-50">11-50 employees</option>
+                        <option value="51-200">51-200 employees</option>
+                        <option value="200+">200+ employees</option>
+                    </select>
+                </div>
+                <button type="submit">Count Me In</button>
+                <p class="form-note">Your information is safe. We'll only contact you about SAM AI.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: PS SECTION -->
+    <section class="ps-section">
+        <div class="ps-content">
+            <p><strong>P.S.</strong> &mdash; This isn't another SaaS platform promising to "revolutionize" your business. This is 18 months of obsessive work, 1.5 million words of coded intelligence, and 40 years of business lessons &mdash; packaged into a system that actually remembers.</p>
+            <p style="margin-top: 16px;">The question is: will you be on the inside when it launches?</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>&copy; 2025 SAM AI &mdash; Built on Odoo 18 Community</p>
+    </footer>
+
+</body>
+</html>

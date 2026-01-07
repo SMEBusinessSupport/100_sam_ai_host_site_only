@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ================================================================
+             DEVELOPMENT CONFIGURATION
+
+             System parameters for local development environment.
+             When this module is installed, SAM operates in DEV MODE.
+             ================================================================ -->
+
+        <!-- ======================= MODULE CATALOG DEV ======================= -->
+
+        <!-- Custom addons download path -->
+        <record id="config_custom_addons_path" model="ir.config_parameter">
+            <field name="key">sam_ai_odoo_modules.custom_addons_path</field>
+            <field name="value">C:\Program Files\SAM AI\server\odoo\addons</field>
+        </record>
+
+        <!-- Dev mode flag for module catalog -->
+        <record id="config_dev_mode" model="ir.config_parameter">
+            <field name="key">sam_ai_odoo_modules.dev_mode</field>
+            <field name="value">True</field>
+        </record>
+
+        <!-- Skip GitHub API in dev (use local copy instead) -->
+        <record id="config_prefer_local_copy" model="ir.config_parameter">
+            <field name="key">sam_ai_odoo_modules.prefer_local_copy</field>
+            <field name="value">True</field>
+        </record>
+
+        <!-- ======================= SAM CHAT DEV MODE ======================= -->
+
+        <!-- Master dev mode flag - checked by ai_sam_base to enable all dev features -->
+        <record id="config_sam_dev_mode" model="ir.config_parameter">
+            <field name="key">sam.dev_mode</field>
+            <field name="value">True</field>
+        </record>
+
+        <!-- Always inject system prompt on every message (dev mode behavior) -->
+        <record id="config_sam_always_inject_prompt" model="ir.config_parameter">
+            <field name="key">sam.always_inject_prompt</field>
+            <field name="value">True</field>
+        </record>
+
+        <!-- Enable verbose debug logging for SAM chat -->
+        <record id="config_sam_debug_logging" model="ir.config_parameter">
+            <field name="key">sam.debug_logging</field>
+            <field name="value">True</field>
+        </record>
+
+        <!-- Write debug files (debug_last_prompt.md, etc.) -->
+        <record id="config_sam_write_debug_files" model="ir.config_parameter">
+            <field name="key">sam.write_debug_files</field>
+            <field name="value">True</field>
+        </record>
+
+    </data>
+</odoo>

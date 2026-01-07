@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Dashboard Action (Kanban-style overview) -->
+    <record id="view_insights_scan_kanban" model="ir.ui.view">
+        <field name="name">insights.scan.kanban</field>
+        <field name="model">insights.scan</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" default_order="scan_date desc">
+                <field name="scan_date"/>
+                <field name="state"/>
+                <field name="health_score"/>
+                <field name="health_status"/>
+                <field name="critical_count"/>
+                <field name="warning_count"/>
+                <field name="files_scanned"/>
+                <field name="models_found"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <span class="o_primary" t-att-style="'font-size: 32px; font-weight: bold; color:' + (record.health_score.raw_value >= 80 ? '#28a745' : record.health_score.raw_value >= 50 ? '#ffc107' : '#dc3545')">
+                                        <t t-esc="record.health_score.value"/>/100
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Status:</strong> <t t-esc="record.health_status.value"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>State:</strong>
+                                        <span t-att-class="'badge ' + (record.state.raw_value == 'completed' ? 'bg-success' : record.state.raw_value == 'running' ? 'bg-warning' : record.state.raw_value == 'failed' ? 'bg-danger' : 'bg-secondary')">
+                                            <t t-esc="record.state.value"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <span t-att-style="'color: #dc3545; font-weight: bold;'" t-if="record.critical_count.raw_value > 0">
+                                            <t t-esc="record.critical_count.value"/> Critical
+                                        </span>
+                                        <span t-else="">0 Critical</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span t-att-style="'color: #ffc107; font-weight: bold;'" t-if="record.warning_count.raw_value > 0">
+                                            <t t-esc="record.warning_count.value"/> Warnings
+                                        </span>
+                                        <span t-else="">0 Warnings</span>
+                                    </div>
+                                </div>
+                                <div class="row mt-2 text-muted">
+                                    <div class="col-6">
+                                        <t t-esc="record.files_scanned.value"/> files
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-esc="record.models_found.value"/> models
+                                    </div>
+                                </div>
+                                <div class="row mt-2 text-muted small">
+                                    <div class="col-12">
+                                        <t t-esc="record.scan_date.value"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_insights_dashboard" model="ir.actions.act_window">
+        <field name="name">Ecosystem Health</field>
+        <field name="res_model">insights.scan</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('state', '=', 'completed')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No ecosystem scans yet!
+            </p>
+            <p>
+                Click "Run Quick Scan" to analyze your SAM AI ecosystem.
+            </p>
+        </field>
+    </record>
+
+    <!-- Pivot Analysis View -->
+    <record id="view_insights_finding_pivot" model="ir.ui.view">
+        <field name="name">insights.finding.pivot</field>
+        <field name="model">insights.finding</field>
+        <field name="arch" type="xml">
+            <pivot string="Findings Analysis">
+                <field name="category" type="row"/>
+                <field name="severity" type="col"/>
+                <field name="id" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph Analysis View -->
+    <record id="view_insights_finding_graph" model="ir.ui.view">
+        <field name="name">insights.finding.graph</field>
+        <field name="model">insights.finding</field>
+        <field name="arch" type="xml">
+            <graph string="Findings by Category" type="bar">
+                <field name="category"/>
+                <field name="id" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Findings Analysis Action -->
+    <record id="action_insights_analysis" model="ir.actions.act_window">
+        <field name="name">Findings Analysis</field>
+        <field name="res_model">insights.finding</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="view_insights_finding_search"/>
+    </record>
+
+</odoo>

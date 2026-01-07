@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM AI - The Full-Stack AI-Powered Business System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* ========================================
+               SAM AI BRAND COLOR SYSTEM
+               Conversion-optimized colors built on $2.3B+ split-test data
+               ======================================== */
+
+            /* Primary Blue Family - TRUST & AUTHORITY */
+            --blue-primary: #4A90E2;
+            --blue-light: #E8F4FD;
+            --blue-dark: #2C5F7F;
+            --blue-hover: #3A7BC8;
+
+            /* Gold Accent Family - PREMIUM & QUALITY */
+            --gold-sparkle: #F4C430;
+            --gold-trust: #D4AF37;
+            --gold-soft: #FFF4D6;
+            --gold-rich: #B8941E;
+
+            /* Soft Neutrals - FOUNDATION & CLARITY */
+            --neutral-50: #FAFBFC;
+            --neutral-100: #F5F7F9;
+            --neutral-200: #E8ECEF;
+            --neutral-300: #D4DCE2;
+            --neutral-400: #9CA8B4;
+            --neutral-600: #5A6C7D;
+            --neutral-700: #3D4F5F;
+            --neutral-800: #2D3748;
+
+            /* Semantic Action Colors */
+            --success-primary: #48C78E;
+            --success-light: #E8F8F0;
+            --success-dark: #2E8B57;
+
+            --warning-primary: #FFB84D;
+            --warning-light: #FFF4E6;
+            --warning-dark: #E69500;
+
+            --urgency-primary: #FF6B35;
+            --urgency-light: #FFE8E0;
+            --urgency-dark: #E85A2A;
+
+            /* Design Tokens */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --shadow-blue: 0 6px 20px rgba(74, 144, 226, 0.4);
+            --shadow-gold: 0 6px 20px rgba(244, 196, 48, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--neutral-800);
+            background: var(--neutral-50);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ========================================
+           SECTION 1: HERO - FULL STACK WOW FACTOR
+           The Big Hook - AI Powered All In One Business Platform
+        ======================================== */
+
+        /* ========================================
+           HERO: ABOVE THE FOLD ONLY
+           Big Promise - Grab attention in 3 seconds
+           ======================================== */
+        .hero {
+            position: relative;
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            color: white;
+            overflow: hidden;
+            padding: 80px 20px 60px;
+            text-align: center;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(244, 196, 48, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.12) 0%, transparent 50%);
+            animation: shimmer 6s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .hero-kicker {
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold-sparkle);
+            font-weight: 700;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            text-shadow: 0 0 20px rgba(244, 196, 48, 0.4);
+            animation: gentleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes gentleGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(244, 196, 48, 0.4); }
+            50% { text-shadow: 0 0 30px rgba(244, 196, 48, 0.6); }
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #fff 0%, #93c5fd 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-headline-impact {
+            display: block;
+            font-size: 6rem;
+            margin-top: 20px;
+            color: white;
+            -webkit-text-fill-color: white;
+            text-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
+        }
+
+        .hero-tagline {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .hero-tagline strong {
+            color: var(--gold-sparkle);
+            font-weight: 600;
+        }
+
+        /* ========================================
+           STACK SECTION: BELOW THE FOLD
+           Supporting Details - Build comprehension
+           Soft neutral background for clarity
+           ======================================== */
+        .stack-section {
+            background: var(--neutral-50);
+            padding: 80px 20px;
+            position: relative;
+        }
+
+        /* Gold accent divider at top */
+        .stack-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--gold-sparkle) 20%,
+                var(--gold-trust) 50%,
+                var(--gold-sparkle) 80%,
+                transparent 100%);
+            box-shadow: 0 0 20px rgba(244, 196, 48, 0.4);
+        }
+
+        /* The Stack Visualization */
+        .stack-visual {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            align-items: center;
+        }
+
+        .stack-column {
+            background: white;
+            border: 2px solid var(--blue-light);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .stack-column::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(244, 196, 48, 0.08) 0%, transparent 70%);
+            animation: shimmerMove 8s linear infinite;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .stack-column:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes shimmerMove {
+            0% { transform: translate(-25%, -25%) rotate(0deg); }
+            100% { transform: translate(-25%, -25%) rotate(360deg); }
+        }
+
+        .stack-column:hover {
+            border-color: var(--gold-sparkle);
+            box-shadow: 0 20px 60px rgba(244, 196, 48, 0.25);
+            transform: translateY(-10px);
+        }
+
+        .stack-column-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--blue-primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stack-column-subtitle {
+            font-size: 1rem;
+            color: var(--neutral-600);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stack-items {
+            list-style: none;
+        }
+
+        .stack-items li {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--neutral-200);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--neutral-700);
+        }
+
+        .stack-items li:last-child {
+            border-bottom: none;
+        }
+
+        .stack-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .plus-symbol {
+            text-align: center;
+            font-size: 5rem;
+            font-weight: 900;
+            color: var(--blue-primary);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .equals-symbol {
+            text-align: center;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--blue-primary);
+            margin: 60px 0 40px;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            border: 2px solid var(--gold-sparkle);
+            border-radius: var(--radius-xl);
+            padding: 50px;
+            margin: 0 auto 40px;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(74, 144, 226, 0.3);
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .result-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-xl);
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(244, 196, 48, 0.5), rgba(74, 144, 226, 0.5));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        .result-box h3 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-box p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-cta {
+            margin-top: 60px;
+        }
+
+        /* ========================================
+           TIER 3: HIGH-TICKET VIP CTA (Gold Dominant)
+           "Watch the Webinar" = Most Aware audience
+           Use: High-value actions, exclusive opportunities
+           ======================================== */
+        .cta-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gold-sparkle) 0%, var(--gold-trust) 100%);
+            color: var(--neutral-800);
+            padding: 25px 60px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 8px 24px rgba(244, 196, 48, 0.5),
+                        0 0 0 2px var(--blue-primary);
+            transition: all 0.3s ease;
+            margin: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(244, 196, 48, 0.6),
+                        0 0 0 3px var(--blue-primary);
+        }
+
+        /* ========================================
+           TIER 1: STANDARD SECONDARY CTA (Blue)
+           "See How It Works" = Solution-Aware audience
+           Use: Educational, low-pressure actions
+           ======================================== */
+        .cta-secondary {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            padding: 25px 60px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-radius: 50px;
+            text-decoration: none;
+            border: 2px solid var(--blue-light);
+            transition: all 0.3s ease;
+            margin: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-secondary:hover {
+            background: var(--blue-light);
+            color: var(--blue-dark);
+            border-color: var(--blue-light);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(74, 144, 226, 0.3);
+        }
+
+        .trust-line {
+            margin-top: 50px;
+            font-size: 1rem;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        /* ========================================
+           SECTION 2: SUPER POWERS
+           7 unprecedented capabilities
+        ======================================== */
+
+        .section {
+            padding: 80px 20px;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--neutral-800);
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--neutral-600);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .powers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .power-card {
+            background: white;
+            border: 3px solid var(--neutral-200);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .power-card:hover {
+            border-color: var(--blue-primary);
+            box-shadow: 0 15px 40px rgba(74, 144, 226, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .power-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .power-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--blue-primary);
+        }
+
+        .power-card p {
+            color: var(--neutral-700);
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .power-card .highlight {
+            background: var(--gold-soft);
+            color: var(--gold-rich);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+        }
+
+        /* Expandable Details */
+        .power-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .power-card.expanded .power-details {
+            max-height: 500px;
+        }
+
+        .power-details ul {
+            margin-top: 15px;
+            padding-left: 20px;
+        }
+
+        .power-details li {
+            margin: 8px 0;
+            color: #555;
+        }
+
+        .expand-toggle {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--blue-primary);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .expand-toggle:hover {
+            text-decoration: underline;
+        }
+
+        /* ========================================
+           SECTION 3: HOW SAM THINKS
+           Architecture humanized
+        ======================================== */
+
+        .section-alt {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .architecture-visual {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            margin: 40px 0;
+        }
+
+        .architecture-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .arch-layer {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        .arch-layer h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .arch-layer p {
+            font-size: 1rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .arch-arrow {
+            font-size: 3rem;
+            color: var(--blue-primary);
+            text-align: center;
+        }
+
+        .translation-table {
+            margin-top: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .translation-table h4 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--blue-primary);
+            text-align: center;
+        }
+
+        .translation-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .translation-row:last-child {
+            border-bottom: none;
+        }
+
+        .tech-term {
+            background: #ecf0f1;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #555;
+            text-align: center;
+        }
+
+        .human-term {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .arrow-symbol {
+            font-size: 1.5rem;
+            color: var(--blue-primary);
+        }
+
+        /* ========================================
+           SECTION 4: WHO SAM HELPS
+           Use cases + personas in tabs
+        ======================================== */
+
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 0;
+            flex-wrap: wrap;
+            border-bottom: 3px solid #e5e7eb;
+        }
+
+        .tab-button {
+            background: transparent;
+            color: var(--neutral-400);
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 20px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            margin-bottom: -3px;
+        }
+
+        .tab-button:hover {
+            color: var(--blue-primary);
+            background: var(--blue-light);
+        }
+
+        .tab-button.active {
+            color: var(--blue-primary);
+            border-bottom-color: var(--gold-sparkle);
+            background: white;
+        }
+
+        .tab-button .badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--urgency-primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.5);
+            z-index: 10;
+        }
+
+        .tab-button.active .badge {
+            background: var(--gold-sparkle);
+            color: var(--neutral-800);
+            box-shadow: 0 4px 12px rgba(244, 196, 48, 0.5);
+        }
+
+        .tab-button::after {
+            content: "Click to learn more";
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #9ca3af;
+            margin-top: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tab-button:hover::after {
+            opacity: 1;
+        }
+
+        .tab-button.active::after {
+            content: "Currently viewing";
+            opacity: 1;
+            color: var(--gold-sparkle);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .persona-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .persona-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .persona-avatar {
+            font-size: 5rem;
+        }
+
+        .persona-info h3 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .persona-info p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        .persona-story {
+            background: #f8f9fa;
+            border-left: 5px solid var(--blue-primary);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .benefits-list li {
+            padding: 15px 0 15px 50px;
+            position: relative;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .benefits-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 10px;
+            color: var(--blue-primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        /* ========================================
+           SECTION 5: THE JOURNEY
+           Timeline, credibility, pre-launch story
+        ======================================== */
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 50px auto;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 45%;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            background: var(--blue-primary);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 0 5px white, 0 0 0 8px var(--blue-primary);
+        }
+
+        .timeline-date {
+            font-weight: 700;
+            color: var(--blue-primary);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .timeline-content p {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .stat-highlight {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .stat-highlight h4 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-highlight p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        /* ========================================
+           SECTION 6: SAM VS. THE WORLD
+           Comparison matrix + ROI calculator
+        ======================================== */
+
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 40px 0;
+            overflow-x: auto;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-size: 1.2rem;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .check-yes {
+            color: var(--success-primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .check-no {
+            color: var(--error-primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .check-partial {
+            color: var(--warning-primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .roi-calculator {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 50px;
+            border-radius: 20px;
+            margin: 50px 0;
+        }
+
+        .roi-calculator h4 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .calculator-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--blue-primary);
+        }
+
+        .roi-result {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .roi-result h5 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .roi-number {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .roi-breakdown {
+            text-align: left;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #ecf0f1;
+        }
+
+        .roi-breakdown p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        /* ========================================
+           SECTION 7: FINAL CTA
+           Waitlist signup with early access benefits
+        ======================================== */
+
+        .final-cta {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-dark) 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            font-weight: 800;
+        }
+
+        .final-cta p {
+            font-size: 1.5rem;
+            margin-bottom: 50px;
+            opacity: 0.95;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .waitlist-form {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .waitlist-form h4 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--blue-primary);
+        }
+
+        /* ========================================
+           TIER 3: WAITLIST SUBMIT (Gold VIP Button)
+           Most Aware = Ready to sign up
+           ======================================== */
+        .submit-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--gold-sparkle) 0%, var(--gold-trust) 100%);
+            color: var(--neutral-800);
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 8px 24px rgba(244, 196, 48, 0.5),
+                        0 0 0 2px var(--blue-primary);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(244, 196, 48, 0.6),
+                        0 0 0 3px var(--blue-primary);
+        }
+
+        .early-access-benefits {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .early-access-benefits h5 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--blue-primary);
+            text-align: center;
+        }
+
+        .early-access-benefits ul {
+            list-style: none;
+        }
+
+        .early-access-benefits li {
+            padding: 10px 0 10px 35px;
+            position: relative;
+            color: #555;
+        }
+
+        .early-access-benefits li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--blue-primary);
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        /* ========================================
+           FOOTER
+        ======================================== */
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 60px 20px 30px;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .footer-copyright {
+            margin-top: 40px;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        /* ========================================
+           RESPONSIVE
+        ======================================== */
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-headline-impact {
+                font-size: 3rem;
+            }
+
+            .hero-tagline {
+                font-size: 1.3rem;
+            }
+
+            .stack-visual {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .plus-symbol {
+                font-size: 3rem;
+                padding: 20px 0;
+            }
+
+            .cta-primary, .cta-secondary {
+                display: block;
+                margin: 15px auto;
+                max-width: 400px;
+                font-size: 1.1rem;
+                padding: 20px 40px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .powers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .final-cta h2 {
+                font-size: 2rem;
+            }
+
+            .final-cta p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================
+         SECTION 1: HERO - FULL STACK WOW FACTOR
+    ======================================== -->
+
+    <!-- ========================================
+         HERO: ABOVE THE FOLD
+         Big Promise - Grab Attention
+    ======================================== -->
+    <div class="hero">
+        <div class="hero-content">
+
+            <!-- Kicker -->
+            <div class="hero-kicker">The Future of Business Management</div>
+
+            <!-- Headline: The Big Wow -->
+            <h1>
+                The World's First
+                <span class="hero-headline-impact">Full-Stack AI-Powered Business System</span>
+            </h1>
+
+            <!-- Subheadline: The Explanation -->
+            <p class="hero-tagline">
+                Everything your business needs to compete—<strong>complete business platform</strong>
+                + <strong>your own team of AI agents</strong>—unified, intelligent, unstoppable.
+            </p>
+
+            <!-- CTA Section -->
+            <div class="hero-cta">
+                <a href="#waitlist" class="cta-primary">Watch the Webinar</a>
+                <a href="#how-it-works" class="cta-secondary">See How It Works</a>
+            </div>
+
+            <!-- Trust Line -->
+            <div class="trust-line">
+                Built on Odoo (14+ Million Users Worldwide) + 40 Years of Business Expertise
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================
+         STACK SECTION: BELOW THE FOLD
+         Supporting Details - Build Comprehension
+    ======================================== -->
+    <div class="stack-section">
+        <div class="container">
+
+            <!-- The Visual Stack -->
+            <div class="stack-visual">
+
+                <!-- Column 1: The Platform -->
+                <div class="stack-column">
+                    <div class="stack-column-title">🏗️ Full Business Platform</div>
+                    <div class="stack-column-subtitle">Everything Integrated</div>
+                    <ul class="stack-items">
+                        <li><span class="stack-icon">💼</span> CRM & Sales Pipeline</li>
+                        <li><span class="stack-icon">💰</span> Accounting & Finance</li>
+                        <li><span class="stack-icon">📧</span> Marketing Automation</li>
+                        <li><span class="stack-icon">📦</span> Inventory & Supply Chain</li>
+                        <li><span class="stack-icon">🏭</span> Manufacturing & Operations</li>
+                        <li><span class="stack-icon">🌐</span> Website & eCommerce</li>
+                        <li><span class="stack-icon">👥</span> HR & Payroll</li>
+                        <li><span class="stack-icon">📊</span> Analytics & Reporting</li>
+                    </ul>
+                </div>
+
+                <!-- Plus Symbol (centered between columns) -->
+                <div class="plus-symbol">+</div>
+
+                <!-- Column 2: The AI Team -->
+                <div class="stack-column">
+                    <div class="stack-column-title">🤖 Your AI Agent Team</div>
+                    <div class="stack-column-subtitle">Intelligence & Expertise</div>
+                    <ul class="stack-items">
+                        <li><span class="stack-icon">🎩</span> Board of Directors (CMO, CTO, CFO, COO)</li>
+                        <li><span class="stack-icon">✍️</span> Marketing Specialists</li>
+                        <li><span class="stack-icon">👨‍💻</span> Development Team</li>
+                        <li><span class="stack-icon">📞</span> Customer Support Agents</li>
+                        <li><span class="stack-icon">🧠</span> Perfect Memory System</li>
+                        <li><span class="stack-icon">⚙️</span> Workflow Automation Engine</li>
+                        <li><span class="stack-icon">📚</span> Continuous Learning AI</li>
+                        <li><span class="stack-icon">🎯</span> Strategic Decision Support</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- What It Creates -->
+            <div class="equals-symbol">=</div>
+
+            <div class="result-box">
+                <h3>The Complete Solution</h3>
+                <p>
+                    <strong>One platform.</strong> One team. One source of truth.<br>
+                    The tools to run every aspect of your business + the AI intelligence to run them brilliantly.
+                    <br><br>
+                    What took $1M+ in software licenses and executive salaries—now accessible to any business,
+                    any size, anywhere.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================
+         SECTION 2: SUPER POWERS
+    ======================================== -->
+
+    <div class="section">
+        <div class="container">
+            <h2 class="section-title">What Makes SAM Different?</h2>
+            <p class="section-subtitle">
+                Seven unprecedented capabilities that no other AI can match
+            </p>
+
+            <div class="powers-grid">
+
+                <!-- Power 1: Perfect Memory -->
+                <div class="power-card" onclick="toggleExpand(this)">
+                    <span class="power-icon">🧠</span>
+                    <h3>1. Perfect Memory (Never Forgets)</h3>
+                    <p>
+                        Unlike ChatGPT or Claude that forget after a few messages, SAM has <span class="highlight">infinite, permanent memory</span>.
+                        She remembers every conversation, every decision, every detail—forever.
+                    </p>
+                    <div class="power-details">
+                        <ul>
+                            <li><strong>Graph Database:</strong> Connects knowledge like your brain does (not just storing text)</li>
+                            <li><strong>Vector Search:</strong> Finds relevant memories by meaning, not just keywords</li>
+                            <li><strong>23.2M Tokens Stored:</strong> Already learned from 1,100+ past conversations</li>
+                            <li><strong>Example:</strong> "Remember when we discussed that pricing strategy 6 months ago?" → SAM recalls it instantly</li>
+                        </ul>
+                    </div>
+                    <span class="expand-toggle">▼ Learn More</span>
+                </div>
+
+                <!-- Power 2: Adaptive Personality -->
+                <div class="power-card" onclick="toggleExpand(this)">
+                    <span class="power-icon">🎭</span>
+                    <h3>2. Adaptive Personality (6 Modes)</h3>
+                    <p>
+                        SAM adapts her personality based on <span class="highlight">who you are and what you need</span>.
+                        She's not one-size-fits-all—she's different with your CFO, your developer, and your customer.
+                    </p>
+                    <div class="power-details">
+                        <ul>
+                            <li><strong>Generalist Mode:</strong> Warm, supportive, creative brainstorming partner</li>
+                            <li><strong>CMO Mode:</strong> Strategic marketing advisor with ROI focus</li>
+                            <li><strong>CTO Mode:</strong> Infrastructure strategy and technical architecture</li>
+                            <li><strong>Developer Mode:</strong> Code reviews, debugging, Odoo 18 expertise</li>
+                            <li><strong>Empathy Mode:</strong> Active listening, relationship building, tough conversations</li>
+                            <li><strong>Celebration Mode:</strong> Recognizes wins, encourages momentum</li>
+                        </ul>
+                    </div>
+                    <span class="expand-toggle">▼ Learn More</span>
+                </div>
+
+                <!-- Power 3: Relationship Intelligence -->
+                <div class="power-card" onclick="toggleExpand(this)">
+                    <span class="power-icon">💗</span>
+                    <h3>3. Relationship Intelligence</h3>
+                    <p>
+                        SAM tracks <span class="highlight">trust levels, learned preferences, and personal facts</span> for each user.
+                        She evolves from stranger to close friend based on your relationship depth.
+                    </p>
+                    <div class="power-details">
+                        <ul>
+                            <li><strong>Trust Scores:</strong> Stranger → Acquaintance → Friend → Close Friend (0-100)</li>
+                            <li><strong>Learned Preferences:</strong> Communication style, work patterns, decision-making approach</li>
+                            <li><strong>Personal Facts:</strong> Goals, challenges, team structure, business context</li>
+                            <li><strong>Example:</strong> With Dennis (analytical CFO): data-driven, ROI-focused. With Christy (empathetic): simple, supportive, reassuring.</li>
+                        </ul>
+                    </div>
+                    <span class="expand-toggle">▼ Learn More</span>
+                </div>
+
+                <!-- Power 4: Specialist Delegation -->
+                <div class="power-card" onclick="toggleExpand(this)">
+                    <span class="power-icon">👥</span>
+                    <h3>4. Specialist Delegation (17-Agent Team)</h3>
+                    <p>
+                        SAM doesn't do everything herself. She has a <span class="highlight">team of 17 specialist agents</span>
+                        (CTO, CMO, Developer, Debug, QA Guardian, etc.) that she delegates to based on your needs.
+                    </p>
+                    <div class="power-details">
+                        <ul>
+                            <li><strong>CTO:</strong> Infrastructure strategy (Docker, PostgreSQL, cloud architecture)</li>
+                            <li><strong>CMO:</strong> Marketing campaigns, content strategy, brand positioning</li>
+                            <li><strong>Developer:</strong> Elite Odoo 18 rockstar (implements features with excellence)</li>
+                            <li><strong>Debug:</strong> Log analysis, bug tracking, architecture diagnosis</li>
+                            <li><strong>QA Guardian:</strong> Pre-commit quality gate (catches errors before deployment)</li>
+                            <li><strong>+ 12 more specialists</strong> (Architect, Docs Master, GitHub Expert, Module Specialists, etc.)</li>
+                        </ul>
+                    </div>
+                    <span class="expand-toggle">▼ Learn More</span>
+                </div>
+
+                <!-- Power 5: Action-Oriented -->
+                <div class="power-card" onclick="toggleExpand(this)">
+                    <span class="power-icon">⚡</span>
+                    <h3>5. Action-Oriented (Does, Not Just Talks)</h3>
+                    <p>
+                        SAM doesn't just answer questions—she <span class="highlight">takes action</span>.
+                        Connect her to 1,500+ services (email, CRM, webhooks, APIs) and automate entire workflows.
+                    </p>
+                    <div class="power-details">
+                        <ul>
+                            <li><strong>N8N Workflow Integration:</strong> Visual workflow builder (like Zapier, but smarter)</li>
+                            <li><strong>1,500+ Service Connectors:</strong> Gmail, Slack, Salesforce, Stripe, Google Sheets, webhooks, etc.</li>
+                            <li><strong>Example Workflow:</strong> "When lead submits form → SAM qualifies them → creates CRM record → sends personalized email → schedules follow-up"</li>
+                            <li><strong>Odoo Integration:</strong> SAM can create records, run reports, update data directly in your Odoo system</li>
+                        </ul>
+                    </div>
+                    <span class="expand-toggle">▼ Learn More</span>
+                </div>
+
+                <!-- Power 6: Continuous Learning -->
+                <div class="power-card" onclick="toggleExpand(this)">
+                    <span class="power-icon">📚</span>
+                    <h3>6. Continuous Learning (Gets Smarter)</h3>
+                    <p>
+                        Every conversation makes SAM smarter about <span class="highlight">your business specifically</span>.
+                        She learns your industry, your processes, your team, and your unique language.
+                    </p>
+                    <div class="power-details">
+                        <ul>
+                            <li><strong>Document Intelligence:</strong> Learns from PDFs, Word docs, spreadsheets, meeting notes</li>
+                            <li><strong>Conversation Mining:</strong> Extracts patterns, decisions, and best practices from past discussions</li>
+                            <li><strong>Self-Aware Knowledge Network:</strong> Visualizes what she knows and what she's missing</li>
+                            <li><strong>Example:</strong> After 3 months, SAM knows your pricing model, customer segments, objection handling—better than new employees</li>
+                        </ul>
+                    </div>
+                    <span class="expand-toggle">▼ Learn More</span>
+                </div>
+
+                <!-- Power 7: Pre-Signup Memory -->
+                <div class="power-card" onclick="toggleExpand(this)">
+                    <span class="power-icon">🔮</span>
+                    <h3>7. Pre-Signup Memory (Pixel Tracking)</h3>
+                    <p>
+                        SAM starts learning about you <span class="highlight">before you even sign up</span>.
+                        Pixel tracking captures your journey—what pages you read, what you care about.
+                    </p>
+                    <div class="power-details">
+                        <ul>
+                            <li><strong>Anonymous Tracking:</strong> No personal data until you sign up (privacy-safe)</li>
+                            <li><strong>Journey Mapping:</strong> Which features interested you? Which use cases resonated?</li>
+                            <li><strong>Personalized Onboarding:</strong> When you sign up, SAM already knows your priorities</li>
+                            <li><strong>Example:</strong> "I noticed you spent time reading about workflow automation. Want me to show you how to automate your lead qualification?"</li>
+                        </ul>
+                    </div>
+                    <span class="expand-toggle">▼ Learn More</span>
+                </div>
+
+            </div>
+
+            <div class="stat-highlight">
+                <h4>The Sheer Capacity</h4>
+                <p>
+                    SAM can hold 200,000 tokens in a single conversation—that's 50 pages of context.
+                    She sees your entire Odoo system, all your data models, and your full conversation history—simultaneously.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SECTION 3: HOW SAM THINKS
+    ======================================== -->
+
+    <div class="section section-alt" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How SAM's Brain Works</h2>
+            <p class="section-subtitle">
+                Understanding SAM's architecture—translated into human language
+            </p>
+
+            <div class="architecture-visual">
+                <div class="architecture-diagram">
+
+                    <div class="arch-layer">
+                        <h4>🌿 The Skills Layer (What You See)</h4>
+                        <p>
+                            <strong>SAM Creative:</strong> Mind mapping, brainstorming, content creation<br>
+                            <strong>Memory System:</strong> Search your knowledge, visualize connections<br>
+                            <strong>Workflow Automator:</strong> Build visual workflows with 1,500+ connectors
+                        </p>
+                    </div>
+
+                    <div class="arch-arrow">↓</div>
+
+                    <div class="arch-layer">
+                        <h4>🧠 The Mind Layer (SAM's Intelligence)</h4>
+                        <p>
+                            <strong>All-Knowing Context Builder:</strong> Sees your entire Odoo system (models, fields, records)<br>
+                            <strong>Claude API Integration:</strong> Best-in-class AI from Anthropic<br>
+                            <strong>Canvas Engine:</strong> Universal platform for any visual workflow<br>
+                            <strong>17 Specialist Agents:</strong> CTO, CMO, Developer, Debug, QA Guardian, etc.
+                        </p>
+                    </div>
+
+                    <div class="arch-arrow">↓</div>
+
+                    <div class="arch-layer">
+                        <h4>💾 The Brain Layer (Perfect Memory)</h4>
+                        <p>
+                            <strong>Graph Database (Apache AGE):</strong> Connects knowledge like your brain does<br>
+                            <strong>Vector Database (ChromaDB):</strong> Semantic search by meaning<br>
+                            <strong>Odoo PostgreSQL:</strong> All your business data, conversations, user profiles<br>
+                            <strong>40+ Data Models:</strong> Conversations, messages, workflows, nodes, users, preferences
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="translation-table">
+                    <h4>🔄 Tech → Human Translation</h4>
+
+                    <div class="translation-row">
+                        <div class="tech-term">ai_brain (PostgreSQL)</div>
+                        <div class="arrow-symbol">→</div>
+                        <div class="human-term">SAM's Long-Term Memory</div>
+                    </div>
+
+                    <div class="translation-row">
+                        <div class="tech-term">Graph Database (Apache AGE)</div>
+                        <div class="arrow-symbol">→</div>
+                        <div class="human-term">How SAM Connects Ideas</div>
+                    </div>
+
+                    <div class="translation-row">
+                        <div class="tech-term">Vector Database (ChromaDB)</div>
+                        <div class="arrow-symbol">→</div>
+                        <div class="human-term">SAM's Semantic Search</div>
+                    </div>
+
+                    <div class="translation-row">
+                        <div class="tech-term">Context Builder</div>
+                        <div class="arrow-symbol">→</div>
+                        <div class="human-term">SAM's All-Knowing Awareness</div>
+                    </div>
+
+                    <div class="translation-row">
+                        <div class="tech-term">Canvas Engine</div>
+                        <div class="arrow-symbol">→</div>
+                        <div class="human-term">Visual Thinking Processor</div>
+                    </div>
+
+                    <div class="translation-row">
+                        <div class="tech-term">N8N Workflow Nodes</div>
+                        <div class="arrow-symbol">→</div>
+                        <div class="human-term">SAM's Hands (Actions)</div>
+                    </div>
+
+                    <div class="translation-row">
+                        <div class="tech-term">Power Prompts</div>
+                        <div class="arrow-symbol">→</div>
+                        <div class="human-term">SAM's Adaptive Personality</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SECTION 4: WHO SAM HELPS
+    ======================================== -->
+
+    <div class="section">
+        <div class="container">
+            <h2 class="section-title">Who Is SAM For?</h2>
+            <p class="section-subtitle">
+                Real people, real challenges, real results
+            </p>
+
+            <div class="tabs-nav">
+                <button class="tab-button active" onclick="switchTab('sme')">
+                    <span class="badge">1</span>
+                    🏪 Small Business<br><span style="font-size: 0.85rem; font-weight: 400; opacity: 0.8;">1-10 employees</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('small')">
+                    <span class="badge">2</span>
+                    🏢 Small-Medium<br><span style="font-size: 0.85rem; font-weight: 400; opacity: 0.8;">11-50 employees</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('medium')">
+                    <span class="badge">3</span>
+                    🏭 Medium Business<br><span style="font-size: 0.85rem; font-weight: 400; opacity: 0.8;">51-250 employees</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('enterprise')">
+                    <span class="badge">4</span>
+                    🏛️ Enterprise<br><span style="font-size: 0.85rem; font-weight: 400; opacity: 0.8;">250+ employees</span>
+                </button>
+            </div>
+
+            <!-- Tab: Small Business (1-10 employees) -->
+            <div id="tab-sme" class="tab-content active">
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar">🏪</div>
+                        <div class="persona-info">
+                            <h3>Small Business (1-10 Employees)</h3>
+                            <p>You're the founder, operator, and CEO rolled into one</p>
+                        </div>
+                    </div>
+                    <h4 style="color: #3b82f6; margin: 30px 0 20px;">Why SAM AI + Odoo Is Perfect For You:</h4>
+                    <ul class="benefits-list">
+                        <li><strong>All-In-One Platform:</strong> Replace 5-10 disconnected tools (QuickBooks, Mailchimp, Trello, Google Sheets) with one integrated system—CRM, invoicing, email marketing, project management</li>
+                        <li><strong>AI Business Coach:</strong> Get instant advice from SAM's Board of Directors (CMO, CFO, CTO) without hiring expensive consultants—$0 extra vs. $200/hour</li>
+                        <li><strong>Setup In Days, Not Months:</strong> Pre-configured workflows for common small business needs—start selling/servicing customers immediately</li>
+                        <li><strong>Affordable Pricing:</strong> $99/month total vs. $300-500/month for multiple subscriptions—save $2,400-4,800/year</li>
+                        <li><strong>No Technical Skills Required:</strong> SAM guides you through setup, answers questions in plain English, remembers your preferences</li>
+                        <li><strong>Scale Without Hiring:</strong> Automate customer follow-ups, invoice reminders, inventory alerts—SAM works 24/7 so you don't have to</li>
+                    </ul>
+                    <div class="persona-story" style="margin-top: 30px;">
+                        <strong>Perfect For:</strong> Solopreneurs, family businesses, local service providers, online retailers, consultants, freelancers transitioning to business owners
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Small-Medium Business (11-50 employees) -->
+            <div id="tab-small" class="tab-content">
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar">🏢</div>
+                        <div class="persona-info">
+                            <h3>Small-Medium Business (11-50 Employees)</h3>
+                            <p>Growing fast, need systems that scale with you</p>
+                        </div>
+                    </div>
+                    <h4 style="color: #3b82f6; margin: 30px 0 20px;">Why SAM AI + Odoo Is Perfect For You:</h4>
+                    <ul class="benefits-list">
+                        <li><strong>Eliminate Tool Sprawl:</strong> Replace 15-20 disconnected systems (Salesforce, QuickBooks, Shopify, Zendesk, Asana) with one integrated platform—save $1,500-2,500/month</li>
+                        <li><strong>Scale Operations Without Headcount:</strong> Automate order processing, customer support, inventory management, reporting—do more with existing team</li>
+                        <li><strong>C-Suite On Demand:</strong> Access strategic advice from CMO (marketing strategy), CFO (financial planning), CTO (tech infrastructure) without $300K+ salaries</li>
+                        <li><strong>Department Collaboration:</strong> Sales, operations, finance, marketing all work from one system—no more data silos or version conflicts</li>
+                        <li><strong>Custom Workflows:</strong> SAM learns your unique processes and suggests optimizations—continuous improvement built-in</li>
+                        <li><strong>Multi-Location Support:</strong> Manage multiple warehouses, retail locations, or regional offices from one dashboard</li>
+                    </ul>
+                    <div class="persona-story" style="margin-top: 30px;">
+                        <strong>Perfect For:</strong> Growing manufacturers, multi-location retailers, wholesale distributors, service companies, eCommerce businesses scaling up
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Medium Business (51-250 employees) -->
+            <div id="tab-medium" class="tab-content">
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar">🏭</div>
+                        <div class="persona-info">
+                            <h3>Medium Business (51-250 Employees)</h3>
+                            <p>Complex operations, need enterprise capabilities without enterprise costs</p>
+                        </div>
+                    </div>
+                    <h4 style="color: #3b82f6; margin: 30px 0 20px;">Why SAM AI + Odoo Is Perfect For You:</h4>
+                    <ul class="benefits-list">
+                        <li><strong>Enterprise Features, SME Pricing:</strong> Advanced manufacturing (MRP), multi-warehouse, multi-currency, project accounting—fraction of SAP/Oracle cost ($100K-500K+ savings/year)</li>
+                        <li><strong>AI-Powered Decision Support:</strong> Board of Directors analyzes your data, identifies bottlenecks, recommends optimizations—like having McKinsey consultants on retainer</li>
+                        <li><strong>Department-Specific Specialists:</strong> QA Guardian (quality control), Debug Agent (troubleshooting), Developer (customizations)—17 specialist agents vs. hiring 17 experts</li>
+                        <li><strong>Compliance & Audit Trail:</strong> SAM's perfect memory documents every decision, approval, change—instant audit reports, regulatory compliance simplified</li>
+                        <li><strong>Cross-Department Intelligence:</strong> SAM connects dots between sales forecasts, production capacity, cash flow, supplier lead times—proactive insights, not reactive firefighting</li>
+                        <li><strong>Scalable Infrastructure:</strong> Cloud-hosted or on-premise, multi-tenant support, API integrations with legacy systems—grow without ripping and replacing</li>
+                    </ul>
+                    <div class="persona-story" style="margin-top: 30px;">
+                        <strong>Perfect For:</strong> Mid-size manufacturers, distribution centers, professional services firms, healthcare providers, retail chains
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Enterprise (250+ employees) -->
+            <div id="tab-enterprise" class="tab-content">
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar">🏛️</div>
+                        <div class="persona-info">
+                            <h3>Enterprise (250+ Employees)</h3>
+                            <p>Global operations, need reliability, security, and strategic intelligence at scale</p>
+                        </div>
+                    </div>
+                    <h4 style="color: #3b82f6; margin: 30px 0 20px;">Why SAM AI + Odoo Is Perfect For You:</h4>
+                    <ul class="benefits-list">
+                        <li><strong>SAP/Oracle Alternative:</strong> Full ERP capabilities (financials, supply chain, manufacturing, HR) at 10-20% of license + implementation cost—$1M-5M+ savings over 5 years</li>
+                        <li><strong>AI Strategic Intelligence Layer:</strong> Board of Directors provides cross-functional insights (sales trends → supply chain impacts → financial forecasting)—data-driven executive decision-making</li>
+                        <li><strong>Enterprise Security & Governance:</strong> Role-based access, audit trails, SOC 2 compliance, data residency controls—meets Fortune 500 security requirements</li>
+                        <li><strong>Global Scalability:</strong> Multi-company, multi-currency, multi-language, 24/7 support—proven with 14M+ users worldwide (Odoo) + perfect memory AI (SAM)</li>
+                        <li><strong>Legacy System Integration:</strong> APIs, webhooks, data migration tools—connect to existing SAP, Oracle, custom systems without rip-and-replace</li>
+                        <li><strong>Dedicated Success Team:</strong> Enterprise onboarding, custom training, priority support, quarterly business reviews—white-glove service</li>
+                    </ul>
+                    <div class="persona-story" style="margin-top: 30px;">
+                        <strong>Perfect For:</strong> Multi-national corporations, large manufacturers, enterprise retail, financial services, healthcare systems, government agencies
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================
+         SECTION 5: THE JOURNEY
+    ======================================== -->
+
+    <div class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">SAM's Journey</h2>
+            <p class="section-subtitle">
+                From concept to revolutionary AI platform
+            </p>
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Early 2024</div>
+                        <h4>The Frustration</h4>
+                        <p>
+                            Anthony, an Odoo consultant, had 766+ conversation sessions with Claude AI. Every new project meant
+                            re-explaining the same architecture, the same patterns, the same context. "Why can't AI remember?"
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Mid 2024</div>
+                        <h4>The Vision</h4>
+                        <p>
+                            "What if I built an AI that has perfect memory? What if she could learn from all 23.2M tokens
+                            of my conversation history? What if she could adapt her personality based on who she's talking to?"
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">August 2024</div>
+                        <h4>The Foundation (V1)</h4>
+                        <p>
+                            Built ai_brain module (PostgreSQL data layer), ai_sam core framework (Claude API integration),
+                            and first canvas platform prototype. SAM could have basic conversations with memory.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">September 2024</div>
+                        <h4>The Memory Breakthrough (V2)</h4>
+                        <p>
+                            Integrated Apache AGE graph database and ChromaDB vector database. SAM could now connect knowledge
+                            like a human brain and search by meaning, not just keywords. Imported 1,100+ historical conversations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">October 2024</div>
+                        <h4>The Specialist Team (V3)</h4>
+                        <p>
+                            Created 17 specialist agents (CTO, CMO, Developer, Debug, QA Guardian, etc.). SAM learned to delegate
+                            complex tasks to the right expert. Built agent intelligence system to prevent naivety and maintain ecosystem health.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">October 2024</div>
+                        <h4>The Action Layer (V3.5)</h4>
+                        <p>
+                            Integrated N8N workflow automation with 1,500+ service connectors. SAM evolved from "thinking AI"
+                            to "doing AI"—taking real actions (sending emails, creating records, running workflows).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">November 2024</div>
+                        <h4>The Cost Optimizer (V3.6)</h4>
+                        <p>
+                            Built intelligent cost optimization system that reduced AI API spending by 43% through smart provider
+                            selection, waste detection, A/B testing, and budget management. SAM got smarter AND cheaper.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Early 2025</div>
+                        <h4>Pre-Launch Beta</h4>
+                        <p>
+                            Limited beta release to 50 Odoo consultants and businesses. Gathering feedback, refining UI,
+                            training specialist agents, building documentation. SAM is learning what makes her truly valuable.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Q2 2025</div>
+                        <h4>Public Launch</h4>
+                        <p>
+                            SAM goes public! Multi-tenant SaaS platform, mobile apps (iOS/Android), marketplace for custom agents,
+                            and enterprise deployment options. The AI revolution begins.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="stat-highlight">
+                <h4>23.2M Tokens of Wisdom</h4>
+                <p>
+                    SAM has already learned from 1,100+ historical conversations, extracting patterns, decisions,
+                    and best practices. She knows more about Odoo 18 development than most senior consultants.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SECTION 6: SAM VS. THE WORLD
+    ======================================== -->
+
+    <div class="section">
+        <div class="container">
+            <h2 class="section-title">How SAM Compares</h2>
+            <p class="section-subtitle">
+                Honest comparison with ChatGPT, Claude, and other AI platforms
+            </p>
+
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Capability</th>
+                            <th>SAM</th>
+                            <th>ChatGPT</th>
+                            <th>Claude</th>
+                            <th>Copilot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Perfect Memory (Infinite Conversations)</strong></td>
+                            <td><span class="check-yes">✓</span> Graph + Vector DB</td>
+                            <td><span class="check-no">✗</span> Forgets after ~8K tokens</td>
+                            <td><span class="check-no">✗</span> Forgets after ~200K tokens</td>
+                            <td><span class="check-no">✗</span> Limited context</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Adaptive Personality (6 Modes)</strong></td>
+                            <td><span class="check-yes">✓</span> Context-aware modes</td>
+                            <td><span class="check-partial">~</span> Custom instructions</td>
+                            <td><span class="check-partial">~</span> System prompts</td>
+                            <td><span class="check-no">✗</span> Fixed personality</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Relationship Intelligence (Trust Scores)</strong></td>
+                            <td><span class="check-yes">✓</span> Per-user profiles</td>
+                            <td><span class="check-no">✗</span> No user profiling</td>
+                            <td><span class="check-no">✗</span> No user profiling</td>
+                            <td><span class="check-no">✗</span> No user profiling</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Specialist Delegation (Team of Experts)</strong></td>
+                            <td><span class="check-yes">✓</span> 17 specialist agents</td>
+                            <td><span class="check-no">✗</span> Single model</td>
+                            <td><span class="check-no">✗</span> Single model</td>
+                            <td><span class="check-partial">~</span> GitHub integration only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Action-Oriented (Workflow Automation)</strong></td>
+                            <td><span class="check-yes">✓</span> 1,500+ connectors (N8N)</td>
+                            <td><span class="check-partial">~</span> Zapier integration (limited)</td>
+                            <td><span class="check-no">✗</span> No automation</td>
+                            <td><span class="check-partial">~</span> Microsoft ecosystem only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Continuous Learning (Gets Smarter)</strong></td>
+                            <td><span class="check-yes">✓</span> Learns from documents + conversations</td>
+                            <td><span class="check-partial">~</span> RAG via plugins (clunky)</td>
+                            <td><span class="check-partial">~</span> Projects feature (limited)</td>
+                            <td><span class="check-no">✗</span> No learning</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pre-Signup Memory (Pixel Tracking)</strong></td>
+                            <td><span class="check-yes">✓</span> Learns before signup</td>
+                            <td><span class="check-no">✗</span> No pre-signup tracking</td>
+                            <td><span class="check-no">✗</span> No pre-signup tracking</td>
+                            <td><span class="check-no">✗</span> No pre-signup tracking</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Odoo 18 Integration (Native)</strong></td>
+                            <td><span class="check-yes">✓</span> Built ON Odoo 18</td>
+                            <td><span class="check-no">✗</span> No Odoo knowledge</td>
+                            <td><span class="check-no">✗</span> Generic business AI</td>
+                            <td><span class="check-no">✗</span> Microsoft-only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cost Optimization (AI Budget Management)</strong></td>
+                            <td><span class="check-yes">✓</span> 43% cost reduction</td>
+                            <td><span class="check-no">✗</span> No optimization</td>
+                            <td><span class="check-no">✗</span> No optimization</td>
+                            <td><span class="check-no">✗</span> No optimization</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pricing (Monthly)</strong></td>
+                            <td><strong>$99/month</strong> (pre-launch: $49)</td>
+                            <td>$20/month (ChatGPT Plus)</td>
+                            <td>$20/month (Claude Pro)</td>
+                            <td>$30/month (Copilot Pro)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="roi-calculator">
+                <h4>💰 Calculate Your ROI</h4>
+                <p style="text-align: center; margin-bottom: 30px; color: #555;">
+                    See how much SAM saves you in time and money
+                </p>
+
+                <div class="calculator-inputs">
+                    <div class="input-group">
+                        <label>Your hourly rate ($)</label>
+                        <input type="number" id="hourly-rate" value="60" onchange="calculateROI()">
+                    </div>
+                    <div class="input-group">
+                        <label>Hours/week re-explaining context</label>
+                        <input type="number" id="context-hours" value="5" onchange="calculateROI()">
+                    </div>
+                    <div class="input-group">
+                        <label>Current AI API spend ($/month)</label>
+                        <input type="number" id="api-spend" value="150" onchange="calculateROI()">
+                    </div>
+                    <div class="input-group">
+                        <label>Customer support hours/week</label>
+                        <input type="number" id="support-hours" value="10" onchange="calculateROI()">
+                    </div>
+                </div>
+
+                <div class="roi-result">
+                    <h5>Your Annual Savings with SAM</h5>
+                    <div class="roi-number" id="total-savings">$16,380</div>
+                    <div class="roi-breakdown">
+                        <p><strong>Time Savings:</strong> <span id="time-savings">$15,600/year</span> (context re-explaining eliminated)</p>
+                        <p><strong>API Cost Savings:</strong> <span id="api-savings">$780/year</span> (43% reduction)</p>
+                        <p><strong>Support Efficiency:</strong> <span id="support-savings">$0/year</span> (automated responses)</p>
+                        <p style="margin-top: 20px; font-size: 1.3rem; color: var(--blue-primary);">
+                            <strong>ROI:</strong> <span id="roi-percent">1,265%</span> |
+                            <strong>Payback:</strong> <span id="payback">0.9 months</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SECTION 7: FINAL CTA
+    ======================================== -->
+
+    <div class="final-cta" id="waitlist">
+        <div class="container">
+            <h2>Ready to Meet SAM?</h2>
+            <p>
+                Join 500+ businesses on the waitlist for early access.
+                Pre-launch members get 50% off for life.
+            </p>
+
+            <div class="waitlist-form">
+                <h4>🎉 Join the Waitlist</h4>
+                <form action="/submit-waitlist" method="POST">
+                    <div class="form-group">
+                        <label>Your Name *</label>
+                        <input type="text" name="name" required placeholder="Anthony Gardiner">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" name="email" required placeholder="anthony@sme.ec">
+                    </div>
+                    <div class="form-group">
+                        <label>Company (Optional)</label>
+                        <input type="text" name="company" placeholder="SME Consulting">
+                    </div>
+                    <div class="form-group">
+                        <label>I'm interested in SAM for... *</label>
+                        <input type="text" name="use_case" required placeholder="Odoo consulting, customer support, workflow automation...">
+                    </div>
+                    <button type="submit" class="submit-button">Join Waitlist</button>
+                </form>
+
+                <div class="early-access-benefits">
+                    <h5>🎁 Early Access Benefits</h5>
+                    <ul>
+                        <li><strong>50% Off For Life:</strong> $49/month (regular price $99/month)</li>
+                        <li><strong>Priority Onboarding:</strong> Personal onboarding call with Anthony</li>
+                        <li><strong>Beta Features Access:</strong> Try new features before public release</li>
+                        <li><strong>Custom Agent Training:</strong> We'll train a specialist agent for your industry</li>
+                        <li><strong>Lifetime Support:</strong> Direct access to SAM's development team</li>
+                        <li><strong>No Credit Card Required:</strong> Free to join, cancel anytime</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         FOOTER
+    ======================================== -->
+
+    <div class="footer">
+        <div class="container">
+            <h3 style="margin-bottom: 20px;">SAM AI - Your Business Partner Who Never Forgets</h3>
+            <div class="footer-links">
+                <a href="https://sme.ec" class="footer-link">Website</a>
+                <a href="https://docs.sam-ai.dev" class="footer-link">Documentation</a>
+                <a href="https://github.com/anthonygardner/sam-ai" class="footer-link">GitHub</a>
+                <a href="mailto:anthony@sme.ec" class="footer-link">Contact</a>
+            </div>
+            <p class="footer-copyright">
+                Built with 💗 by Anthony Gardiner Odoo Consulting & Claude AI<br>
+                Version 3.6.0 | October 2024
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         JAVASCRIPT
+    ======================================== -->
+
+    <script>
+        // Power Card Expand/Collapse
+        function toggleExpand(card) {
+            card.classList.toggle('expanded');
+            const toggle = card.querySelector('.expand-toggle');
+            if (card.classList.contains('expanded')) {
+                toggle.textContent = '▲ Show Less';
+            } else {
+                toggle.textContent = '▼ Learn More';
+            }
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Deactivate all tab buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+
+            // Show selected tab content
+            const selectedContent = document.getElementById('tab-' + tabName);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+
+            // Activate clicked button
+            event.target.classList.add('active');
+        }
+
+        // ROI Calculator
+        function calculateROI() {
+            const hourlyRate = parseFloat(document.getElementById('hourly-rate').value) || 60;
+            const contextHours = parseFloat(document.getElementById('context-hours').value) || 5;
+            const apiSpend = parseFloat(document.getElementById('api-spend').value) || 150;
+            const supportHours = parseFloat(document.getElementById('support-hours').value) || 10;
+
+            // Calculate savings
+            const timeSavings = contextHours * 52 * hourlyRate; // Weekly hours * 52 weeks * hourly rate
+            const apiSavings = apiSpend * 12 * 0.43; // Monthly spend * 12 months * 43% reduction
+            const supportSavings = supportHours * 52 * hourlyRate * 0.30; // 30% support efficiency gain
+
+            const totalSavings = timeSavings + apiSavings + supportSavings;
+
+            // SAM cost: $49/month pre-launch (assume early access)
+            const samCost = 49 * 12;
+
+            // ROI calculation
+            const netSavings = totalSavings - samCost;
+            const roiPercent = Math.round((netSavings / samCost) * 100);
+            const paybackMonths = (samCost / (totalSavings / 12)).toFixed(1);
+
+            // Update UI
+            document.getElementById('total-savings').textContent = '$' + Math.round(totalSavings).toLocaleString();
+            document.getElementById('time-savings').textContent = '$' + Math.round(timeSavings).toLocaleString() + '/year';
+            document.getElementById('api-savings').textContent = '$' + Math.round(apiSavings).toLocaleString() + '/year';
+            document.getElementById('support-savings').textContent = '$' + Math.round(supportSavings).toLocaleString() + '/year';
+            document.getElementById('roi-percent').textContent = roiPercent + '%';
+            document.getElementById('payback').textContent = paybackMonths + ' months';
+        }
+
+        // Initialize ROI calculator on load
+        window.onload = function() {
+            calculateROI();
+        };
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

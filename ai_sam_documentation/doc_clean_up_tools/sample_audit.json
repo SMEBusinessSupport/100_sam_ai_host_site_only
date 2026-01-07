@@ -1,0 +1,239 @@
+{
+  "audit_date": "2025-12-19",
+  "auditor": "CTO Auditor Agent",
+  "module": "example_module",
+  "module_version": "1.0.0",
+  "score": 6,
+  "score_breakdown": {
+    "cto_principles": 7,
+    "code_quality": 5,
+    "architecture": 8,
+    "technical_debt": "HIGH"
+  },
+  "summary": "Example audit showing all severity levels and cleanup types",
+  "findings": [
+    {
+      "id": "CLEANUP-001",
+      "severity": "RED",
+      "type": "DELETE",
+      "file": "models/duplicate_file.py",
+      "line": 1,
+      "scope": "file",
+      "title": "ENTIRE FILE FLAGGED FOR DELETION",
+      "reason": "Class collision with models/main_file.py - both define the same class",
+      "action": [
+        "DELETE this entire file",
+        "EDIT models/__init__.py - remove the import line",
+        "TEST: python -c 'import models' to verify no import errors"
+      ],
+      "score_impact": -1,
+      "estimated_time": "5 minutes"
+    },
+    {
+      "id": "CLEANUP-002",
+      "severity": "RED",
+      "type": "SECURITY",
+      "file": "config/settings.py",
+      "line": 15,
+      "scope": "line",
+      "title": "Hardcoded API Key Exposed",
+      "reason": "API key is hardcoded in source code - security vulnerability",
+      "action": [
+        "MOVE API key to environment variable",
+        "UPDATE code to use: os.environ.get('API_KEY')",
+        "ADD .env to .gitignore if not already",
+        "ROTATE the exposed API key immediately"
+      ],
+      "score_impact": -3,
+      "estimated_time": "15 minutes"
+    },
+    {
+      "id": "CLEANUP-003",
+      "severity": "ORANGE",
+      "type": "DEPRECATED",
+      "file": "models/user_profile.py",
+      "line": 45,
+      "scope": "block",
+      "end_line": 60,
+      "title": "Deprecated field - old_email_field",
+      "reason": "Field deprecated 2025-12-01, replaced by email_addresses relation",
+      "action": [
+        "VERIFY replacement works: Check email_addresses field is populated",
+        "SEARCH for usages: grep -rn 'old_email_field' --include='*.py' .",
+        "DELETE field definition (lines 45-60) if no usages found"
+      ],
+      "verification": "SELECT COUNT(*) FROM user_email_addresses > 0",
+      "deprecated_since": "2025-12-01",
+      "replacement": "email_addresses Many2many field",
+      "estimated_time": "20 minutes"
+    },
+    {
+      "id": "CLEANUP-004",
+      "severity": "ORANGE",
+      "type": "WRONG_TYPE",
+      "file": "wizards/import_wizard.py",
+      "line": 10,
+      "scope": "line",
+      "title": "Wizard should be TransientModel not Model",
+      "reason": "Wizard defined as persistent Model - records accumulate forever in database",
+      "action": [
+        "CHANGE line 10: class ImportWizard(models.Model) -> class ImportWizard(models.TransientModel)",
+        "TEST module upgrade",
+        "OPTIONAL: Clean old records from database"
+      ],
+      "estimated_time": "10 minutes"
+    },
+    {
+      "id": "CLEANUP-005",
+      "severity": "ORANGE",
+      "type": "DEAD_CODE",
+      "file": "controllers/main_controller.py",
+      "line": 150,
+      "scope": "block",
+      "end_line": 200,
+      "title": "Commented-out code block",
+      "reason": "Large block of commented code from previous implementation - clutters file",
+      "action": [
+        "REVIEW: Is this code needed for reference?",
+        "IF NO: DELETE lines 150-200",
+        "IF YES: Move to documentation or separate archive file"
+      ],
+      "estimated_time": "10 minutes"
+    },
+    {
+      "id": "CLEANUP-006",
+      "severity": "YELLOW",
+      "type": "DRY",
+      "file": "services/calculator.py",
+      "line": 75,
+      "scope": "method",
+      "title": "Tax calculation duplicated in 4 files",
+      "reason": "Same tax calculation formula appears in: calculator.py, invoice.py, order.py, quote.py",
+      "action": [
+        "CREATE shared utility: services/tax_utils.py with calculate_tax()",
+        "REFACTOR all 4 files to use the shared utility",
+        "TEST calculations still produce same results"
+      ],
+      "related_files": [
+        "services/calculator.py:75",
+        "models/invoice.py:120",
+        "models/order.py:85",
+        "models/quote.py:90"
+      ],
+      "estimated_time": "1 hour"
+    },
+    {
+      "id": "CLEANUP-007",
+      "severity": "YELLOW",
+      "type": "REFACTOR",
+      "file": "models/order.py",
+      "line": 200,
+      "scope": "method",
+      "title": "God method - process_order() is 150 lines",
+      "reason": "Method too long, handles too many responsibilities, hard to test",
+      "action": [
+        "EXTRACT validation logic to _validate_order()",
+        "EXTRACT calculation logic to _calculate_totals()",
+        "EXTRACT notification logic to _send_notifications()",
+        "KEEP process_order() as orchestrator calling these methods"
+      ],
+      "estimated_time": "2 hours"
+    },
+    {
+      "id": "CLEANUP-008",
+      "severity": "YELLOW",
+      "type": "TODO",
+      "file": "services/api_client.py",
+      "line": 50,
+      "scope": "line",
+      "title": "TODO - Implement retry logic",
+      "reason": "Existing TODO comment: 'TODO: Add retry on 429 rate limit'",
+      "action": [
+        "IMPLEMENT exponential backoff retry for 429 responses",
+        "ADD max_retries parameter (default 3)",
+        "ADD tests for retry behavior"
+      ],
+      "estimated_time": "1 hour"
+    },
+    {
+      "id": "CLEANUP-009",
+      "severity": "GREEN",
+      "type": "SPLIT",
+      "file": "models/product.py",
+      "line": 1,
+      "scope": "file",
+      "title": "File has 2500 lines - consider splitting",
+      "reason": "Large file is harder to navigate and maintain",
+      "action": [
+        "CONSIDER extracting ProductVariant to models/product_variant.py",
+        "CONSIDER extracting ProductPricing to models/product_pricing.py",
+        "KEEP core Product model in models/product.py"
+      ],
+      "estimated_time": "3 hours"
+    },
+    {
+      "id": "CLEANUP-010",
+      "severity": "GREEN",
+      "type": "OPTIMIZE",
+      "file": "reports/sales_report.py",
+      "line": 80,
+      "scope": "method",
+      "title": "N+1 Query in loop",
+      "reason": "Each iteration queries partner.name separately - inefficient at scale",
+      "action": [
+        "PREFETCH partners before loop: partners = orders.mapped('partner_id')",
+        "BUILD lookup dict: partner_names = {p.id: p.name for p in partners}",
+        "USE lookup in loop instead of querying"
+      ],
+      "estimated_time": "30 minutes"
+    },
+    {
+      "id": "CLEANUP-011",
+      "severity": "GREEN",
+      "type": "DOCUMENT",
+      "file": "services/encryption.py",
+      "line": 1,
+      "scope": "file",
+      "title": "Complex encryption logic needs documentation",
+      "reason": "Custom encryption implementation with no docstrings or comments",
+      "action": [
+        "ADD module-level docstring explaining the encryption approach",
+        "ADD docstrings to each public method",
+        "ADD inline comments for non-obvious operations"
+      ],
+      "estimated_time": "1 hour"
+    },
+    {
+      "id": "CLEANUP-012",
+      "severity": "BLUE",
+      "type": "NOTE",
+      "file": "models/__init__.py",
+      "line": 1,
+      "scope": "file",
+      "title": "Import order is intentional",
+      "reason": "Models must be imported in dependency order to avoid circular imports",
+      "action": [
+        "DO NOT reorder imports without understanding dependencies",
+        "SEE: docs/model_dependencies.md for explanation"
+      ]
+    }
+  ],
+  "recommended_order": [
+    "CLEANUP-002 (15 min) - Fix security issue FIRST",
+    "CLEANUP-001 (5 min) - Delete duplicate file",
+    "CLEANUP-004 (10 min) - Fix model type",
+    "CLEANUP-005 (10 min) - Remove dead code",
+    "CLEANUP-003 (20 min) - Remove deprecated field",
+    "CLEANUP-006 (1 hr) - Extract shared tax calculation",
+    "CLEANUP-008 (1 hr) - Implement retry logic",
+    "CLEANUP-007 (2 hr) - Refactor god method",
+    "CLEANUP-010 (30 min) - Fix N+1 query",
+    "CLEANUP-011 (1 hr) - Add documentation",
+    "CLEANUP-009 (3 hr) - Split large file"
+  ],
+  "total_estimated_time": "10 hours 30 minutes",
+  "quick_wins": ["CLEANUP-001", "CLEANUP-004", "CLEANUP-005"],
+  "quick_wins_time": "25 minutes",
+  "critical_issues": ["CLEANUP-002"],
+  "critical_issues_time": "15 minutes"
+}

@@ -1,0 +1,655 @@
+# Api Documentation
+
+**Original file:** `API_DOCUMENTATION.yaml`
+**Type:** YAML
+
+---
+
+```yaml
+openapi: 3.0.3
+info:
+  title: SAM AI - UI Module (No API Endpoints)
+  description: |
+    **IMPORTANT: This module (ai_sam) contains NO HTTP controllers or API endpoints.**
+
+    The **ai_sam** module is a **pure UI layer** following the **Platform Skin Architecture**.
+    All Python business logic, models, and HTTP controllers have been moved to the
+    **ai_sam_base** module as of November 30, 2025.
+
+    ## Architecture Overview
+
+    ```
+    ai_sam (THIS MODULE - UI-Only Layer)
+    ├── views/              ← 18 XML view files
+    ├── static/
+    │   ├── src/js/        ← 18 JavaScript files (Vanilla JS)
+    │   ├── src/css/       ← 8 CSS files
+    │   └── vendor_library/ ← 203 API provider icons
+    ├── templates/         ← QWeb templates
+    └── data/              ← Menu definitions
+
+    ai_sam_base (SEPARATE MODULE - Data Layer)
+    ├── models/            ← 43 Python models
+    ├── controllers/       ← 10 HTTP controllers (67 endpoints)
+    └── security/          ← Access control (20 rules)
+    ```
+
+    ## What This Module Contains
+
+    This module contains:
+    - **18 View XML Files**: Form, tree, kanban, client actions
+    - **18 JavaScript Files**: Chat interface (9,056 lines), Canvas Framework, Widgets
+    - **8 CSS Files**: Purple branding (#714B67), responsive design
+    - **203 Vendor Library Directories**: API provider icons (301 SVGs)
+    - **QWeb Templates**: Chat, memory, canvas rendering
+    - **Menu Definitions**: Consolidated menu structure (single source of truth)
+
+    ## API Endpoints
+
+    **All API endpoints are in the ai_sam_base module.**
+
+    Please refer to the **ai_sam_base API documentation** for:
+    - 67 HTTP REST endpoints across 10 controllers
+    - Chat endpoints (18 endpoints)
+    - Canvas endpoints (15 endpoints)
+    - Menu context endpoints (7 endpoints)
+    - Session management (12 endpoints)
+    - OAuth endpoints (3 endpoints)
+    - Developer mode endpoints (7 endpoints)
+    - Memory graph endpoints (9 endpoints)
+
+    **API Documentation Location:**
+    `../ai_sam_base/API_DOCUMENTATION.yaml`
+
+    ## JavaScript → Backend Communication
+
+    The JavaScript files in this module communicate with backend endpoints via:
+
+    ### 1. Odoo RPC (JSON-RPC 2.0)
+
+    ```javascript
+    // Example: Chat message sending
+    // File: static/src/js/sam_chat_vanilla_v2.js
+
+    async function sendMessage(message, conversationId) {
+        const response = await fetch('/jsonrpc', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                method: 'call',
+                params: {
+                    service: 'object',
+                    method: 'execute',
+                    args: [
+                        database_name,
+                        uid,
+                        password,
+                        'ai.conversation',
+                        'send_message',
+                        conversationId,
+                        message
+                    ]
+                },
+                id: 1
+            })
+        });
+        return await response.json();
+    }
+    ```
+
+    ### 2. HTTP Endpoints (via ai_sam_base controllers)
+
+    ```javascript
+    // Example: Chat streaming
+    // File: static/src/js/sam_chat_vanilla_v2.js
+
+    async function streamChatResponse(message) {
+        const eventSource = new EventSource(
+            `/sam_ai/chat/stream?message=${encodeURIComponent(message)}`
+        );
+
+        eventSource.onmessage = (event) => {
+            const chunk = JSON.parse(event.data);
+            appendToChat(chunk.content);
+        };
+
+        eventSource.onerror = (error) => {
+            console.error('Streaming error:', error);
+            eventSource.close();
+        };
+    }
+    ```
+
+    ### 3. Canvas State Management
+
+    ```javascript
+    // Example: Save canvas workflow
+    // File: static/src/js/canvas_engine.js
+
+    async function saveCanvas(canvasId, canvasData) {
+        const response = await fetch('/jsonrpc', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                method: 'call',
+                params: {
+                    service: 'object',
+                    method: 'execute',
+                    args: [
+                        database_name,
+                        uid,
+                        password,
+                        'canvas',
+                        'save_canvas_state',
+                        canvasId,
+                        canvasData
+                    ]
+                },
+                id: 1
+            })
+        });
+        return await response.json();
+    }
+    ```
+
+    ### 4. Memory System Queries
+
+    ```javascript
+    // Example: Search memory
+    // File: static/src/js/memory_dashboard.js
+
+    async function searchMemory(query) {
+        const response = await fetch('/sam_ai/memory/search', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                query: query,
+                limit: 10,
+                include_graph: true
+            })
+        });
+        return await response.json();
+    }
+    ```
+
+    ## Frontend-Only Operations (No Backend Calls)
+
+    Some operations are handled entirely in the frontend without backend communication:
+
+    ### 1. Canvas Rendering
+
+    ```javascript
+    // File: static/src/js/canvas_engine.js
+    // Pure frontend rendering using HTML5 Canvas API
+
+    function renderCanvas() {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw nodes
+        nodes.forEach(node => drawNode(ctx, node));
+
+        // Draw connections
+        connections.forEach(conn => drawConnection(ctx, conn));
+    }
+    ```
+
+    ### 2. Coordinate Transformations
+
+    ```javascript
+    // File: static/src/js/canvas_sizer.js
+    // Frontend coordinate transformation (world ↔ screen)
+
+    function worldToScreen(worldX, worldY) {
+        return {
+            x: (worldX - panX) * zoom,
+            y: (worldY - panY) * zoom
+        };
+    }
+
+    function screenToWorld(screenX, screenY) {
+        return {
+            x: screenX / zoom + panX,
+            y: screenY / zoom + panY
+        };
+    }
+    ```
+
+    ### 3. Reactive State Management
+
+    ```javascript
+    // File: static/src/js/state_manager.js
+    // Proxy-based reactive state (no backend needed)
+
+    const chatState = new Proxy({
+        messages: [],
+        isStreaming: false,
+        tokenCount: 0
+    }, {
+        set(target, property, value) {
+            target[property] = value;
+            // Automatically update DOM
+            STATE_TO_DOM_MAP[property]?.forEach(updater => updater(value));
+            return true;
+        }
+    });
+    ```
+
+    ### 4. Token Counting (Frontend Estimation)
+
+    ```javascript
+    // File: static/src/js/token_counter_widget.js
+    // Frontend token estimation (approximate)
+
+    function estimateTokens(text) {
+        // Simple estimation: ~4 characters per token
+        // Real token counting happens backend
+        return Math.ceil(text.length / 4);
+    }
+    ```
+
+    ## View Definitions (XML)
+
+    This module contains **18 view XML files** that define the UI structure:
+
+    ### Main Views (13 Files)
+
+    | View File | Purpose | Backend Model (ai_sam_base) |
+    |-----------|---------|----------------------------|
+    | `sam_ai_chat_v2_action.xml` | Chat interface client action | `ai.conversation` |
+    | `api_service_provider_views.xml` | 8-tab API configuration | `api.service.provider` |
+    | `ai_memory_dashboard_simple.xml` | Memory statistics dashboard | `ai.memory.vector`, `ai.memory.entity` |
+    | `mcp_server_config_views.xml` | MCP server generation | `mcp.server.config` |
+    | `sam_mode_context_view.xml` | Hierarchical AI agents | `sam.mode.context` |
+    | `ai_service_cost_comparison_views.xml` | Cost analysis pivot/graph | `ai.service.cost.comparison` |
+    | `ai_workspace_views.xml` | Team collaboration | `ai.workspace` |
+    | `ai_conversation_reader_views.xml` | Conversation browser | `ai.conversation` |
+    | `ai_provider_model_views.xml` | AI model configuration | `ai.provider.model` |
+    | `ai_conversation_views.xml` | Conversation management | `ai.conversation` |
+    | `ai_conversation_message_views.xml` | Message display | `ai.conversation.message` |
+    | `ai_service_views.xml` | AI service configuration | `ai.service` |
+    | `api_credentials_views.xml` | API key management (encrypted) | `api.credentials` |
+
+    ### Memory Views (5 Files)
+
+    | View File | Purpose | Backend Model (ai_sam_base) |
+    |-----------|---------|----------------------------|
+    | `memory_graph_simple.xml` | Vis.js graph visualization template | `ai.memory.entity`, `ai.memory.connection` |
+    | `ai_memory_vector_views.xml` | ChromaDB vector management | `ai.memory.vector` |
+    | `ai_memory_connection_views.xml` | Apache AGE graph connections | `ai.memory.connection` |
+    | `ai_memory_entity_views.xml` | Graph entities (users, concepts) | `ai.memory.entity` |
+    | `ai_memory_access_log_views.xml` | Memory access auditing | `ai.memory.access.log` |
+
+    ## QWeb Templates
+
+    This module contains QWeb templates for rendering:
+
+    ### Chat Templates
+    - Message bubbles (user/AI)
+    - Markdown rendering with syntax highlighting (Prism.js)
+    - Token counter widget display
+    - Chat bubble launcher
+    - Attachment previews (images, PDFs)
+
+    ### Memory Templates
+    - Memory graph visualization (vis.js)
+    - Memory statistics cards
+    - Entity relationship diagrams
+    - Access log timeline
+
+    ### Canvas Templates
+    - Workflow node rendering
+    - Connection edge rendering
+    - Node parameter forms
+    - Execution status overlays
+
+    ## Menu Structure
+
+    **File:** `data/sam_ai_menus_consolidated.xml` (Single Source of Truth, 2025-10-25)
+
+    All menus are consolidated into a single file for easy maintenance:
+
+    ```
+    SAM AI (Root Menu)
+    ├── Chat
+    │   ├── New Conversation
+    │   └── Conversation History
+    ├── Memory
+    │   ├── Dashboard
+    │   ├── Vectors (ChromaDB)
+    │   ├── Graph (Apache AGE)
+    │   │   ├── Entities
+    │   │   ├── Connections
+    │   │   └── Access Logs
+    │   └── Memory Settings
+    ├── Workflows
+    │   ├── Canvas
+    │   ├── Executions
+    │   └── Templates
+    ├── Configuration
+    │   ├── API Providers (203 vendors)
+    │   ├── AI Services
+    │   ├── AI Models
+    │   ├── Credentials (encrypted)
+    │   ├── Power Prompts (Hierarchical Agents)
+    │   ├── MCP Servers
+    │   └── Workspaces
+    └── Reports
+        ├── Cost Analysis
+        ├── Usage Statistics
+        └── Conversation Reader
+    ```
+
+    ## CSS Styling
+
+    This module contains **8 CSS files** with consistent purple branding:
+
+    ### Brand Colors
+
+    ```css
+    /* static/src/css/sam_common.css */
+    :root {
+        --sam-primary: #714B67;      /* Purple */
+        --sam-secondary: #9B7EAC;    /* Light purple */
+        --sam-accent: #4A90E2;       /* Blue accent */
+        --sam-success: #28A745;      /* Green */
+        --sam-danger: #DC3545;       /* Red */
+        --sam-warning: #FFC107;      /* Yellow */
+    }
+    ```
+
+    ### CSS Files
+
+    | File | Purpose |
+    |------|---------|
+    | `sam_common.css` | Shared styles and CSS variables |
+    | `sam_chat_v2.css` | Chat interface styling |
+    | `canvas.css` | Canvas framework styling |
+    | `memory_dashboard.css` | Memory system UI |
+    | `api_provider.css` | API provider 8-tab wizard |
+    | `workspace.css` | Team collaboration UI |
+    | `hierarchical_agents.css` | Power Prompts indentation |
+    | `widgets.css` | Widget styling (bubbles, counters) |
+
+    ## Vendor Library (203 API Providers)
+
+    **Directory:** `static/vendor_library/`
+
+    This module includes icons for **203 API providers** with **301 SVG icons** total:
+
+    ### Registry Files
+
+    - `_registry/api_providers.json` - 203 provider metadata entries
+    - `_registry/svg_icons.json` - 301 SVG icon mappings
+
+    ### Provider Categories
+
+    - AI Providers: Claude, OpenAI, Google, Cohere, Hugging Face, etc.
+    - Cloud Services: AWS, Azure, GCP
+    - Communication: Slack, Discord, Microsoft Teams, Telegram
+    - Productivity: Google Workspace, Microsoft 365, Notion
+    - CRM: Salesforce, HubSpot, Pipedrive
+    - Payment: Stripe, PayPal, Square
+    - E-commerce: Shopify, WooCommerce, Magento
+    - Social Media: Twitter/X, Facebook, Instagram, LinkedIn
+    - Developer Tools: GitHub, GitLab, Bitbucket, Jira
+    - And 194+ more providers...
+
+    ## Development Guidelines
+
+    ### Adding New Views
+
+    1. Create view XML file in `views/` directory
+    2. Reference backend model from `ai_sam_base` module
+    3. Add to `__manifest__.py` data section
+    4. Update module
+
+    ### Adding New JavaScript
+
+    1. Create JavaScript file in `static/src/js/`
+    2. Follow Vanilla JS pattern (no OWL framework)
+    3. Use Proxy-based reactivity (see `state_manager.js`)
+    4. Register in `__manifest__.py` assets section
+    5. Clear browser cache and reload
+
+    ### Adding New CSS
+
+    1. Create CSS file in `static/src/css/`
+    2. Use SAM color variables (`--sam-primary`, etc.)
+    3. Register in `__manifest__.py` assets section
+    4. Follow responsive design principles
+
+    ### Adding New Vendor Icons
+
+    1. Create provider directory: `static/vendor_library/my_provider/`
+    2. Add SVG icon: `my_provider/icon.svg`
+    3. Register in `_registry/api_providers.json`
+    4. Update `_registry/svg_icons.json`
+
+    ## Testing
+
+    ### Manual Testing Checklist
+
+    - [ ] **Chat Interface**
+      - [ ] Multi-tab conversations work
+      - [ ] Streaming responses display correctly
+      - [ ] Token counter shows accurate estimates
+      - [ ] Markdown rendering works (code blocks, tables, etc.)
+      - [ ] Chat bubble minimize/maximize
+      - [ ] Attachment uploads work
+
+    - [ ] **Canvas Framework**
+      - [ ] Drag/drop nodes
+      - [ ] Connect nodes by dragging
+      - [ ] Save/load workflows
+      - [ ] Zoom in/out (mouse wheel)
+      - [ ] Pan canvas (drag background)
+
+    - [ ] **Memory Dashboard**
+      - [ ] Statistics display correctly
+      - [ ] Vis.js graph renders
+      - [ ] Click entity to view details
+      - [ ] Search memory works
+      - [ ] Access logs display
+
+    - [ ] **API Provider Configuration**
+      - [ ] 8-tab wizard navigates correctly
+      - [ ] Vendor icons load (203 providers)
+      - [ ] API key encryption works
+      - [ ] Test connection button validates
+      - [ ] Save persists configuration
+
+    - [ ] **Responsive Design**
+      - [ ] Test on mobile (320px - 767px)
+      - [ ] Test on tablet (768px - 1023px)
+      - [ ] Test on desktop (1024px+)
+      - [ ] Test on ultra-wide (1920px+)
+
+    ### Browser Console Testing
+
+    ```javascript
+    // Test chat state
+    console.log(chatState);
+
+    // Test memory search
+    searchMemory("test query").then(results => console.log(results));
+
+    // Test canvas rendering
+    renderCanvas();
+    console.log(canvas.toJSON());
+
+    // Test API provider
+    testAPIProvider(providerId).then(result => console.log(result));
+    ```
+
+    ## Troubleshooting
+
+    ### Views Not Displaying
+
+    **Problem:** View XML changes not showing
+    **Solution:**
+    1. Update module: Apps → ai_sam → Upgrade
+    2. Clear browser cache (Ctrl+Shift+Delete)
+    3. Restart Odoo if changes still not visible
+
+    ### JavaScript Errors
+
+    **Problem:** JavaScript console errors
+    **Solution:**
+    1. Check browser console for specific error
+    2. Verify JavaScript file loaded: Network tab → Filter JS
+    3. Check `__manifest__.py` assets section includes file
+    4. Clear browser cache and hard reload (Ctrl+F5)
+
+    ### CSS Not Applied
+
+    **Problem:** Styles not showing correctly
+    **Solution:**
+    1. Check CSS file loaded: Network tab → Filter CSS
+    2. Verify `__manifest__.py` assets section includes file
+    3. Check CSS selector specificity (use browser DevTools)
+    4. Clear browser cache
+
+    ### Vendor Icons Not Loading
+
+    **Problem:** API provider icons missing
+    **Solution:**
+    1. Check icon file exists: `static/vendor_library/<provider>/icon.svg`
+    2. Verify registry files: `_registry/api_providers.json`, `_registry/svg_icons.json`
+    3. Check browser Network tab for 404 errors
+    4. Restart Odoo to reload static assets
+
+    ## For API Endpoint Documentation
+
+    **Please refer to:**
+    - **ai_sam_base/API_DOCUMENTATION.yaml** - Complete API documentation (67 endpoints)
+    - **ai_sam_base/README.md** - Data layer architecture and models
+    - **ai_sam_workflows_base/API_DOCUMENTATION.yaml** - Workflow RPC methods
+
+    ## Migration Notes
+
+    **Platform Skin Architecture Migration (2025-11-30):**
+
+    All Python code (models, controllers, business logic) was moved from `ai_sam`
+    to `ai_sam_base` module. This migration:
+    - Separated UI concerns from business logic
+    - Improved maintainability and testability
+    - Enabled independent updates (UI vs backend)
+    - Reduced complexity of each module
+
+    **Before migration:** Monolithic `ai_sam` module (43 models + views + JS)
+    **After migration:** UI-only `ai_sam` module (views + JS + CSS only)
+
+    ## Support
+
+    - **UI Documentation:** This file + [README.md](README.md)
+    - **API Documentation:** [ai_sam_base/API_DOCUMENTATION.yaml](../ai_sam_base/API_DOCUMENTATION.yaml)
+    - **Architecture Diagrams:** [ARCHITECTURE.mermaid](ARCHITECTURE.mermaid)
+    - **User Guide:** [static/description/index.html](static/description/index.html)
+
+  version: 1.0.0
+  contact:
+    name: SAM AI Support
+    url: https://samai.com
+    email: support@samai.com
+  license:
+    name: LGPL-3
+    url: https://www.gnu.org/licenses/lgpl-3.0.html
+
+servers:
+  - url: https://your-odoo-instance.com
+    description: |
+      **Note:** This module has NO servers/endpoints.
+      All API endpoints are in the ai_sam_base module.
+      Please refer to ../ai_sam_base/API_DOCUMENTATION.yaml
+
+tags:
+  - name: UI-Only Module
+    description: This module contains no HTTP controllers or API endpoints
+
+paths:
+  /no-endpoints:
+    get:
+      tags:
+        - UI-Only Module
+      summary: This module has no API endpoints
+      description: |
+        **ai_sam** is a pure UI layer module following Platform Skin Architecture.
+
+        All API endpoints are located in the **ai_sam_base** module.
+
+        Please refer to:
+        - `../ai_sam_base/API_DOCUMENTATION.yaml` for complete API documentation
+        - `../ai_sam_workflows_base/API_DOCUMENTATION.yaml` for workflow RPC methods
+
+        This module contains:
+        - 18 View XML files (form, tree, kanban, client actions)
+        - 18 JavaScript files (9,056-line chat interface + Canvas Framework)
+        - 8 CSS files (purple branding)
+        - 203 vendor library directories (301 SVG icons)
+        - QWeb templates for rendering
+        - Consolidated menu structure
+
+        **Architecture:**
+        ```
+        ai_sam (THIS MODULE)     →  UI-only layer (views, JS, CSS)
+        ai_sam_base              →  Data layer (43 models, 67 endpoints)
+        ai_sam_workflows_base    →  Workflow data layer (15 models, RPC methods)
+        ```
+
+      responses:
+        '404':
+          description: |
+            This endpoint does not exist.
+            This is a documentation placeholder to indicate that ai_sam has no API endpoints.
+
+components:
+  schemas:
+    NoEndpoints:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "This module (ai_sam) contains no API endpoints. All endpoints are in ai_sam_base."
+        ui_components:
+          type: object
+          properties:
+            views:
+              type: integer
+              example: 18
+              description: Number of XML view files
+            javascript_files:
+              type: integer
+              example: 18
+              description: Number of JavaScript files
+            css_files:
+              type: integer
+              example: 8
+              description: Number of CSS files
+            vendor_icons:
+              type: integer
+              example: 301
+              description: Number of SVG icons (203 providers)
+        refer_to:
+          type: object
+          properties:
+            api_documentation:
+              type: string
+              example: "../ai_sam_base/API_DOCUMENTATION.yaml"
+            workflow_rpc_docs:
+              type: string
+              example: "../ai_sam_workflows_base/API_DOCUMENTATION.yaml"
+            architecture:
+              type: string
+              example: "./ARCHITECTURE.mermaid"
+            readme:
+              type: string
+              example: "./README.md"
+
+externalDocs:
+  description: Complete API Documentation (ai_sam_base module)
+  url: ../ai_sam_base/API_DOCUMENTATION.yaml
+
+```

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ N8N Node Selection Overlay - Visual Demo</title>
+
+    <!-- Bootstrap 5.3.0 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Overlay Backdrop */
+        .overlay-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Overlay Modal */
+        .overlay-modal {
+            background: white;
+            border-radius: 8px;
+            padding: 0;
+            max-width: 90vw;
+            width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            z-index: 1001;
+            transform: scale(1) translateY(0);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            background: #f8f9fa;
+            padding: 0 20px;
+            overflow-x: auto;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 0;
+        }
+
+        .category-tab {
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .category-tab.active {
+            color: #007acc;
+            border-bottom-color: #007acc;
+            font-weight: 600;
+        }
+
+        .category-tab:hover {
+            background: rgba(0,122,204,0.1);
+            color: #007acc;
+        }
+
+        /* Node Items */
+        .node-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .node-item:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+        }
+
+        /* Demo Controls */
+        .demo-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 2000;
+        }
+
+        .demo-controls button {
+            margin: 5px 0;
+            width: 100%;
+        }
+
+        /* Tab Content */
+        .tab-content-section {
+            display: none;
+        }
+
+        .tab-content-section.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .overlay-modal {
+                margin: 20px;
+                width: calc(100vw - 40px);
+                max-width: calc(100vw - 40px);
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px;">
+
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <h6 class="mb-3">🎨 Demo Controls</h6>
+        <button class="btn btn-primary btn-sm" onclick="showOverlay()">Show Overlay</button>
+        <button class="btn btn-secondary btn-sm" onclick="hideOverlay()">Hide Overlay</button>
+        <button class="btn btn-info btn-sm" onclick="switchTab('services')">Services Tab</button>
+        <button class="btn btn-warning btn-sm" onclick="switchTab('triggers')">Triggers Tab</button>
+        <button class="btn btn-success btn-sm" onclick="switchTab('actions')">Actions Tab</button>
+        <button class="btn btn-dark btn-sm" onclick="switchTab('core')">Core Tab</button>
+        <hr>
+        <small class="text-muted">Click nodes to test selection</small>
+    </div>
+
+    <!-- Overlay Backdrop -->
+    <div class="overlay-backdrop" id="overlayBackdrop" style="display: flex;">
+
+        <!-- Overlay Modal -->
+        <div class="overlay-modal">
+
+            <!-- Full Screen Overlay Modal Header -->
+            <div class="d-flex justify-content-between align-items-center p-4 border-bottom">
+                <h4 class="mb-0">⚡ N8N Node Selection (<span id="node-count">305</span> Total Site Integrations)</h4>
+                <button class="btn btn-sm btn-outline-secondary overlay-close" onclick="hideOverlay()" style="font-size: 12px;">✖ Close</button>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs" id="category-tabs">
+                <button class="category-tab active" data-tab="services" onclick="switchTab('services')">
+                    🔌 Services
+                </button>
+                <button class="category-tab" data-tab="triggers" onclick="switchTab('triggers')">
+                    ⚡ Triggers
+                </button>
+                <button class="category-tab" data-tab="actions" onclick="switchTab('actions')">
+                    🎬 Actions
+                </button>
+                <button class="category-tab" data-tab="core" onclick="switchTab('core')">
+                    ⚙️ Core
+                </button>
+            </div>
+
+            <!-- Modal Content with Padding -->
+            <div style="padding: 20px; max-height: 70vh; overflow-y: auto;" id="tab-content">
+
+                <!-- Services Tab Content (Default - 3-column filter system) -->
+                <div id="services-tab-content" class="tab-content-section active">
+
+                    <!-- Smart Filter Dropdown Menus -->
+                    <div class="mb-3">
+                        <div class="row g-2">
+                            <!-- Category Filter -->
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-tags"></i></span>
+                                    <select class="form-select" id="categoryFilter" style="font-size: 14px;" onchange="filterNodes()">
+                                        <option value="">All Categories</option>
+                                        <option value="Marketing">📧 Marketing</option>
+                                        <option value="Sales & Marketing">💼 Sales & Marketing</option>
+                                        <option value="Communication">💬 Communication</option>
+                                        <option value="Data & Storage">🗄️ Data & Storage</option>
+                                        <option value="Development">⚙️ Development</option>
+                                        <option value="Productivity">📊 Productivity</option>
+                                        <option value="Finance">💰 Finance</option>
+                                        <option value="Analytics">📈 Analytics</option>
+                                        <option value="Social Media">📱 Social Media</option>
+                                        <option value="E-commerce">🛍️ E-commerce</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Platform Filter -->
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-building"></i></span>
+                                    <select class="form-select" id="platformFilter" style="font-size: 14px;" onchange="filterNodes()">
+                                        <option value="">All Platforms</option>
+                                        <option value="Google">🌐 Google Suite</option>
+                                        <option value="Microsoft">🏢 Microsoft</option>
+                                        <option value="Slack">💬 Slack</option>
+                                        <option value="ActiveCampaign">📧 ActiveCampaign</option>
+                                        <option value="Airtable">📋 Airtable</option>
+                                        <option value="Notion">📝 Notion</option>
+                                        <option value="HubSpot">🚀 HubSpot</option>
+                                        <option value="Shopify">🛍️ Shopify</option>
+                                        <option value="Salesforce">☁️ Salesforce</option>
+                                        <option value="Trello">📌 Trello</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Node Type Filter -->
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-cog"></i></span>
+                                    <select class="form-select" id="nodeTypeFilter" style="font-size: 14px;" onchange="filterNodes()">
+                                        <option value="">All Types</option>
+                                        <option value="trigger">🔄 Triggers</option>
+                                        <option value="action">⚡ Actions</option>
+                                        <option value="webhook">🌐 Webhooks</option>
+                                        <option value="schedule">⏰ Scheduled</option>
+                                        <option value="manual">👆 Manual</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clear All Filters Button -->
+                        <div class="text-center mt-2">
+                            <button class="btn btn-outline-secondary btn-sm" id="clearAllFilters" onclick="clearFilters()">
+                                <i class="fa fa-refresh"></i> Clear All Filters
+                            </button>
+                        </div>
+
+                        <small class="text-muted mt-2 d-block text-center">
+                            <i class="fa fa-lightbulb"></i>
+                            Use category, platform, and type filters to find the perfect integration
+                        </small>
+                    </div>
+
+                    <!-- Scrollable Nodes Container -->
+                    <div id="nodesContainer" style="max-height: 50vh; overflow-y: auto;">
+                        <div class="row" id="nodesList">
+                            <!-- Sample Nodes -->
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Marketing" data-platform="ActiveCampaign">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('ActiveCampaign')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">📧</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">ActiveCampaign</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Communication" data-platform="Google">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Gmail')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">📧</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Gmail</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Data & Storage" data-platform="Google">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Google Sheets')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">📊</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Google Sheets</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Communication" data-platform="Slack">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Slack')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">💬</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Slack</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Sales & Marketing" data-platform="HubSpot">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('HubSpot')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">🚀</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">HubSpot</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Productivity" data-platform="Notion">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Notion')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">📝</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Notion</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Data & Storage" data-platform="Airtable">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Airtable')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">📋</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Airtable</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="E-commerce" data-platform="Shopify">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Shopify')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">🛍️</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Shopify</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Productivity" data-platform="Trello">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Trello')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">📌</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Trello</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add 6 more sample nodes to show scrolling -->
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Sales & Marketing" data-platform="Salesforce">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Salesforce')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">☁️</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Salesforce</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Communication" data-platform="Microsoft">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('Microsoft Teams')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">👥</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">Microsoft Teams</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-6 col-6 mb-2" data-category="Development" data-platform="GitHub">
+                                <div class="node-item p-2 border rounded text-center" onclick="selectNode('GitHub')">
+                                    <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                        <span style="margin-right: 6px;">🐙</span>
+                                        <div style="flex: 1;">
+                                            <div class="fw-bold">GitHub</div>
+                                            <small style="color: #666; font-size: 10px;">⚡ Action</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Triggers Tab Content -->
+                <div id="triggers-tab-content" class="tab-content-section">
+                    <div class="text-center mb-4">
+                        <h5>⚡ Triggers - Start Your Workflows</h5>
+                        <p class="text-muted">Choose how to trigger your automation workflows</p>
+                    </div>
+                    <div class="row" id="triggers-list">
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #28a745;" onclick="selectNode('Manual Trigger')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">▶️</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">Manual Trigger</div>
+                                        <small style="color: #28a745; font-size: 10px;">Manually start workflow execution</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #28a745;" onclick="selectNode('Webhook')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">🔗</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">Webhook</div>
+                                        <small style="color: #28a745; font-size: 10px;">Trigger via HTTP webhook</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #28a745;" onclick="selectNode('Schedule Trigger')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">⏰</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">Schedule Trigger</div>
+                                        <small style="color: #28a745; font-size: 10px;">Trigger on schedule/cron</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Tab Content -->
+                <div id="actions-tab-content" class="tab-content-section">
+                    <div class="text-center mb-4">
+                        <h5>🎬 Actions - Perform Operations</h5>
+                        <p class="text-muted">Select actions to perform in your workflows</p>
+                    </div>
+                    <div class="row" id="actions-list">
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #007bff;" onclick="selectNode('Send Email')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">📧</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">Send Email</div>
+                                        <small style="color: #007bff; font-size: 10px;">Send email messages</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #007bff;" onclick="selectNode('API Call')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">🌐</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">API Call</div>
+                                        <small style="color: #007bff; font-size: 10px;">Make HTTP API requests</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #007bff;" onclick="selectNode('Database Query')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">🗃️</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">Database Query</div>
+                                        <small style="color: #007bff; font-size: 10px;">Query database</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Tab Content -->
+                <div id="core-tab-content" class="tab-content-section">
+                    <div class="text-center mb-4">
+                        <h5>⚙️ Core - Logic & Utilities</h5>
+                        <p class="text-muted">Essential nodes for workflow logic and data manipulation</p>
+                    </div>
+                    <div class="row" id="core-list">
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #6c757d;" onclick="selectNode('IF')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">🔀</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">IF</div>
+                                        <small style="color: #6c757d; font-size: 10px;">Conditional branching (true/false)</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #6c757d;" onclick="selectNode('Switch')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">🎯</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">Switch</div>
+                                        <small style="color: #6c757d; font-size: 10px;">Multiple conditional outputs</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 col-6 mb-2">
+                            <div class="node-item p-2 border rounded text-center" style="border-color: #6c757d;" onclick="selectNode('Merge')">
+                                <div style="display: flex; align-items: center; justify-content: flex-start; text-align: left;">
+                                    <span style="margin-right: 6px;">🔗</span>
+                                    <div style="flex: 1;">
+                                        <div class="fw-bold">Merge</div>
+                                        <small style="color: #6c757d; font-size: 10px;">Combine multiple data streams</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Overlay Controls
+        function showOverlay() {
+            document.getElementById('overlayBackdrop').style.display = 'flex';
+            console.log('✅ Overlay shown');
+        }
+
+        function hideOverlay() {
+            document.getElementById('overlayBackdrop').style.display = 'none';
+            console.log('✅ Overlay hidden');
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            console.log('🔄 Switching to tab:', tabName);
+
+            // Hide all tabs
+            document.querySelectorAll('.tab-content-section').forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+            });
+
+            // Show selected tab
+            const targetTab = document.getElementById(tabName + '-tab-content');
+            if (targetTab) {
+                targetTab.classList.add('active');
+                targetTab.style.display = 'block';
+            }
+
+            // Update tab buttons
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+
+            console.log('✅ Switched to tab:', tabName);
+        }
+
+        // Node Selection
+        function selectNode(nodeName) {
+            console.log('🎯 Node selected:', nodeName);
+            alert('Node selected: ' + nodeName + '\n\nIn production, this would add the node to your canvas!');
+        }
+
+        // Filter Nodes
+        function filterNodes() {
+            const category = document.getElementById('categoryFilter').value;
+            const platform = document.getElementById('platformFilter').value;
+            const nodeType = document.getElementById('nodeTypeFilter').value;
+
+            console.log('🔍 Filtering:', { category, platform, nodeType });
+
+            const allNodes = document.querySelectorAll('#nodesList > div');
+            let visibleCount = 0;
+
+            allNodes.forEach(node => {
+                const nodeCategory = node.dataset.category || '';
+                const nodePlatform = node.dataset.platform || '';
+
+                const categoryMatch = !category || nodeCategory === category;
+                const platformMatch = !platform || nodePlatform.includes(platform);
+
+                if (categoryMatch && platformMatch) {
+                    node.style.display = '';
+                    visibleCount++;
+                } else {
+                    node.style.display = 'none';
+                }
+            });
+
+            // Update count
+            document.getElementById('node-count').textContent =
+                (category || platform) ? visibleCount : '305';
+
+            console.log('✅ Filtered nodes, visible:', visibleCount);
+        }
+
+        // Clear Filters
+        function clearFilters() {
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('platformFilter').value = '';
+            document.getElementById('nodeTypeFilter').value = '';
+            filterNodes();
+            console.log('✅ Filters cleared');
+        }
+
+        // Initial setup
+        console.log('🎨 N8N Node Selection Overlay Demo Ready');
+        console.log('💡 Use the demo controls in the top-right to test functionality');
+    </script>
+
+</body>
+</html>

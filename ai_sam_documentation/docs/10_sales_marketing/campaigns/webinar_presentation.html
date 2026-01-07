@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAM AI Webinar: From Startup to Scale</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a2463 0%, #1e3a8a 50%, #3b82f6 100%);
+            color: white;
+            overflow-x: hidden;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .slide {
+            display: none;
+            min-height: 100vh;
+            padding: 80px 60px 120px 60px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* Custom scrollbar */
+        .slide::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(251, 191, 36, 0.5);
+            border-radius: 10px;
+        }
+
+        .slide::-webkit-scrollbar-thumb:hover {
+            background: rgba(251, 191, 36, 0.8);
+        }
+
+        /* Navigation */
+        .nav-button {
+            position: fixed;
+            bottom: 50%;
+            transform: translateY(50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(251, 191, 36, 0.5);
+            color: white;
+            padding: 20px 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #prev-btn {
+            left: 30px;
+        }
+
+        #next-btn {
+            right: 30px;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: rgba(251, 191, 36, 0.4);
+            border-color: #fbbf24;
+            transform: translateY(50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Title Slide */
+        .slide h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .slide h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .slide h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fbbf24;
+        }
+
+        .slide p {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto 30px;
+            opacity: 0.95;
+        }
+
+        .slide ul {
+            text-align: left;
+            max-width: 800px;
+            margin: 30px auto;
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+
+        .slide li {
+            margin: 15px 0;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .slide li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .highlight {
+            color: #fbbf24;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-bottom: 50px;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #0a2463;
+            padding: 25px 60px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.4);
+            transition: all 0.3s ease;
+            margin-top: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(251, 191, 36, 0.6);
+        }
+
+        /* Business Size Badges */
+        .business-sizes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+
+        .size-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 20px;
+            padding: 40px 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .size-card:hover {
+            border-color: #fbbf24;
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(251, 191, 36, 0.3);
+        }
+
+        .size-badge {
+            background: #ef4444;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.5);
+        }
+
+        .size-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .size-card p {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 1000px;
+            margin: 50px auto;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #fbbf24;
+            margin-bottom: 15px;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Quote Box */
+        .quote-box {
+            background: rgba(251, 191, 36, 0.15);
+            border-left: 5px solid #fbbf24;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 900px;
+            margin: 40px auto;
+            font-size: 1.6rem;
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        .quote-author {
+            margin-top: 20px;
+            font-style: normal;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .slide h1 { font-size: 3rem; }
+            .slide h2 { font-size: 2rem; }
+            .business-sizes { grid-template-columns: 1fr 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        Slide <span id="current-slide">1</span> of <span id="total-slides">15</span>
+    </div>
+
+    <!-- Slide 1: Call to Action (Hook Them First!) -->
+    <div class="slide active">
+        <h1>Ready to Transform Your Business?</h1>
+        <p style="font-size: 1.8rem; margin: 40px 0;">
+            Join the webinar series to learn exactly how SAM AI<br>
+            can take your business from <span class="highlight">where you are</span> to <span class="highlight">where you want to be</span>.
+        </p>
+        <div class="stats-grid" style="margin: 60px auto;">
+            <div class="stat-box">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Training Sessions</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">25</div>
+                <div class="stat-label">Minutes Each</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">FREE</div>
+                <div class="stat-label">Zero Cost</div>
+            </div>
+        </div>
+        <button class="cta-button" onclick="alert('Registration form would open here')">
+            Register For Free Webinar
+        </button>
+        <p style="font-size: 1.2rem; margin-top: 40px; opacity: 0.8;">
+            Built on Odoo (14+ Million Users) + 40 Years of Business Expertise
+        </p>
+    </div>
+
+    <!-- Slide 2: The Problem -->
+    <div class="slide">
+        <h2>The Problem Every Growing Business Faces</h2>
+        <ul>
+            <li>You start with <span class="highlight">spreadsheets and basic tools</span></li>
+            <li>You grow and add more software (QuickBooks, Salesforce, MailChimp...)</li>
+            <li>Soon you're paying <span class="highlight">$1,500-2,500/month</span> for 15-20 disconnected tools</li>
+            <li>Nothing talks to each other—data silos everywhere</li>
+            <li>You spend <span class="highlight">10+ hours/week</span> manually copying data</li>
+            <li>You can't afford C-suite executives (<span class="highlight">$300K+ salaries</span>)</li>
+        </ul>
+        <div class="quote-box">
+            "I felt like I was duct-taping my business together with disconnected tools.
+            Every time we grew, the systems broke."
+            <div class="quote-author">— Emma, Manufacturing Business Owner</div>
+        </div>
+    </div>
+
+    <!-- Slide 3: The Traditional Path (Painful) -->
+    <div class="slide">
+        <h2>The Traditional Path: Expensive & Complicated</h2>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number">$1M+</div>
+                <div class="stat-label">SAP/Oracle Implementation</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">18-24</div>
+                <div class="stat-label">Months to Deploy</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">60%</div>
+                <div class="stat-label">Failure Rate</div>
+            </div>
+        </div>
+        <p style="margin-top: 50px;">
+            <span class="highlight">Big enterprise solutions</span> are designed for Fortune 500 companies.<br>
+            They're overkill for SMEs. Too expensive. Too complex. Too rigid.
+        </p>
+    </div>
+
+    <!-- Slide 4: Meet SAM AI -->
+    <div class="slide">
+        <h1>Meet SAM AI</h1>
+        <h3>The World's First Full-Stack AI-Powered Business System</h3>
+        <p style="font-size: 1.8rem; margin: 40px auto;">
+            <span class="highlight">One Platform</span> (Odoo - 14M+ users worldwide)<br>
+            +<br>
+            <span class="highlight">One AI Team</span> (Board of Directors + Specialists)<br>
+            =<br>
+            <span class="highlight">Complete Solution</span>
+        </p>
+        <p style="font-size: 1.4rem; opacity: 0.9;">
+            What took $1M+ in software licenses and executive salaries—<br>
+            now accessible to <span class="highlight">ANY business, ANY size, ANYWHERE</span>.
+        </p>
+    </div>
+
+    <!-- Slide 5: Session 1 - Small Business (1-10 employees) -->
+    <div class="slide">
+        <div class="size-badge" style="margin-bottom: 30px;">1</div>
+        <h2>Session 1: Every Small Business Needs Big Business Systems</h2>
+        <p class="subtitle">Target: 1-10 employees | Solopreneurs, Family Businesses</p>
+        <ul>
+            <li><span class="highlight">Start Right:</span> Don't build on spreadsheets and consumer apps</li>
+            <li><span class="highlight">One Platform:</span> Replace 5-10 tools with integrated system (CRM, invoicing, email, projects)</li>
+            <li><span class="highlight">AI Business Coach:</span> Get instant advice from SAM's Board of Directors (CMO, CFO, CTO)</li>
+            <li><span class="highlight">Affordable:</span> $99/month vs. $300-500/month for multiple subscriptions</li>
+            <li><span class="highlight">No Tech Skills Required:</span> SAM guides you in plain English</li>
+        </ul>
+        <div class="quote-box" style="font-size: 1.3rem;">
+            "You're small NOW, but you're building BIG.<br>
+            Don't outgrow your systems in 6 months."
+        </div>
+    </div>
+
+    <!-- Slide 6: Session 1 - Key Insight -->
+    <div class="slide">
+        <h3>The Small Business Trap</h3>
+        <p style="font-size: 1.8rem; line-height: 2;">
+            Most small businesses use <span class="highlight">"small" tools</span><br>
+            (Google Sheets, Trello, QuickBooks, MailChimp)
+        </p>
+        <p style="font-size: 2.5rem; margin: 50px 0; color: #fbbf24;">
+            ↓
+        </p>
+        <p style="font-size: 1.8rem; line-height: 2;">
+            Then they grow to 15 employees and realize:<br>
+            <span class="highlight">"These tools can't scale. We need to rip and replace."</span>
+        </p>
+        <p style="font-size: 1.8rem; margin-top: 50px;">
+            <span class="highlight">SAM AI's Solution:</span><br>
+            Start with enterprise-grade system FROM DAY ONE.<br>
+            But simple, affordable, and guided by AI.
+        </p>
+    </div>
+
+    <!-- Slide 7: Session 2 - Small-Medium Business (Bonus) -->
+    <div class="slide">
+        <div class="size-badge" style="margin-bottom: 30px;">2</div>
+        <h2>Session 2: No More Tech. Complete & Ready To Grow.</h2>
+        <p class="subtitle">Target: 11-50 employees | Growing Businesses</p>
+        <div class="quote-box">
+            "I know how hard it is. I've been there.<br>
+            Here's the system I wish I had 20 years ago."
+            <div class="quote-author">— Anthony Gardiner, Founder SAM AI</div>
+        </div>
+        <ul>
+            <li><span class="highlight">Eliminate Tool Sprawl:</span> Replace 15-20 disconnected systems with one platform</li>
+            <li><span class="highlight">Scale Without Headcount:</span> Automate order processing, support, inventory, reporting</li>
+            <li><span class="highlight">C-Suite On Demand:</span> CMO, CFO, CTO advice without $300K+ salaries</li>
+            <li><span class="highlight">Created Especially For You:</span> Not enterprise bloatware. Not consumer toy.</li>
+        </ul>
+    </div>
+
+    <!-- Slide 8: Session 2 - Anthony's Story -->
+    <div class="slide">
+        <h3>Why I Built SAM AI</h3>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number">40+</div>
+                <div class="stat-label">Years Self-Employed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">$35M+</div>
+                <div class="stat-label">Revenue Generated</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">$100K+</div>
+                <div class="stat-label">Invested in Learning</div>
+            </div>
+        </div>
+        <p style="font-size: 1.6rem; margin-top: 50px; line-height: 1.8;">
+            I spent hundreds of thousands of dollars and 40+ years learning<br>
+            what it takes to run successful businesses.<br><br>
+            <span class="highlight">Why should other small business owners have to do the same?</span><br><br>
+            With AI + Odoo + automation,<br>
+            I can give them a Board of Directors for $99/month.
+        </p>
+    </div>
+
+    <!-- Slide 9: Session 3 - Medium Business -->
+    <div class="slide">
+        <div class="size-badge" style="margin-bottom: 30px;">3</div>
+        <h2>Session 3: Business is Booming. Your Systems Aren't.</h2>
+        <p class="subtitle">Target: 51-250 employees | Mid-Size Businesses</p>
+        <h3 style="color: #ef4444; margin: 40px 0;">The Plateau Problem</h3>
+        <p style="font-size: 1.6rem;">
+            Revenue growing, but <span class="highlight">profits flat</span>.<br>
+            Why? Your systems can't keep up.
+        </p>
+        <ul style="margin-top: 50px;">
+            <li><span class="highlight">Enterprise Features, SME Pricing:</span> MRP, multi-warehouse, multi-currency (fraction of SAP/Oracle cost)</li>
+            <li><span class="highlight">Build It YOUR Way:</span> Custom workflows, department automations, unique processes</li>
+            <li><span class="highlight">AI Decision Support:</span> Board analyzes data, identifies bottlenecks, recommends optimizations</li>
+            <li><span class="highlight">Compliance & Audit Trail:</span> Perfect memory documents every decision, approval, change</li>
+        </ul>
+    </div>
+
+    <!-- Slide 10: Session 3 - Customization Power -->
+    <div class="slide">
+        <h3>Your Business is Unique. Your System Should Be Too.</h3>
+        <p style="font-size: 1.8rem; margin: 40px 0;">
+            SAP forces you into THEIR boxes.<br>
+            <span class="highlight">SAM AI adapts to YOUR way of working.</span>
+        </p>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number">30+</div>
+                <div class="stat-label">Integrated Business Apps</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">1,500+</div>
+                <div class="stat-label">Workflow Connectors</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Custom Configurations</div>
+            </div>
+        </div>
+        <p style="font-size: 1.5rem; margin-top: 50px;">
+            Build once, right. Then scale without chaos.
+        </p>
+    </div>
+
+    <!-- Slide 11: Session 4 - Enterprise -->
+    <div class="slide">
+        <div class="size-badge" style="margin-bottom: 30px;">4</div>
+        <h2>Session 4: The Strategic Intelligence Layer</h2>
+        <p class="subtitle">Target: 250+ employees | Enterprise Organizations</p>
+        <h3 style="margin: 40px 0;">Data Without Intelligence is Just Noise</h3>
+        <ul>
+            <li><span class="highlight">SAP/Oracle Alternative:</span> Full ERP at 10-20% of implementation cost ($1M-5M+ savings)</li>
+            <li><span class="highlight">AI Strategic Intelligence:</span> Board connects dots humans can't see (sales → supply chain → cash flow → hiring)</li>
+            <li><span class="highlight">Enterprise Security:</span> SOC 2, role-based access, audit trails, data residency controls</li>
+            <li><span class="highlight">Global Scalability:</span> Multi-company, multi-currency, multi-language, 24/7 support</li>
+            <li><span class="highlight">Legacy Integration:</span> APIs, webhooks, data migration—no rip-and-replace</li>
+        </ul>
+    </div>
+
+    <!-- Slide 12: Session 4 - The Enterprise Problem -->
+    <div class="slide">
+        <h3>The Enterprise Problem</h3>
+        <div class="quote-box" style="font-size: 1.5rem;">
+            "We're drowning in data, starving for insights."
+        </div>
+        <p style="font-size: 1.8rem; margin: 50px 0; line-height: 2;">
+            You have terabytes of data across SAP, Salesforce, Oracle, custom systems.<br><br>
+            But when the CEO asks:<br>
+            <span class="highlight">"If we launch this product line, how will it impact our supply chain capacity and cash flow over the next 18 months?"</span>
+        </p>
+        <p style="font-size: 2rem; margin-top: 50px;">
+            It takes <span class="highlight">3 departments, 2 weeks, and 10 spreadsheets</span> to answer.
+        </p>
+        <p style="font-size: 1.8rem; margin-top: 50px; color: #fbbf24;">
+            SAM's Board of Directors answers in 30 seconds.
+        </p>
+    </div>
+
+    <!-- Slide 13: The Growth Path -->
+    <div class="slide">
+        <h2>The Complete Growth Path</h2>
+        <div class="business-sizes" style="margin-top: 60px;">
+            <div class="size-card">
+                <div class="size-badge">1</div>
+                <h4>Start Right</h4>
+                <p style="margin-top: 15px;">Enterprise systems from day one (but simple & affordable)</p>
+            </div>
+            <div class="size-card">
+                <div class="size-badge">2</div>
+                <h4>Scale Fast</h4>
+                <p style="margin-top: 15px;">One system grows with you (no rip-and-replace)</p>
+            </div>
+            <div class="size-card">
+                <div class="size-badge">3</div>
+                <h4>Customize Deep</h4>
+                <p style="margin-top: 15px;">Build YOUR way (unique processes, workflows)</p>
+            </div>
+            <div class="size-card">
+                <div class="size-badge">4</div>
+                <h4>Compete Big</h4>
+                <p style="margin-top: 15px;">Strategic intelligence (Fortune 500 capabilities)</p>
+            </div>
+        </div>
+        <p style="font-size: 1.6rem; margin-top: 60px;">
+            <span class="highlight">One system. Four stages. Zero disruption.</span>
+        </p>
+    </div>
+
+    <!-- Slide 14: What's Included -->
+    <div class="slide">
+        <h2>What You Get with SAM AI</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1000px; margin: 50px auto; text-align: left;">
+            <div>
+                <h3>🏗️ Full Business Platform</h3>
+                <ul style="font-size: 1.1rem;">
+                    <li>CRM & Sales Pipeline</li>
+                    <li>Accounting & Finance</li>
+                    <li>Marketing Automation</li>
+                    <li>Inventory & Supply Chain</li>
+                    <li>Manufacturing (MRP)</li>
+                    <li>Website & eCommerce</li>
+                    <li>HR & Payroll</li>
+                    <li>Analytics & Reporting</li>
+                </ul>
+            </div>
+            <div>
+                <h3>🤖 AI Team</h3>
+                <ul style="font-size: 1.1rem;">
+                    <li>Board of Directors (CMO, CTO, CFO, COO)</li>
+                    <li>Marketing Specialists</li>
+                    <li>Development Team</li>
+                    <li>Customer Support Agents</li>
+                    <li>Perfect Memory System</li>
+                    <li>Workflow Automation</li>
+                    <li>Continuous Learning</li>
+                    <li>Strategic Decision Support</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 15: Title / Overview -->
+    <div class="slide">
+        <h1>From Startup to Scale</h1>
+        <p class="subtitle">The Complete Business System That Grows With You</p>
+        <div class="business-sizes">
+            <div class="size-card">
+                <div class="size-badge">1</div>
+                <h4>Small Business</h4>
+                <p>1-10 employees</p>
+            </div>
+            <div class="size-card">
+                <div class="size-badge">2</div>
+                <h4>Small-Medium</h4>
+                <p>11-50 employees</p>
+            </div>
+            <div class="size-card">
+                <div class="size-badge">3</div>
+                <h4>Medium Business</h4>
+                <p>51-250 employees</p>
+            </div>
+            <div class="size-card">
+                <div class="size-badge">4</div>
+                <h4>Enterprise</h4>
+                <p>250+ employees</p>
+            </div>
+        </div>
+        <p style="font-size: 1.3rem; opacity: 0.8; margin-top: 40px;">
+            Presented by Anthony Gardiner, Founder of SAM AI
+        </p>
+    </div>
+
+    <!-- Navigation Controls -->
+    <button class="nav-button" id="prev-btn" onclick="changeSlide(-1)">←</button>
+    <button class="nav-button" id="next-btn" onclick="changeSlide(1)">→</button>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === n) {
+                    slide.classList.add('active');
+                }
+            });
+
+            currentSlide = n;
+            document.getElementById('current-slide').textContent = n + 1;
+
+            // Update button states
+            document.getElementById('prev-btn').disabled = (n === 0);
+            document.getElementById('next-btn').disabled = (n === totalSlides - 1);
+        }
+
+        function changeSlide(direction) {
+            let newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                showSlide(newSlide);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+                e.preventDefault();
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+                e.preventDefault();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Funnels - Russell Brunson | SAM AI Knowledge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 40px;
+            border-bottom: 3px solid #ecf0f1;
+        }
+
+        .hero-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero .tagline {
+            font-size: 1.4rem;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .book-meta {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-item .label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .meta-item .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .section {
+            margin: 40px 0;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-left: 5px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h3 {
+            font-size: 1.6rem;
+            color: #764ba2;
+            margin: 25px 0 15px;
+            font-weight: 600;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .framework-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .framework-card h4 {
+            font-size: 1.4rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .framework-card .subtitle {
+            font-size: 1rem;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .framework-card ul {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        .framework-card li {
+            margin: 8px 0;
+        }
+
+        .proof-box {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .proof-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .proof-box .stat {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 15px 0;
+        }
+
+        .quote-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .quote-box p {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .quote-box .attribution {
+            font-size: 1rem;
+            color: #856404;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .diagram {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            font-family: monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .diagram pre {
+            white-space: pre-wrap;
+            color: #2c3e50;
+        }
+
+        ul {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        strong {
+            color: #667eea;
+        }
+
+        .application-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .application-box h4 {
+            font-size: 1.3rem;
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        .application-box p {
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Russell Brunson Overview</a>
+
+        <div class="hero">
+            <div class="hero-icon">🧲</div>
+            <h1>Lead Funnels</h1>
+            <p class="tagline">"The Ultimate Guide to Building Lead Generation Funnels That Fill Your Pipeline"</p>
+        </div>
+
+        <!-- BOOK META -->
+        <div class="book-meta">
+            <div class="meta-item">
+                <div class="label">Author</div>
+                <div class="value">Russell Brunson</div>
+            </div>
+            <div class="meta-item">
+                <div class="label">Published</div>
+                <div class="value">2023</div>
+            </div>
+            <div class="meta-item">
+                <div class="label">Word Count</div>
+                <div class="value">~110,000 words</div>
+            </div>
+            <div class="meta-item">
+                <div class="label">Core Frameworks</div>
+                <div class="value">7 major frameworks</div>
+            </div>
+        </div>
+
+        <!-- OVERVIEW -->
+        <div class="section">
+            <h2>📘 Book Overview</h2>
+
+            <p><strong>Lead Funnels</strong> is Russell Brunson's fourth core book (2023), focusing SPECIFICALLY on lead generation - the foundation of all modern digital marketing. While the trilogy (DotCom Secrets, Expert Secrets, Traffic Secrets) covered the complete business-building system, Lead Funnels goes DEEP on ONE thing: getting high-quality leads into your pipeline.</p>
+
+            <div class="quote-box">
+                <p>"Your business lives and dies by your ability to generate leads. Everything else is secondary."</p>
+                <div class="attribution">— Russell Brunson, Lead Funnels</div>
+            </div>
+
+            <p>The book's central thesis: <strong>The quality of your leads determines the quality of your business. Lead generation isn't about quantity - it's about attracting the RIGHT people with the RIGHT offer at the RIGHT time.</strong></p>
+        </div>
+
+        <!-- PROOF -->
+        <div class="proof-box">
+            <h3>💰 Real-World Results</h3>
+            <div class="stat">5.2M+</div>
+            <p>Leads generated using the exact funnel templates documented in this book</p>
+            <p style="margin-top: 15px;"><strong>Tested across 47 industries</strong> with documented conversion rates and lead quality metrics</p>
+        </div>
+
+        <!-- CORE FRAMEWORKS -->
+        <div class="section">
+            <h2>🎯 7 Core Frameworks from Lead Funnels</h2>
+
+            <!-- FRAMEWORK 1: THE LEAD MAGNET -->
+            <div class="framework-card">
+                <h4>1. The Irresistible Lead Magnet</h4>
+                <p class="subtitle">How to create "bait" so good your dream customers can't resist</p>
+
+                <p><strong>Core Concept:</strong> A lead magnet is FREE value you offer in exchange for an email address. But most lead magnets suck (generic PDFs nobody reads). Russell's framework creates lead magnets so valuable people would PAY for them.</p>
+
+                <div class="diagram">
+<pre>
+The Perfect Lead Magnet Formula:
+
+1. SOLVE ONE SPECIFIC PROBLEM
+   ──────────────────────────────
+   ❌ Bad: "The Ultimate Marketing Guide" (too broad)
+   ✅ Good: "The 5-Minute Facebook Ad Template" (specific)
+
+   Rule: Solve their IMMEDIATE pain, not everything
+
+2. QUICK WIN (Fast Results)
+   ──────────────────────────────
+   ❌ Bad: "12-Month Business Plan Template" (too long)
+   ✅ Good: "Write Your Sales Page in 30 Minutes" (quick)
+
+   Rule: They should see results in <1 hour
+
+3. HIGH PERCEIVED VALUE
+   ──────────────────────────────
+   ❌ Bad: "10 Tips PDF" (low value)
+   ✅ Good: "Complete Funnel Template + Video Training" (high value)
+
+   Rule: Make them think "I can't believe this is free!"
+
+4. CONSUMABLE FORMAT
+   ──────────────────────────────
+   ❌ Bad: 50-page PDF nobody reads
+   ✅ Good: 10-min video + 1-page checklist
+
+   Rule: Easy to consume = higher completion rate
+</pre>
+                </div>
+
+                <p><strong>Lead Magnet Types (Ranked by Conversion Rate):</strong></p>
+                <ul>
+                    <li><strong>#1: Software/Tools</strong> (Free calculator, template, worksheet) - Highest conversion</li>
+                    <li><strong>#2: Video Training</strong> (Teach something valuable in 10-20 min)</li>
+                    <li><strong>#3: Checklists/Swipe Files</strong> (Actionable, easy to use)</li>
+                    <li><strong>#4: Case Studies</strong> (Show how someone got results)</li>
+                    <li><strong>#5: eBooks/PDFs</strong> (Only if highly specific - not generic)</li>
+                </ul>
+
+                <p><strong>Russell's Lead Magnets:</strong></p>
+                <ul>
+                    <li><strong>DotCom Secrets Book</strong> (Free + $7.95 shipping) - Physical book as lead magnet</li>
+                    <li><strong>Funnel Scripts Software</strong> (Free trial) - Software tool as lead magnet</li>
+                    <li><strong>5-Day Challenge</strong> (Free email course) - Educational series</li>
+                </ul>
+            </div>
+
+            <!-- FRAMEWORK 2: THE TRIPWIRE FUNNEL -->
+            <div class="framework-card">
+                <h4>2. The Tripwire Funnel (Self-Liquidating Offer)</h4>
+                <p class="subtitle">How to generate leads while breaking even (or profiting) on ad spend</p>
+
+                <p><strong>Core Concept:</strong> Instead of just giving away a free lead magnet (costs you money), add a LOW-TICKET offer ($7-$37) immediately after they opt-in. Even if only 10-20% buy, it PAYS FOR your ads. You're generating leads for FREE (or profit).</p>
+
+                <div class="diagram">
+<pre>
+The Tripwire Funnel Flow:
+
+STEP 1: Lead Magnet Opt-In (FREE)
+   ↓
+User enters email to get free value
+
+STEP 2: Order Form Bump ($7-$37)
+   ↓
+IMMEDIATELY offer low-ticket product
+"Wait! Before you get your free [lead magnet],
+ want to add [tripwire] for just $7?"
+
+STEP 3: Upsell #1 ($97-$297)
+   ↓
+If they buy tripwire, offer relevant upsell
+"You're going to love [tripwire].
+ Want to 10X your results with [upsell]?"
+
+STEP 4: Upsell #2 ($297-$997)
+   ↓
+If they buy upsell #1, offer advanced version
+
+STEP 5: Email Sequence (Backend)
+   ↓
+Everyone gets email sequence regardless
+(Soap Opera Sequence from DotCom Secrets)
+</pre>
+                </div>
+
+                <p><strong>The Math (Why Tripwires Work):</strong></p>
+                <div class="diagram">
+<pre>
+WITHOUT TRIPWIRE:
+─────────────────
+100 clicks at $2 = $200 ad spend
+20 opt-ins (20% conversion) = 20 leads
+Cost per lead: $10
+
+WITH TRIPWIRE ($27 offer):
+─────────────────
+100 clicks at $2 = $200 ad spend
+20 opt-ins (20%) = 20 leads
+4 buy tripwire (20% of 20) = $108 revenue
+Cost per lead: ($200 - $108) / 20 = $4.60
+
+RESULT: 54% cheaper leads (or FREE if more buy upsells)
+</pre>
+                </div>
+
+                <p><strong>Best Tripwire Products:</strong></p>
+                <ul>
+                    <li><strong>Physical Products:</strong> Books ($7 + shipping), samples, starter kits</li>
+                    <li><strong>Digital Products:</strong> Templates, courses, software trials ($7-$37)</li>
+                    <li><strong>Done-For-You Services:</strong> Audits, reviews, consultations ($27-$97)</li>
+                </ul>
+            </div>
+
+            <!-- FRAMEWORK 3: THE QUIZ FUNNEL -->
+            <div class="framework-card">
+                <h4>3. The Quiz Funnel (Segmentation Machine)</h4>
+                <p class="subtitle">How to generate hyper-qualified leads who self-segment</p>
+
+                <p><strong>Core Concept:</strong> Instead of a generic lead magnet for everyone, create a QUIZ that segments leads based on their answers. Then deliver a personalized result/recommendation. Quiz funnels convert 30-50% higher than standard opt-in pages.</p>
+
+                <div class="diagram">
+<pre>
+Quiz Funnel Flow:
+
+STEP 1: Compelling Quiz Hook
+   ↓
+"What Type of Entrepreneur Are You?"
+"What's Your #1 Marketing Bottleneck?"
+"Which Funnel Should You Build First?"
+
+STEP 2: 5-7 Questions (Easy, Fun)
+   ↓
+Multiple choice, image-based, engaging
+GOAL: Gather data + build curiosity
+
+STEP 3: Email Gate (To See Results)
+   ↓
+"Enter your email to get your personalized results"
+Conversion Rate: 40-60% (WAY higher than standard opt-in)
+
+STEP 4: Personalized Result
+   ↓
+"You're a [Type]! Here's what that means..."
+Show customized recommendations
+Offer relevant product (tripwire or core offer)
+
+STEP 5: Segmented Email Sequence
+   ↓
+Send different emails based on quiz results
+(Leads who answered "Beginner" get different emails than "Advanced")
+</pre>
+                </div>
+
+                <p><strong>Why Quizzes Work:</strong></p>
+                <ul>
+                    <li><strong>Curiosity:</strong> "What result will I get?" (drives completion)</li>
+                    <li><strong>Engagement:</strong> Interactive > Static (people love quizzes)</li>
+                    <li><strong>Segmentation:</strong> You learn about them BEFORE pitching</li>
+                    <li><strong>Personalization:</strong> Customized recommendations convert better</li>
+                </ul>
+
+                <p><strong>Quiz Funnel Examples:</strong></p>
+                <ul>
+                    <li><strong>Fitness:</strong> "What's Your Body Type?" → Personalized workout plan</li>
+                    <li><strong>Business:</strong> "What's Your Biggest Marketing Weakness?" → Customized training</li>
+                    <li><strong>E-commerce:</strong> "What's Your Style?" → Product recommendations</li>
+                </ul>
+            </div>
+
+            <!-- FRAMEWORK 4: THE APPLICATION FUNNEL -->
+            <div class="framework-card">
+                <h4>4. The Application Funnel (High-Ticket Lead Gen)</h4>
+                <p class="subtitle">How to generate leads for $1,000+ offers (and filter out tire-kickers)</p>
+
+                <p><strong>Core Concept:</strong> For high-ticket offers (coaching, consulting, done-for-you services), you don't want EVERYONE - you want QUALIFIED buyers. The application funnel filters leads and pre-sells them BEFORE the sales call.</p>
+
+                <div class="diagram">
+<pre>
+Application Funnel Flow:
+
+STEP 1: Pre-Qualify Ad/Content
+   ↓
+"Are you making $100K+/year and ready to scale to 7 figures?"
+(Filters out unqualified leads BEFORE they apply)
+
+STEP 2: Video Sales Letter (VSL)
+   ↓
+20-30 min video that:
+• Shows transformation (case studies)
+• Builds value ($10K-$100K)
+• Pre-handles objections
+• Asks for application (not sale)
+
+STEP 3: Application Form
+   ↓
+Ask qualifying questions:
+• What's your current revenue?
+• What's your biggest challenge?
+• What's your budget?
+• Why are you ready NOW?
+
+GOAL: Filter + Gather intel for sales call
+
+STEP 4: Calendar Booking
+   ↓
+If qualified → Book call with sales team
+If not qualified → Offer lower-ticket alternative
+
+STEP 5: Confirmation Sequence
+   ↓
+Email/SMS reminders before call
+Send "homework" (video to watch, questions to answer)
+GOAL: Show up rate 70-80%
+</pre>
+                </div>
+
+                <p><strong>Why Application Funnels Work for High-Ticket:</strong></p>
+                <ul>
+                    <li><strong>Pre-Qualification:</strong> Sales calls only with serious buyers (higher close rate)</li>
+                    <li><strong>Pre-Selling:</strong> VSL does 80% of selling BEFORE the call</li>
+                    <li><strong>Authority:</strong> "You must apply" = exclusivity (raises perceived value)</li>
+                    <li><strong>Data Collection:</strong> Application answers help sales team customize pitch</li>
+                </ul>
+            </div>
+
+            <!-- FRAMEWORK 5: THE SUMMIT FUNNEL -->
+            <div class="framework-card">
+                <h4>5. The Summit Funnel (Virtual Event Lead Gen)</h4>
+                <p class="subtitle">How to generate 10,000+ leads in 5 days with a virtual summit</p>
+
+                <p><strong>Core Concept:</strong> Host a multi-day virtual event where you interview 20-30 experts. Attendees register (free) to watch. You generate MASSIVE lead lists fast + build authority by association with experts.</p>
+
+                <p><strong>The Summit Strategy:</strong></p>
+                <ul>
+                    <li><strong>Step 1:</strong> Recruit 20-30 experts in your niche (your Dream 100)</li>
+                    <li><strong>Step 2:</strong> Interview each expert (30-45 min) on their specialty</li>
+                    <li><strong>Step 3:</strong> Create registration page (free to attend)</li>
+                    <li><strong>Step 4:</strong> Each expert promotes to THEIR audience (you borrow their lists)</li>
+                    <li><strong>Step 5:</strong> Run summit (release interviews daily over 5 days)</li>
+                    <li><strong>Step 6:</strong> Sell "All-Access Pass" ($97-$297) for replays + bonuses</li>
+                </ul>
+
+                <p><strong>Why Summits Generate Massive Leads:</strong></p>
+                <ul>
+                    <li><strong>Leverage:</strong> 30 experts each promote → You tap into 30 audiences</li>
+                    <li><strong>Authority:</strong> Hosting a summit positions YOU as the expert convener</li>
+                    <li><strong>Low Barrier:</strong> Free to attend = high registration rate</li>
+                    <li><strong>Backend Revenue:</strong> All-Access Pass sales can fund entire event</li>
+                </ul>
+
+                <p><strong>Russell's Results:</strong> Generated 18,000+ leads in one summit (Funnel Hacking Live Virtual)</p>
+            </div>
+
+            <!-- FRAMEWORK 6: THE CHALLENGE FUNNEL -->
+            <div class="framework-card">
+                <h4>6. The Challenge Funnel (5-Day Engagement Machine)</h4>
+                <p class="subtitle">How to turn cold leads into HOT buyers in 5 days</p>
+
+                <p><strong>Core Concept:</strong> Instead of a single webinar (90 minutes), run a 5-day challenge where you teach + engage daily. By day 5, they're PRIMED to buy because they've already experienced transformation.</p>
+
+                <div class="diagram">
+<pre>
+5-Day Challenge Structure:
+
+DAY 1: Foundation (Quick Win)
+──────────────────────────────
+• Live training (45-60 min)
+• Teach ONE breakthrough concept
+• Give homework assignment
+GOAL: Immediate value + engagement
+
+DAY 2: Deeper Training
+──────────────────────────────
+• Build on Day 1
+• Teach next breakthrough concept
+• Show case studies
+GOAL: Build belief (it works)
+
+DAY 3: Advanced Strategy
+──────────────────────────────
+• Teach advanced tactic
+• Address common objections
+• Share your story (Epiphany Bridge)
+GOAL: Build connection
+
+DAY 4: Implementation
+──────────────────────────────
+• Help them implement
+• Q&A session
+• Tease Day 5 offer
+GOAL: Overcome obstacles
+
+DAY 5: Pitch Day
+──────────────────────────────
+• Recap transformation (Day 1-4)
+• Make the offer (Stack Slide)
+• Add urgency (challenge bonus expires)
+GOAL: Convert 10-20% into buyers
+</pre>
+                </div>
+
+                <p><strong>Why Challenges Convert Higher Than Webinars:</strong></p>
+                <ul>
+                    <li><strong>Time Investment:</strong> 5 hours together vs. 90 min (deeper relationship)</li>
+                    <li><strong>Micro-Commitments:</strong> Daily attendance = psychological buy-in</li>
+                    <li><strong>Results DURING Challenge:</strong> They see transformation BEFORE buying</li>
+                    <li><strong>Community:</strong> Facebook group creates tribe mentality</li>
+                </ul>
+
+                <p><strong>Russell's Results:</strong> 5-Day Challenge generated $3.2M in sales (One Funnel Away Challenge)</p>
+            </div>
+
+            <!-- FRAMEWORK 7: EMAIL LEAD NURTURE -->
+            <div class="framework-card">
+                <h4>7. The Lead Nurture Sequence (Soap Opera 2.0)</h4>
+                <p class="subtitle">What to send leads AFTER they opt-in to turn them into buyers</p>
+
+                <p><strong>Core Concept:</strong> Getting the lead is step 1. Nurturing the lead is step 2. Most businesses fail at step 2 (they send one email then forget). Russell's Soap Opera Sequence (updated) keeps leads engaged until they buy.</p>
+
+                <p><strong>The Updated Soap Opera Sequence:</strong></p>
+                <ul>
+                    <li><strong>Email 1 (Immediate):</strong> Deliver lead magnet + set expectations ("Watch for my emails!")</li>
+                    <li><strong>Email 2 (Day 1):</strong> Share your backstory (part 1) - Build Attractive Character</li>
+                    <li><strong>Email 3 (Day 2):</strong> Continue backstory (Epiphany Bridge) - Build connection</li>
+                    <li><strong>Email 4 (Day 3):</strong> Share case study - Build belief ("It works for others")</li>
+                    <li><strong>Email 5 (Day 4):</strong> Soft pitch (introduce offer) - No hard sell yet</li>
+                    <li><strong>Email 6 (Day 5):</strong> Stack + Urgency (full pitch with deadline)</li>
+                    <li><strong>Email 7+ (Ongoing):</strong> Value + Pitches (alternating) - Keep engaged long-term</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- HOW SAM AI USES THIS -->
+        <div class="section">
+            <h2>🤖 How SAM AI's Online Sales Strategist Uses Lead Funnels</h2>
+
+            <div class="application-box">
+                <h4>When You Say: "I need to generate more leads"</h4>
+                <p>The agent walks through funnel selection:</p>
+                <ol>
+                    <li><strong>Budget:</strong> "What's your customer LTV?" (Determines funnel complexity)</li>
+                    <li><strong>Offer Level:</strong> "Low-ticket? Mid-ticket? High-ticket?" (Determines funnel type)</li>
+                    <li><strong>Recommendation:</strong>
+                        <ul>
+                            <li>Low-ticket ($7-$97): Tripwire Funnel</li>
+                            <li>Mid-ticket ($97-$997): Webinar or Challenge Funnel</li>
+                            <li>High-ticket ($1,000+): Application Funnel</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="application-box">
+                <h4>When You Say: "My lead magnet isn't converting"</h4>
+                <p>The agent audits using the Perfect Lead Magnet formula:</p>
+                <ul>
+                    <li><strong>Check #1:</strong> "Does it solve ONE specific problem?" (Not too broad?)</li>
+                    <li><strong>Check #2:</strong> "Can they get a quick win in <1 hour?" (Fast results?)</li>
+                    <li><strong>Check #3:</strong> "Is the perceived value HIGH?" (Would they pay for this?)</li>
+                    <li><strong>Check #4:</strong> "Is it consumable?" (Easy format? Video > PDF)</li>
+                </ul>
+            </div>
+
+            <div class="application-box">
+                <h4>When You Say: "I want to scale lead gen fast"</h4>
+                <p>The agent recommends Summit or Challenge Funnel:</p>
+                <ul>
+                    <li><strong>Summit:</strong> "Recruit 30 experts → Each promotes → Borrow their audiences → Generate 10K+ leads in one week"</li>
+                    <li><strong>Challenge:</strong> "5-day live event → Daily engagement → Convert 10-20% by Day 5"</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- KEY TAKEAWAYS -->
+        <div class="section">
+            <h2>💡 Key Takeaways from Lead Funnels</h2>
+
+            <ul>
+                <li><strong>Lead magnets must be irresistible</strong> - Solve ONE problem, deliver quick win, high value</li>
+                <li><strong>Tripwire funnels make lead gen FREE</strong> - $7-$37 offer pays for ads</li>
+                <li><strong>Quiz funnels segment automatically</strong> - 40-60% opt-in rates (2X standard)</li>
+                <li><strong>Application funnels filter + pre-sell</strong> - Perfect for high-ticket ($1K+)</li>
+                <li><strong>Summits leverage other audiences</strong> - 10,000+ leads in one event</li>
+                <li><strong>Challenges build deeper relationships</strong> - 5 days > 90 minutes (higher conversion)</li>
+                <li><strong>Email nurture is NON-NEGOTIABLE</strong> - Soap Opera Sequence turns leads into buyers</li>
+            </ul>
+        </div>
+
+        <!-- EXTERNAL RESOURCES -->
+        <div class="section">
+            <h2>🔗 Get the Book</h2>
+
+            <p>Want to study Lead Funnels yourself?</p>
+            <ul>
+                <li><strong>ClickFunnels Platform:</strong> Available as bonus inside ClickFunnels (included with membership)</li>
+                <li><strong>Amazon:</strong> Available in paperback and Kindle</li>
+                <li><strong>Funnel Templates:</strong> Russell includes done-for-you templates in the book</li>
+            </ul>
+        </div>
+
+        <!-- NEXT STEPS -->
+        <div class="proof-box" style="background: linear-gradient(135deg, #fdcb6e 0%, #f39c12 100%); color: #1a1a2e;">
+            <h3>📚 Complete Education</h3>
+            <p>You've completed all 4 Russell Brunson books! Review any book:</p>
+            <p style="margin-top: 15px;">
+                <a href="dotcom-secrets.html" style="color: #1a1a2e; font-weight: 700;">DotCom Secrets (Funnel Architecture)</a> |
+                <a href="expert-secrets.html" style="color: #1a1a2e; font-weight: 700;">Expert Secrets (Selling)</a> |
+                <a href="traffic-secrets.html" style="color: #1a1a2e; font-weight: 700;">Traffic Secrets (Traffic)</a>
+            </p>
+        </div>
+
+        <div style="margin-top: 50px; padding-top: 30px; border-top: 2px solid #ecf0f1; text-align: center;">
+            <a href="index.html" class="back-link">← Back to Russell Brunson Overview</a>
+        </div>
+    </div>
+</body>
+</html>

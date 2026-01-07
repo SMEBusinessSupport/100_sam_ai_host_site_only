@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Documentation parent menu (under SAM AI > Configuration) -->
+        <menuitem
+            id="menu_ai_sam_documentation"
+            name="📖 Documentation"
+            parent="ai_sam.menu_sam_ai_config"
+            sequence="70"/>
+
+        <!-- Main Documentation List -->
+        <menuitem
+            id="menu_ai_sam_documentation_list"
+            name="📄 View Documents"
+            parent="menu_ai_sam_documentation"
+            action="action_ai_automator_documentation"
+            sequence="10"/>
+
+        <!-- Documentation Scan Action -->
+        <menuitem
+            id="menu_ai_sam_documentation_scan"
+            name="🔄 Scan Documentation"
+            parent="menu_ai_sam_documentation"
+            action="action_scan_documentation"
+            sequence="20"/>
+    </data>
+</odoo>

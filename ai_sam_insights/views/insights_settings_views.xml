@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Module List View (for embedded use) -->
+    <record id="view_insights_scan_module_list" model="ir.ui.view">
+        <field name="name">insights.scan.module.list</field>
+        <field name="model">insights.scan.module</field>
+        <field name="arch" type="xml">
+            <list string="Modules" editable="bottom">
+                <field name="selected" widget="boolean_toggle"/>
+                <field name="technical_name"/>
+                <field name="name"/>
+                <field name="version"/>
+                <field name="category"/>
+                <field name="summary"/>
+                <field name="author" optional="hide"/>
+                <field name="path" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Settings Form View -->
+    <record id="view_insights_scan_settings_form" model="ir.ui.view">
+        <field name="name">insights.scan.settings.form</field>
+        <field name="model">insights.scan.settings</field>
+        <field name="arch" type="xml">
+            <form string="Scan Default Settings">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <span>Scan Default Settings</span>
+                        </h1>
+                    </div>
+
+                    <group string="Scan Path Configuration">
+                        <group>
+                            <field name="default_scan_path" placeholder="/path/to/addons"/>
+                            <button name="action_scan_path" type="object"
+                                    string="Scan for Modules"
+                                    class="btn-primary"
+                                    icon="fa-search"/>
+                        </group>
+                        <group>
+                            <field name="include_registry"/>
+                            <field name="last_path_scan" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Module Statistics" invisible="not module_ids">
+                        <group>
+                            <field name="total_modules" readonly="1"/>
+                            <field name="selected_modules" readonly="1"/>
+                        </group>
+                        <group>
+                            <div class="text-center">
+                                <button name="action_select_all" type="object"
+                                        string="Select All"
+                                        class="btn-secondary me-1"/>
+                                <button name="action_deselect_all" type="object"
+                                        string="Deselect All"
+                                        class="btn-secondary me-1"/>
+                                <button name="action_select_sam_modules" type="object"
+                                        string="Select SAM Modules Only"
+                                        class="btn-info"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <group string="Discovered Modules" invisible="not module_ids">
+                        <field name="module_ids" nolabel="1" colspan="2">
+                            <list editable="bottom">
+                                <field name="selected" widget="boolean_toggle"/>
+                                <field name="technical_name"/>
+                                <field name="name"/>
+                                <field name="version"/>
+                                <field name="category"/>
+                                <field name="summary"/>
+                            </list>
+                        </field>
+                    </group>
+
+                    <div class="alert alert-info" role="alert" invisible="module_ids">
+                        <strong>Getting Started:</strong>
+                        <ol class="mb-0 mt-2">
+                            <li>Enter the path to your Odoo addons directory above</li>
+                            <li>Click "Scan for Modules" to discover available modules</li>
+                            <li>Use the checkboxes to select which modules to include in scans</li>
+                            <li>Your selections will be used as defaults for all future scans</li>
+                        </ol>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Settings Action (opens singleton) -->
+    <record id="action_insights_settings" model="ir.actions.act_window">
+        <field name="name">Scan Default Settings</field>
+        <field name="res_model">insights.scan.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Server action to open/create settings -->
+    <record id="action_open_settings" model="ir.actions.server">
+        <field name="name">Open Scan Settings</field>
+        <field name="model_id" ref="model_insights_scan_settings"/>
+        <field name="state">code</field>
+        <field name="code">
+action = model.action_open_settings()
+        </field>
+    </record>
+
+</odoo>

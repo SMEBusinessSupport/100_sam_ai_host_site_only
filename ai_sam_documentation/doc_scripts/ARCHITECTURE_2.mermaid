@@ -1,0 +1,565 @@
+```mermaid
+---
+title: SAM AI Workflows Base - System Architecture
+---
+
+graph TB
+    subgraph "Frontend Layer (ai_sam module)"
+        UI[Visual Workflow Canvas<br/>JavaScript + React]
+        Builder[Workflow Builder UI]
+        Viewer[Execution Viewer UI]
+    end
+
+    subgraph "Data Layer (ai_sam_workflows_base)"
+        Canvas[canvas<br/>Workflow Definitions]
+        Executions[executions<br/>Execution Logs]
+        Templates[workflow.template<br/>Reusable Templates]
+        Nodes[nodes<br/>DEPRECATED Phase 1]
+        Credentials[api_credentials<br/>API Keys]
+        BusinessUnit[workflow.business.unit<br/>Org Units]
+    end
+
+    subgraph "Execution Engine"
+        Executor[Workflow Executor]
+        NodeRunner[Node Runner]
+        ErrorHandler[Error Handler & Retry]
+        Trigger[Trigger Handler<br/>Webhook, Cron, Manual]
+    end
+
+    subgraph "N8N Integration"
+        JSONParser[N8N JSON Parser]
+        NodeRegistry[Node Type Registry<br/>195 N8N Nodes]
+        ContentNodes[SAM Content Nodes]
+        AgentNodes[AI Agent Nodes]
+    end
+
+    subgraph "External Services"
+        OpenAI[OpenAI API]
+        Slack[Slack API]
+        GitHub[GitHub API]
+        Webhooks[External Webhooks]
+        CustomAPIs[Custom APIs]
+    end
+
+    %% Frontend connections
+    UI --> Builder
+    UI --> Viewer
+    Builder -->|save_canvas_state| Canvas
+    Viewer -->|load execution logs| Executions
+
+    %% Data Layer connections
+    Canvas -->|json_definition| JSONParser
+    Canvas -->|creates| Executions
+    Templates -->|create_from_template| Canvas
+    Canvas --> BusinessUnit
+    Canvas --> Credentials
+
+    %% Execution flow
+    Canvas -->|action_execute_workflow| Executor
+    Executor --> NodeRunner
+    Executor --> ErrorHandler
+    Executor -->|logs to| Executions
+    Trigger -->|triggers| Executor
+
+    %% N8N Integration
+    JSONParser --> NodeRegistry
+    JSONParser --> ContentNodes
+    JSONParser --> AgentNodes
+    NodeRunner --> NodeRegistry
+
+    %% External Services
+    NodeRunner -.->|API calls| OpenAI
+    NodeRunner -.->|API calls| Slack
+    NodeRunner -.->|API calls| GitHub
+    Trigger -.->|receives| Webhooks
+    NodeRunner -.->|API calls| CustomAPIs
+    Credentials -.->|provides credentials| NodeRunner
+
+    %% Styling
+    classDef frontend fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef data fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef engine fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    classDef n8n fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef external fill:#ffebee,stroke:#b71c1c,stroke-width:2px,stroke-dasharray: 5 5
+    classDef deprecated fill:#fce4ec,stroke:#880e4f,stroke-width:1px,stroke-dasharray: 3 3
+
+    class UI,Builder,Viewer frontend
+    class Canvas,Executions,Templates,Credentials,BusinessUnit data
+    class Nodes deprecated
+    class Executor,NodeRunner,ErrorHandler,Trigger engine
+    class JSONParser,NodeRegistry,ContentNodes,AgentNodes n8n
+    class OpenAI,Slack,GitHub,Webhooks,CustomAPIs external
+```
+
+---
+
+## Data Model Relationships
+
+```mermaid
+---
+title: SAM AI Workflows Base - Data Model ERD
+---
+
+erDiagram
+    %% Core Workflow Models
+    CANVAS ||--o{ EXECUTIONS : creates
+    CANVAS }o--o| WORKFLOW_TEMPLATE : created_from
+    CANVAS }o--o| WORKFLOW_BUSINESS_UNIT : belongs_to
+    CANVAS ||--o{ NODES : contains
+
+    %% Template System
+    WORKFLOW_TEMPLATE ||--o{ WORKFLOW_TEMPLATE_TAG : tagged_with
+    WORKFLOW_TEMPLATE }o--|| RES_USERS : authored_by
+
+    %% Execution System
+    EXECUTIONS }o--|| CANVAS : executes
+    EXECUTIONS }o--|| RES_USERS : executed_by
+
+    %% API Credentials
+    CANVAS }o--o{ API_CREDENTIALS : uses
+
+    %% N8N Integration
+    CANVAS }o--o{ NODE_TYPES : uses_node_types
+    NODE_TYPES }o--|| N8N_NODE_CATEGORY : categorized_by
+
+    %% Business Organization
+    WORKFLOW_BUSINESS_UNIT ||--o{ CANVAS : organizes
+
+    %% Model Definitions
+    CANVAS {
+        int id PK
+        string name
+        text json_definition
+        string execution_mode
+        string workflow_type
+        int business_unit_id FK
+        int template_id FK
+        boolean nodes_cache_valid
+        text generated_python_code
+        text generated_javascript_code
+    }
+
+    EXECUTIONS {
+        int id PK
+        int canvas_id FK
+        string state
+        datetime started_at
+        datetime finished_at
+        float duration
+        text error_message
+        text execution_log
+        json node_executions
+    }
+
+    WORKFLOW_TEMPLATE {
+        int id PK
+        string name
+        text json_definition
+        string category
+        string visibility
+        int author_id FK
+        int usage_count
+        boolean is_validated
+    }
+
+    WORKFLOW_TEMPLATE_TAG {
+        int id PK
+        string name
+    }
+
+    API_CREDENTIALS {
+        int id PK
+        string name
+        string credential_type
+        string api_key
+        string oauth_access_token
+    }
+
+    WORKFLOW_BUSINESS_UNIT {
+        int id PK
+        string name
+        string code
+        text description
+    }
+
+    NODES {
+        int id PK
+        int canvas_id FK
+        string node_id
+        string node_type
+        json parameters
+        int position_x
+        int position_y
+    }
+
+    NODE_TYPES {
+        int id PK
+        string name
+        string node_type
+        int category_id FK
+        json metadata
+    }
+
+    N8N_NODE_CATEGORY {
+        int id PK
+        string name
+        string code
+    }
+
+    RES_USERS {
+        int id PK
+        string name
+        string login
+    }
+```
+
+---
+
+## Workflow Execution Flow
+
+```mermaid
+---
+title: Workflow Execution Sequence
+---
+
+sequenceDiagram
+    actor User
+    participant UI as Visual Canvas
+    participant Canvas as Canvas Model
+    participant Execution as Execution Model
+    participant NodeRunner as Node Runner
+    participant ExtAPI as External API
+
+    User->>UI: Click "Execute Workflow"
+    UI->>Canvas: action_execute_workflow()
+
+    Canvas->>Execution: create(state='pending')
+    Execution-->>Canvas: execution_id
+
+    Canvas->>Execution: _execute_workflow()
+    Note over Execution: Parse json_definition
+
+    Execution->>Execution: Find start node
+    Execution->>Execution: _execute_node_chain(start_node)
+
+    loop For each node in chain
+        Execution->>NodeRunner: _execute_single_node(node, input)
+        NodeRunner->>NodeRunner: Get node type & parameters
+
+        alt Node type: HTTP Request
+            NodeRunner->>ExtAPI: HTTP call with params
+            ExtAPI-->>NodeRunner: Response data
+        else Node type: Email Send
+            NodeRunner->>ExtAPI: Send email via SMTP
+            ExtAPI-->>NodeRunner: Success
+        else Node type: Logic
+            NodeRunner->>NodeRunner: Process logic (if/switch)
+        end
+
+        NodeRunner-->>Execution: node_result {success, data}
+        Execution->>Execution: Log to node_executions JSON
+        Execution->>Execution: Pass output to next node
+    end
+
+    alt Execution successful
+        Execution->>Execution: Update state='success'
+    else Execution failed
+        Execution->>Execution: Update state='failed'
+        Execution->>Execution: Log error_message
+    end
+
+    Execution-->>Canvas: Execution complete
+    Canvas-->>UI: {success, execution_id, results}
+    UI-->>User: Show execution results
+```
+
+---
+
+## Template Creation and Usage Flow
+
+```mermaid
+---
+title: Workflow Template Lifecycle
+---
+
+stateDiagram-v2
+    [*] --> CreateWorkflow: User creates workflow
+
+    state CreateWorkflow {
+        [*] --> BuildCanvas: Add nodes
+        BuildCanvas --> ConnectNodes: Connect nodes
+        ConnectNodes --> TestWorkflow: Test execution
+        TestWorkflow --> RefineWorkflow: Fix errors
+        RefineWorkflow --> BuildCanvas: Iterate
+    }
+
+    CreateWorkflow --> SaveAsTemplate: User saves as template
+
+    state SaveAsTemplate {
+        [*] --> FillMetadata: Name, description, category
+        FillMetadata --> AddDocumentation: Add usage docs
+        AddDocumentation --> SetVisibility: Private/Team/Public/Marketplace
+    }
+
+    SaveAsTemplate --> TemplateCreated: Template saved
+
+    state TemplateCreated {
+        [*] --> Validation
+        Validation --> Validated: action_validate_template()
+    }
+
+    TemplateCreated --> BrowseMarketplace: Others browse templates
+
+    state BrowseMarketplace {
+        [*] --> SearchTemplates: Filter by category/tags
+        SearchTemplates --> PreviewTemplate: action_preview_template()
+        PreviewTemplate --> SelectTemplate: User selects
+    }
+
+    BrowseMarketplace --> CreateFromTemplate: action_create_workflow()
+
+    CreateFromTemplate --> CustomizeWorkflow: User customizes
+    CustomizeWorkflow --> SaveWorkflow: Workflow saved
+    SaveWorkflow --> IncrementUsageCount: template.usage_count++
+
+    IncrementUsageCount --> [*]
+
+    style CreateWorkflow fill:#e1f5ff
+    style SaveAsTemplate fill:#fff9c4
+    style TemplateCreated fill:#c8e6c9
+    style BrowseMarketplace fill:#f3e5f5
+```
+
+---
+
+## N8N JSON Structure
+
+```mermaid
+---
+title: N8N JSON Format (Single Source of Truth)
+---
+
+graph TD
+    JSON[canvas.json_definition]
+
+    JSON --> Nodes[nodes Array]
+    JSON --> Connections[connections Object]
+    JSON --> Settings[settings Object]
+
+    Nodes --> Node1[Node Object]
+    Nodes --> Node2[Node Object]
+    Nodes --> NodeN[...]
+
+    Node1 --> NodeID[id: string]
+    Node1 --> NodeName[name: string]
+    Node1 --> NodeType[type: string]
+    Node1 --> NodePos[position: x,y]
+    Node1 --> NodeParams[parameters: object]
+
+    Connections --> ConnKey[Node Name]
+    ConnKey --> ConnType[Connection Type]
+    ConnType --> ConnArray[Array of connections]
+    ConnArray --> TargetNode[node, type, index]
+
+    Settings --> ExecOrder[executionOrder: v1]
+    Settings --> Timeout[timeout: ms]
+
+    style JSON fill:#714B67,color:#fff
+    style Nodes fill:#e1f5ff
+    style Connections fill:#fff9c4
+    style Settings fill:#c8e6c9
+```
+
+---
+
+## Flatline Migration - Phase 1 vs Phase 2
+
+```mermaid
+---
+title: Data Storage Evolution
+---
+
+graph LR
+    subgraph "Pre-Phase 1 (Deprecated)"
+        OldJSON[json_definition<br/>Backup]
+        OldNodes[nodes table<br/>SOURCE OF TRUTH]
+        OldConn[connections table<br/>Relationships]
+
+        OldJSON -.->|rebuild_nodes_cache| OldNodes
+        OldNodes --> OldConn
+    end
+
+    subgraph "Phase 1 (Current - 2025-10-31)"
+        JSON[json_definition<br/>SOURCE OF TRUTH]
+        NodesCache[nodes table<br/>Cache DEPRECATED]
+
+        JSON -->|Optional cache| NodesCache
+        NodesCache -.->|Legacy support| JSON
+    end
+
+    subgraph "Phase 2 (Planned)"
+        FinalJSON[json_definition<br/>ONLY SOURCE]
+
+        FinalJSON -.->|Direct parse| Executor
+    end
+
+    OldJSON ==>|Migration| JSON
+    JSON ==>|Future| FinalJSON
+
+    style OldJSON fill:#ffcdd2,stroke:#c62828
+    style OldNodes fill:#ffcdd2,stroke:#c62828
+    style OldConn fill:#ffcdd2,stroke:#c62828
+    style JSON fill:#c8e6c9,stroke:#2e7d32
+    style NodesCache fill:#fff9c4,stroke:#f57f17
+    style FinalJSON fill:#81c784,stroke:#1b5e20
+```
+
+---
+
+## Node Execution Types
+
+```mermaid
+---
+title: Node Type Execution Strategy
+---
+
+flowchart TD
+    Start([Node Execution Starts]) --> GetType{Get Node Type}
+
+    GetType -->|Trigger| TriggerNode[Execute Trigger Node]
+    GetType -->|Action| ActionNode[Execute Action Node]
+    GetType -->|Logic| LogicNode[Execute Logic Node]
+    GetType -->|Data Transform| DataNode[Execute Data Node]
+
+    TriggerNode --> TriggerTypes{Trigger Type}
+    TriggerTypes -->|Webhook| Webhook[Wait for webhook call]
+    TriggerTypes -->|Cron| Cron[Schedule with Odoo cron]
+    TriggerTypes -->|Manual| Manual[User triggered]
+
+    ActionNode --> ActionTypes{Action Type}
+    ActionTypes -->|HTTP| HTTP[Make HTTP request]
+    ActionTypes -->|Email| Email[Send email]
+    ActionTypes -->|Database| Database[Query database]
+    ActionTypes -->|API Call| APICall[Call external API]
+
+    LogicNode --> LogicTypes{Logic Type}
+    LogicTypes -->|IF| IF[Evaluate condition]
+    LogicTypes -->|Switch| Switch[Multiple branches]
+    LogicTypes -->|Merge| Merge[Merge inputs]
+
+    DataNode --> DataTypes{Data Type}
+    DataTypes -->|Set| Set[Set variables]
+    DataTypes -->|Function| Function[Execute JS code]
+    DataTypes -->|Transform| Transform[Transform data]
+
+    HTTP --> Success{Success?}
+    Email --> Success
+    Database --> Success
+    APICall --> Success
+    IF --> Success
+    Switch --> Success
+    Merge --> Success
+    Set --> Success
+    Function --> Success
+    Transform --> Success
+
+    Success -->|Yes| LogResult[Log to node_executions]
+    Success -->|No| LogError[Log error message]
+
+    LogResult --> NextNode[Pass output to next node]
+    LogError --> RetryLogic{Retry?}
+
+    RetryLogic -->|Yes, retry < 3| GetType
+    RetryLogic -->|No| FailExecution[Mark execution as failed]
+
+    NextNode --> End([End])
+    FailExecution --> End
+
+    Webhook --> End
+    Cron --> End
+    Manual --> NextNode
+
+    style Start fill:#e1f5ff
+    style End fill:#e1f5ff
+    style Success fill:#fff9c4
+    style LogResult fill:#c8e6c9
+    style LogError fill:#ffcdd2
+    style FailExecution fill:#ef9a9a
+```
+
+---
+
+## Deployment Architecture
+
+```mermaid
+---
+title: SAM AI Workflows - Production Deployment
+---
+
+graph TB
+    subgraph "Client Layer"
+        Browser[Web Browser]
+    end
+
+    subgraph "Load Balancer"
+        LB[Nginx / HAProxy]
+    end
+
+    subgraph "Odoo Application Servers"
+        Odoo1[Odoo Instance 1<br/>ai_sam_workflows_base + ai_sam]
+        Odoo2[Odoo Instance 2<br/>ai_sam_workflows_base + ai_sam]
+    end
+
+    subgraph "Database Layer"
+        PG_Primary[(PostgreSQL<br/>Primary)]
+        PG_Replica[(PostgreSQL<br/>Replica)]
+    end
+
+    subgraph "Background Workers"
+        Worker1[Workflow Executor<br/>Worker 1]
+        Worker2[Workflow Executor<br/>Worker 2]
+        Cron[Odoo Cron<br/>Scheduled Workflows]
+    end
+
+    subgraph "External Integration Layer"
+        OpenAI[OpenAI API]
+        Slack[Slack API]
+        GitHub[GitHub API]
+        Webhooks[Webhook Receiver]
+    end
+
+    Browser --> LB
+    LB --> Odoo1
+    LB --> Odoo2
+
+    Odoo1 --> PG_Primary
+    Odoo2 --> PG_Primary
+
+    PG_Primary --> PG_Replica
+
+    Odoo1 --> Worker1
+    Odoo2 --> Worker2
+    Odoo1 --> Cron
+
+    Worker1 -.->|API calls| OpenAI
+    Worker1 -.->|API calls| Slack
+    Worker2 -.->|API calls| GitHub
+    Webhooks -.->|triggers| Worker1
+
+    style Browser fill:#e1f5ff
+    style LB fill:#fff9c4
+    style PG_Primary fill:#c8e6c9
+    style Worker1 fill:#f3e5f5
+    style Worker2 fill:#f3e5f5
+    style Cron fill:#ffe0b2
+```
+
+---
+
+**Note:** These diagrams are written in Mermaid syntax and can be rendered in:
+- GitHub (automatic rendering in .md files)
+- GitLab (automatic rendering)
+- VS Code (with Mermaid Preview extension)
+- Online: https://mermaid.live
+
+**Last Updated:** December 10, 2025

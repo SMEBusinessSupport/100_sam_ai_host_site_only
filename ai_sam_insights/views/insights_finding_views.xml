@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Finding Form View -->
+    <record id="view_insights_finding_form" model="ir.ui.view">
+        <field name="name">insights.finding.form</field>
+        <field name="model">insights.finding</field>
+        <field name="arch" type="xml">
+            <form string="Finding">
+                <header>
+                    <button name="action_acknowledge" type="object" string="Acknowledge"
+                            class="btn-secondary" invisible="status != 'new'"/>
+                    <button name="action_mark_resolved" type="object" string="Mark Resolved"
+                            class="btn-success" invisible="status in ('resolved', 'wont_fix', 'false_positive')"/>
+                    <button name="action_wont_fix" type="object" string="Won't Fix"
+                            class="btn-warning" invisible="status in ('resolved', 'wont_fix', 'false_positive')"/>
+                    <button name="action_false_positive" type="object" string="False Positive"
+                            class="btn-danger" invisible="status in ('resolved', 'wont_fix', 'false_positive')"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="new,acknowledged,in_progress,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-history" name="action_open_file" type="object">
+                            <field name="occurrence_count" string="Times Seen" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="severity" readonly="1"/>
+                            <field name="category" readonly="1"/>
+                            <field name="finding_type" readonly="1"/>
+                            <field name="priority" invisible="severity != 'recommendation'"/>
+                        </group>
+                        <group>
+                            <field name="first_seen_date" readonly="1"/>
+                            <field name="last_seen_date" readonly="1"/>
+                            <field name="file_path" readonly="1"/>
+                            <field name="model_name" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Details">
+                        <field name="title" readonly="1"/>
+                        <field name="description" readonly="1"/>
+                        <field name="effort" invisible="severity != 'recommendation'"/>
+                        <field name="impact" invisible="severity != 'recommendation'"/>
+                    </group>
+
+                    <group string="Scan History">
+                        <group>
+                            <field name="first_seen_scan_id" readonly="1"/>
+                            <field name="scan_id" string="Last Seen Scan" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Resolution" invisible="status not in ('resolved', 'wont_fix', 'false_positive')">
+                        <field name="resolved_date" readonly="1"/>
+                        <field name="resolved_by" readonly="1"/>
+                        <field name="resolution_note"/>
+                    </group>
+
+                    <group string="Raw Details">
+                        <field name="details_json" widget="ace" options="{'mode': 'json'}"
+                               readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Finding List View -->
+    <record id="view_insights_finding_list" model="ir.ui.view">
+        <field name="name">insights.finding.list</field>
+        <field name="model">insights.finding</field>
+        <field name="arch" type="xml">
+            <list string="Findings" default_order="severity_order, category"
+                  decoration-danger="severity == 'critical'"
+                  decoration-warning="severity == 'warning'"
+                  decoration-info="severity == 'info'"
+                  decoration-success="severity == 'recommendation'"
+                  decoration-muted="status in ('resolved', 'wont_fix', 'false_positive')">
+                <field name="severity" widget="badge"/>
+                <field name="status" widget="badge"/>
+                <field name="category"/>
+                <field name="finding_type"/>
+                <field name="title"/>
+                <field name="file_path"/>
+                <field name="occurrence_count" string="# Seen"/>
+                <field name="first_seen_date"/>
+                <field name="last_seen_date"/>
+                <field name="severity_order" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Finding Search View -->
+    <record id="view_insights_finding_search" model="ir.ui.view">
+        <field name="name">insights.finding.search</field>
+        <field name="model">insights.finding</field>
+        <field name="arch" type="xml">
+            <search string="Search Findings">
+                <field name="finding_type"/>
+                <field name="file_path"/>
+                <field name="model_name"/>
+                <field name="title"/>
+                <separator/>
+                <filter name="critical" string="Critical"
+                        domain="[('severity', '=', 'critical')]"/>
+                <filter name="warning" string="Warnings"
+                        domain="[('severity', '=', 'warning')]"/>
+                <filter name="info" string="Info"
+                        domain="[('severity', '=', 'info')]"/>
+                <filter name="recommendations" string="Recommendations"
+                        domain="[('severity', '=', 'recommendation')]"/>
+                <separator/>
+                <filter name="new" string="New"
+                        domain="[('status', '=', 'new')]"/>
+                <filter name="acknowledged" string="Acknowledged"
+                        domain="[('status', '=', 'acknowledged')]"/>
+                <filter name="in_progress" string="In Progress"
+                        domain="[('status', '=', 'in_progress')]"/>
+                <filter name="open" string="Open Issues"
+                        domain="[('status', 'in', ('new', 'acknowledged', 'in_progress'))]"/>
+                <filter name="closed" string="Closed"
+                        domain="[('status', 'in', ('resolved', 'wont_fix', 'false_positive'))]"/>
+                <separator/>
+                <filter name="recurring" string="Recurring (seen 2+ times)"
+                        domain="[('occurrence_count', '>=', 2)]"/>
+                <filter name="duplicates" string="Duplicates"
+                        domain="[('category', '=', 'duplicate')]"/>
+                <filter name="orphans" string="Orphans"
+                        domain="[('category', '=', 'orphan')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_severity" string="Severity"
+                            context="{'group_by': 'severity'}"/>
+                    <filter name="group_status" string="Status"
+                            context="{'group_by': 'status'}"/>
+                    <filter name="group_category" string="Category"
+                            context="{'group_by': 'category'}"/>
+                    <filter name="group_scan" string="Last Scan"
+                            context="{'group_by': 'scan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Finding Action -->
+    <record id="action_insights_finding" model="ir.actions.act_window">
+        <field name="name">All Findings</field>
+        <field name="res_model">insights.finding</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_insights_finding_search"/>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+
+    <!-- Critical Findings Action -->
+    <record id="action_insights_critical" model="ir.actions.act_window">
+        <field name="name">Critical Issues</field>
+        <field name="res_model">insights.finding</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('severity', '=', 'critical'), ('status', 'in', ('new', 'acknowledged', 'in_progress'))]</field>
+        <field name="search_view_id" ref="view_insights_finding_search"/>
+    </record>
+
+    <!-- Relationship List View -->
+    <record id="view_insights_relationship_list" model="ir.ui.view">
+        <field name="name">insights.relationship.list</field>
+        <field name="model">insights.relationship</field>
+        <field name="arch" type="xml">
+            <list string="Relationships">
+                <field name="relationship_type"/>
+                <field name="source_type"/>
+                <field name="source_name"/>
+                <field name="target_type"/>
+                <field name="target_name"/>
+                <field name="is_complete"/>
+                <field name="scan_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Relationship Action -->
+    <record id="action_insights_relationship" model="ir.actions.act_window">
+        <field name="name">Relationships</field>
+        <field name="res_model">insights.relationship</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
