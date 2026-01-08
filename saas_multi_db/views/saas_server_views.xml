@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+      <record id="saas_server_view_form" model="ir.ui.view">
+          <field name="name">saas.server.view.form</field>
+          <field name="model">saas.server</field>
+          <field name="arch" type="xml">
+              <form>
+                  <group>
+                      <field name="name"/>
+                      <field name="address"/>
+                      <field name="database_name"/>
+                      <field name="admin_username"/>
+                      <field name="admin_password" password="True"/>
+                  </group>
+              </form>
+          </field>
+      </record>
+
+      <record id="saas_server_view_tree" model="ir.ui.view">
+          <field name="name">saas.server.view.tree</field>
+          <field name="model">saas.server</field>
+          <field name="arch" type="xml">
+              <tree>
+                  <field name="name"/>
+                  <field name="address"/>
+              </tree>
+          </field>
+      </record>
+
+      <record id="saas_server_action" model="ir.actions.act_window">
+          <field name="name">SaaS Servers</field>
+          <field name="res_model">saas.server</field>
+          <field name="binding_view_types">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="target">current</field>
+      </record>
+
+      <menuitem id="saas_server_menu" name="SAAS Servers" parent="saas_database_parent_menu" action="saas_server_action" sequence="20"/>
+
+  </data>
+</odoo>

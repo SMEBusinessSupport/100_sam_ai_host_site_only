@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+      <record id="saas_database_view_form" model="ir.ui.view">
+          <field name="name">saas.database.view.form</field>
+          <field name="model">saas.database</field>
+          <field name="arch" type="xml">
+              <form>
+                  <header>
+                      <button name="login_to_saas_user" type="object" string="Login to SAAS System"/>
+                      <button name="open_log_file" type="object" string="Read Log File"/>
+                  </header>
+                  <group>
+                      <field name="state"/>
+                      <field name="ref_email"/>
+                      <field name="saas_server_id"/>
+                      <field name="name"/>
+                      <field name="url" widget="url"/>
+                      <field name="partner_id"/>
+                      <field name="login"/>
+                      <field name="password"/>
+                      <field name="admin_password"/>
+                      <field name="template_database_id"/>
+                      <field name="next_invoice_date"/>
+                      <field name="invoice_id"/>
+                      <field name="ftp_password"/>
+                      <field name="subscribed"/>
+                      <field name="database_size_format"/>
+                      <field name="directory_size_format"/>
+                      <field name="total_size_format"/>
+                      <field name="max_size"/>
+                      <field name="backup_ids">
+                          <tree>
+                              <field name="create_date"/>
+                              <field name="datas"/>
+                          </tree>
+                      </field>
+                      <field name="log_file_content"/>
+                  </group>
+              </form>
+          </field>
+      </record>
+
+      <record id="saas_database_view_tree" model="ir.ui.view">
+          <field name="name">saas.database.view.tree</field>
+          <field name="model">saas.database</field>
+          <field name="arch" type="xml">
+              <tree>
+                  <field name="name"/>
+                  <field name="partner_id"/>
+                  <field name="template_database_id"/>
+                  <field name="next_invoice_date"/>
+                  <field name="plan_price"/>
+                  <field name="total_size_format"/>
+              </tree>
+          </field>
+      </record>
+
+      <record id="saas_database_action" model="ir.actions.act_window">
+          <field name="name">View all SAAS databases</field>
+          <field name="res_model">saas.database</field>
+          <field name="binding_view_types">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="target">current</field>
+      </record>
+      
+      <menuitem id="saas_database_top_menu" name="SaaS" sequence="800" web_icon="crm,static/description/icon.png"/>
+      <menuitem id="saas_database_parent_menu" name="Database Management" parent="saas_database_top_menu" sequence="80"/>
+      <menuitem id="saas_database_menu" name="SAAS Databases" parent="saas_database_parent_menu" action="saas_database_action" sequence="10"/>
+        
+  </data>
+</odoo>

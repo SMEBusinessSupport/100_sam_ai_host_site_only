@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+        
+        <record id="saas_new_database" model="mail.template">
+            <field name="name">SaaS New Database</field>
+            <field name="model_id" ref="model_saas_database"></field>
+            <field name="email_from">support@successmadeeasier.com</field>
+            <field name="email_to">${object.login}</field>
+            <field name="subject">Welcome to your new system</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html"><![CDATA[
+                <p>Hello ${object.partner_id.name}, your new system has been created here is a link</p>
+                <p><a t-attf-href="${object.url}">${object.url}</a></p>
+            ]]>
+            </field>
+        </record>
+
+</data>
+</odoo>

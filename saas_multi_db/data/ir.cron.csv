@@ -1,0 +1,5 @@
+id,name,state,model_id/id,code,interval_number,interval_type,numbercall,active
+"database_invoice_check","Database Invoice Check","code","model_saas_database","model.invoice_members()","6","hours","-1","True"
+"saas_auto_backup","SAAS Auto Backup","code","model_saas_template_database","model.saas_auto_backup()","24","hours","-1","True"
+"saas_check_storage","SaaS Check Storage","code","model_saas_database","model.saas_check_storage()","30","minutes","-1","True"
+"saas_create_database","SaaS Create Database","code","model_saas_template_database","model.saas_create_database()","1","minutes","-1","True"

@@ -1,0 +1,28 @@
+{
+    'name': "SME ~ SAM Smart SAAS",
+    'version': "1.0.1",
+    'author': "SME Business Support, Sythiltech",
+    'category': "Tools",
+    'summary':'Let public users create a new Odoo databases in your Instance',
+    'license':'LGPL-3',
+    'data': [
+        'views/saas_multi_db_templates.xml',
+        'views/saas_database_views.xml',
+        'views/saas_template_database_views.xml',
+        'views/res_partner.xml',
+        'views/saas_server_views.xml',
+        'views/email_templates.xml',
+        #'data/website.menu.csv',
+        'data/ir.cron.csv',
+        'security/ir.model.access.csv',
+    ],
+    'demo': [],
+    'images':[
+        'static/description/2.jpg',
+        'static/description/1.jpg',
+        'static/description/3.jpg',
+        'static/description/4.jpg',
+    ],
+    'depends': ['base_automation', 'website','payment_paypal'],
+    'installable': True,
+}
